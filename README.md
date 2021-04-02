@@ -10,6 +10,6 @@ Please be aware that this project is still work in progress.
 3. Database is now ready to be connected with API
 
 ## API
-1. Copy and paste all .php files to your website hosting provider
+1. Copy and paste all .php files to your website hosting provider (PHP 8.0+ recommended)
 2. Open Database.php file and edit host, database name, username and password
 3. API is now ready to be connected with database
