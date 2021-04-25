@@ -169,6 +169,31 @@ class Database{
         if($user_id == null) return Display::json(1);
 
         //TODO: deleteAccount
+        try{
+
+        }catch(PDOException $e){
+            return Display::json(505);
+        }
+    }
+
+    public static function isPasswordOwnedByUser(string $username, int $password_id) : int{
+        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return 3;
+
+        try{
+            $username = strtolower($username);
+        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        	$stmt = $conn->prepare("SELECT p.password_id FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username AND p.password_id = :password_id");
+        	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+        	$stmt->execute();
+
+        	return ($stmt->rowCount() == 1) ? 1 : 2; 
+        }catch(PDOException $e) {
+        	return 505;
+        }
+        $conn = null;
     }
 
     public static function savePassword(string $username, string $password, string $website, string $username2, string $password2) : string{
@@ -225,6 +250,54 @@ class Database{
         $conn = null;
     }
 
+    public static function deletePassword(string $username, string $password, int $password_id) : string{
+        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return Display::json(1);
+        if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
+
+        switch(self::isPasswordCorrect($username, $password)){
+            case 0:
+                return Display::json(2);
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
+        switch(self::isPasswordOwnedByUser($username, $password_id)){
+            case 2:
+                return Display::json(10);
+            break;
+            case 3:
+                return Display::json(1);
+            break;
+            case 505: 
+                return Display::json(505);
+            break;
+        }
+
+        try{
+            $username = strtolower($username);
+        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        	$stmt = $conn->prepare("DELETE FROM user_passwords WHERE password_id = :password_id");
+            $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+        	$stmt->execute();
+
+            $stmt = $conn->prepare("DELETE FROM passwords WHERE password_id = :password_id");
+            $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+        	$stmt->execute();
+
+        	return ($stmt->rowCount() == 1) ? Display::json(0) : Display::json(11);
+        }catch(PDOException $e) {
+        	return Display::json(505);
+        }
+        $conn = null;
+    }
+
     public static function getPasswords(string $username, string $password) : string{
         if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
 
@@ -247,7 +320,7 @@ class Database{
         	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        	$stmt = $conn->prepare("SELECT p.website, p.username, p.password FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username");
+        	$stmt = $conn->prepare("SELECT p.password_id AS id, p.website, p.username, p.password FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username");
         	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 

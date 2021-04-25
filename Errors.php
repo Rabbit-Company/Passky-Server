@@ -13,6 +13,8 @@ class Errors{
         "7" => "Username doesn't exist!",
         "8" => "You don't have any saved password.",
         "9" => "Domain is invalid!",
+        "10" => "User does not own this password!",
+        "11" => "Something went wrong while deleting data from database!",
         "400" => "Action was not provided in POST!",
         "401" => "Action is invalid!",
         "403" => "You didn't provide all required values in POST.",
