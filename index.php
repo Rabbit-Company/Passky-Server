@@ -9,20 +9,26 @@ require_once "Database.php";
 	<title>Passky API</title>
 </head>
 <body>
-
 <?php
-if(!empty($_POST['action'])){
-    switch($_POST['action']){
+if(!empty($_GET['action'])){
+    switch($_GET['action']){
         case "createAccount":
-			if(!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['password'])){
-				echo Database::createAccount($_POST['username'], $_POST['email'], $_POST['password']);
+			if(isset($_SERVER['PHP_AUTH_USER']) && isset($_POST['email']) && isset($_SERVER['PHP_AUTH_PW'])){
+				echo Database::createAccount($_SERVER['PHP_AUTH_USER'], $_POST['email'], $_SERVER['PHP_AUTH_PW']);
 			}else{
 				echo Display::json(403);
 			}
         break;
 		case "getPasswords":
-			if(!empty($_POST['username']) && !empty($_POST['password'])){
-				echo Database::getPasswords($_POST['username'], $_POST['password']);
+			if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])){
+				echo Database::getPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+			}else{
+				echo Display::json(403);
+			}
+		break;
+		case "savePassword":
+			if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && isset($_POST['website']) && isset($_POST['username']) && isset($_POST['password'])){
+				echo Database::savePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['website'], $_POST['username'], $_POST['password']);
 			}else{
 				echo Display::json(403);
 			}
@@ -35,6 +41,5 @@ if(!empty($_POST['action'])){
     echo Display::json(400);
 }
 ?>
-
 </body>
 </html>
