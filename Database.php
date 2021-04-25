@@ -150,6 +150,7 @@ class Database{
     }
 
     public static function deleteAccount(string $username, string $password) : string{
+        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return Display::json(1);
         if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -168,12 +169,26 @@ class Database{
 
         if($user_id == null) return Display::json(1);
 
-        //TODO: deleteAccount
+        $passwords_obj = json_decode(self::getPasswords($username, $password), true);
+        if($passwords_obj["error"] == 0){
+            foreach($passwords_obj["passwords"] as &$password_data){
+                self::deletePassword($username, $password, $password_data['id']);
+            }
+        }
+
         try{
 
-        }catch(PDOException $e){
+            $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :user_id;");
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+            return ($stmt->execute()) ? Display::json(0) : Display::json(11);
+        }catch(PDOException $e) {
             return Display::json(505);
         }
+        $conn = null;
     }
 
     public static function isPasswordOwnedByUser(string $username, int $password_id) : int{

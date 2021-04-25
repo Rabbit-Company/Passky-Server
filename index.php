@@ -40,6 +40,13 @@ if(!empty($_GET['action'])){
 				echo Display::json(403);
 			}
 		break;
+		case "deleteAccount":
+			if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])){
+				echo Database::deleteAccount($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+			}else{
+				echo Display::json(403);
+			}
+		break;
         default:
             echo Display::json(401);
         break;
