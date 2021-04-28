@@ -1,15 +1,7 @@
 <?php
 require_once "Display.php";
 require_once "Database.php";
-?>
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Passky API</title>
-</head>
-<body>
-<?php
 if(!empty($_GET['action'])){
     switch($_GET['action']){
         case "createAccount":
@@ -55,5 +47,3 @@ if(!empty($_GET['action'])){
     echo Display::json(400);
 }
 ?>
-</body>
-</html>
