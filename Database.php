@@ -11,7 +11,7 @@ class Database{
 
     public static function isUsernameTaken(string $username) : int{
         try{
-            $username = strtolower($username);
+          $username = strtolower($username);
         	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -19,10 +19,10 @@ class Database{
         	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 
-            return ($stmt->rowCount() == 0) ? 0 : 1;
+          return ($stmt->rowCount() == 0) ? 0 : 1;
 
         }catch(PDOException $e) {
-            return 505;
+          return 505;
         }
         $conn = null;
     }
@@ -44,7 +44,7 @@ class Database{
 
     public static function isPasswordCorrect(string $username, string $password) : int {
        try{
-            $username = strtolower($username);
+          $username = strtolower($username);
         	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -53,10 +53,10 @@ class Database{
         	$stmt->execute();
 
         	if($stmt->rowCount() == 1){
-        		$row = $stmt->fetch();
-                return (password_verify($password, $row["password"])) ? 1 : 0;
+            $row = $stmt->fetch();
+            return (password_verify($password, $row["password"])) ? 1 : 0;
         	} else {
-        		return 2;
+            return 2;
         	}
 
         }catch(PDOException $e) {
@@ -67,57 +67,57 @@ class Database{
 
     public static function getUserCount(){
         try{
-    		$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    	     $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+           $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
-            $stmt->execute();
+           $stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
+           $stmt->execute();
 
     		if($stmt->rowCount() == 1){
-    			$row = $stmt->fetch();
-                $JSON_OBJ = new StdClass;
-                $JSON_OBJ->amount = $row['amount'];
-                return Display::json(0, $JSON_OBJ);
+          $row = $stmt->fetch();
+          $JSON_OBJ = new StdClass;
+          $JSON_OBJ->amount = $row['amount'];
+          return Display::json(0, $JSON_OBJ);
     		}else{
-    			return Display::json(505);
+          return Display::json(505);
     		}
 
         }catch(PDOException $e) {
-    		return Display::json(505);
+          return Display::json(505);
         }
         $conn = null;
     }
 
     public static function getUserId($username){
-        try{
-    		$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      try{
+        $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $username = strtolower($username);
+        $username = strtolower($username);
 
-            $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = :username");
-            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-            $stmt->execute();
+        $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = :username");
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
 
     		if($stmt->rowCount() == 1){
-                return $stmt->fetch()['user_id'];
+          return $stmt->fetch()['user_id'];
     		}else{
     			return null;
     		}
 
-        }catch(PDOException $e) {
-    		return null;
-        }
-        $conn = null;
+      }catch(PDOException $e) {
+        return null;
+      }
+      $conn = null;
     }
 
     public static function createAccount(string $username, string $email, string $password) : string{
 
         $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
-        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return Display::json(1);
+        if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(12);
         if(!filter_var($sub_email, FILTER_VALIDATE_EMAIL)) return Display::json(6);
-        if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
+        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
 
         switch(self::isUsernameTaken($username)){
             case 1:
@@ -150,8 +150,8 @@ class Database{
     }
 
     public static function deleteAccount(string $username, string $password) : string{
-        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return Display::json(1);
-        if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
+        if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
+        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
                 return Display::json(2);
@@ -192,33 +192,33 @@ class Database{
     }
 
     public static function isPasswordOwnedByUser(string $username, int $password_id) : int{
-        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return 3;
+      if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return 3;
 
-        try{
-            $username = strtolower($username);
-        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
-        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      try{
+        $username = strtolower($username);
+        $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        	$stmt = $conn->prepare("SELECT p.password_id FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username AND p.password_id = :password_id");
-        	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
-            $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-        	$stmt->execute();
+        $stmt = $conn->prepare("SELECT p.password_id FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username AND p.password_id = :password_id");
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+        $stmt->execute();
 
-        	return ($stmt->rowCount() == 1) ? 1 : 2; 
-        }catch(PDOException $e) {
-        	return 505;
-        }
-        $conn = null;
+        return ($stmt->rowCount() == 1) ? 1 : 2;
+      }catch(PDOException $e) {
+        return 505;
+      }
+      $conn = null;
     }
 
     public static function savePassword(string $username, string $password, string $website, string $username2, string $password2) : string{
 
-        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return Display::json(1);
-        if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
+        if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
+        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
 
-        if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || strpos($password2, ' ')) return Display::json(5);
-        if(!(strlen($username2) >= 3 && strlen($username2) <= 255)) return Display::json(1);
-        if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255) return Display::json(9);
+        if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || str_contains($password2, ' ') || str_contains($password2, '"') || str_contains($password2, "\\") || str_contains($password2, "'")) return Display::json(5);
+        if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
+        if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ') || str_contains($website, '"') || str_contains($website, "\\") || str_contains($website, "'")) return Display::json(9);
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -266,8 +266,8 @@ class Database{
     }
 
     public static function deletePassword(string $username, string $password, int $password_id) : string{
-        if(!(strlen($username) >= 6 && strlen($username) <= 30) || strpos($username, ' ')) return Display::json(1);
-        if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
+        if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
+        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -288,22 +288,22 @@ class Database{
             case 3:
                 return Display::json(1);
             break;
-            case 505: 
+            case 505:
                 return Display::json(505);
             break;
         }
 
         try{
-            $username = strtolower($username);
+          $username = strtolower($username);
         	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         	$stmt = $conn->prepare("DELETE FROM user_passwords WHERE password_id = :password_id");
-            $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+          $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
         	$stmt->execute();
 
-            $stmt = $conn->prepare("DELETE FROM passwords WHERE password_id = :password_id");
-            $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+          $stmt = $conn->prepare("DELETE FROM passwords WHERE password_id = :password_id");
+          $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
         	$stmt->execute();
 
         	return ($stmt->rowCount() == 1) ? Display::json(0) : Display::json(11);
@@ -314,7 +314,7 @@ class Database{
     }
 
     public static function getPasswords(string $username, string $password) : string{
-        if(!(strlen($password) >= 8 && strlen($password) <= 255) || strpos($password, ' ')) return Display::json(5);
+        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -340,15 +340,15 @@ class Database{
         	$stmt->execute();
 
         	if($stmt->rowCount() > 0){
-                $JSON_OBJ = new StdClass;
-                $JSON_OBJ->passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                return Display::json(0, $JSON_OBJ);
+            $JSON_OBJ = new StdClass;
+            $JSON_OBJ->passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return Display::json(0, $JSON_OBJ);
         	}else{
-    			return Display::json(8);
+            return Display::json(8);
         	}
 
         }catch(PDOException $e) {
-    		return Display::json(505);
+          return Display::json(505);
         }
         $conn = null;
     }
