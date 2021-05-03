@@ -16,6 +16,7 @@ class Errors{
         "10" => "User does not own this password!",
         "11" => "Something went wrong while deleting data from database!",
         "12" => "Username must be between 6 and 30 characters long and can only contains letters, numbers and dots!",
+        "13" => "Something went wrong while updating data in database!",
         "400" => "Action was not provided in POST!",
         "401" => "Action is invalid!",
         "403" => "You didn't provide all required values in POST.",

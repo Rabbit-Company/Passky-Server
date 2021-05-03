@@ -25,6 +25,13 @@ if(!empty($_GET['action'])){
 				echo Display::json(403);
 			}
 		break;
+		case "editPassword":
+			if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && isset($_POST['password_id']) && isset($_POST['website']) && isset($_POST['username']) && isset($_POST['password'])){
+				echo Database::editPassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id'], $_POST['website'], $_POST['username'], $_POST['password']);
+			}else{
+				echo Display::json(403);
+			}
+		break;
 		case "deletePassword":
 			if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && isset($_POST['password_id'])){
 				echo Database::deletePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id']);
