@@ -2,6 +2,7 @@ version: '3'
 services:
   passky-mysql:
     container_name: passky-mysql
+    command: --default-authentication-plugin=mysql_native_password
     build:
       context: .
       dockerfile: ./mysql/Dockerfile
@@ -11,8 +12,6 @@ services:
       - MYSQL_DATABASE=passky
       - MYSQL_USER=passky
       - MYSQL_PASSWORD=uDWjSd8wB2HRBHei489o
-    volumes:
-      - /var/lib/mysql
     ports:
       - 3306:3306
   passky-php:
@@ -21,8 +20,6 @@ services:
       context: .
       dockerfile: ./php/Dockerfile
     restart: always
-    volumes:
-      - /usr/src/app
     ports:
       - 8080:8080
     depends_on:

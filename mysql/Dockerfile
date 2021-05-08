@@ -1,7 +1,9 @@
-FROM mysql:8.0
+FROM mariadb:latest
+
+RUN mkdir -p /usr/src/app
 
 COPY . /usr/src/app
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/mysql
 
-CMD ["mysqld", "--init-file=database.sql"]
+RUN mysql -u passky -puDWjSd8wB2HRBHei489o passky < database.sql
