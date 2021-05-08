@@ -1,18 +1,29 @@
-version: '3'
+version: '2'
 services:
-  db:
+  passky-mysql:
+    container_name: passky-mysql
     build:
       context: .
       dockerfile: ./mysql/Dockerfile
-    image: passky-mysql
     restart: always
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=passky
+      - MYSQL_USER=passky
+      - MYSQL_PASSWORD=uDWjSd8wB2HRBHei489o
+    volumes: 
+      - .:/var/lib/mysql
     ports:
       - 3306:3306
-  app:
+  passky-php:
+    container_name: passky-php
     build:
       context: .
       dockerfile: ./php/Dockerfile
-    image: passky-php
     restart: always
+    volumes: 
+      - .:/var/www/html
     ports:
       - 8080:8080
+    depends_on:
+      - passky-mysql

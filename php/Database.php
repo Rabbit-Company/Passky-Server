@@ -4,7 +4,7 @@ require_once "Display.php";
 
 class Database{
 
-    static string $mysql_host = "localhost";
+    static string $mysql_host = "passky-mysql";
     static string $mysql_database = "passky";
     static string $mysql_username = "passky";
     static string $mysql_password = "uDWjSd8wB2HRBHei489o";
