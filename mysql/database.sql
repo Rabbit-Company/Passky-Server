@@ -6,13 +6,13 @@ Database: MySQL 8.0
 */
 
 -- Create database section -------------------------------------------------
-CREATE DATABASE `passky`;
+-- CREATE DATABASE `passky`;
 
 -- Create tables section -------------------------------------------------
 
 -- Table passky.users
 
-CREATE TABLE `passky`.`users`
+CREATE TABLE IF NOT EXISTS `passky`.`users`
 (
   `user_id` Int NOT NULL AUTO_INCREMENT,
   `username` Char(30) NOT NULL,
@@ -27,7 +27,7 @@ ALTER TABLE `passky`.`users` ADD UNIQUE `username` (`username`);
 
 -- Table passky.passwords
 
-CREATE TABLE `passky`.`passwords`
+CREATE TABLE IF NOT EXISTS `passky`.`passwords`
 (
   `password_id` Int NOT NULL AUTO_INCREMENT,
   `website` Char(255) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `passky`.`passwords`
 
 -- Table passky.user_passwords
 
-CREATE TABLE `passky`.`user_passwords`
+CREATE TABLE IF NOT EXISTS `passky`.`user_passwords`
 (
   `password_id` Int NOT NULL,
   `user_id` Int NOT NULL

@@ -1,0 +1,18 @@
+version: '3'
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./mysql/Dockerfile
+    image: passky-mysql
+    restart: always
+    ports:
+      - 3306:3306
+  app:
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile
+    image: passky-php
+    restart: always
+    ports:
+      - 8080:8080
