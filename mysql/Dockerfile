@@ -4,4 +4,4 @@ COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
-CMD ["mysqld", "--init-file=/database.sql"]
+CMD ["mysqld", "--init-file=database.sql"]
