@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   passky-mysql:
     container_name: passky-mysql
@@ -12,7 +12,7 @@ services:
       - MYSQL_USER=passky
       - MYSQL_PASSWORD=uDWjSd8wB2HRBHei489o
     volumes: 
-      - .:/var/lib/mysql
+      - ./passky-mysql:/var/lib/mysql
     ports:
       - 3306:3306
   passky-php:
@@ -22,7 +22,7 @@ services:
       dockerfile: ./php/Dockerfile
     restart: always
     volumes: 
-      - .:/var/www/html
+      - ./passky-php:/usr/src/app
     ports:
       - 8080:8080
     depends_on:

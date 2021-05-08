@@ -1,9 +1,6 @@
 FROM php:8.0-cli
 
-COPY ./Database.php /usr/src/app/
-COPY ./Display.php /usr/src/app/
-COPY ./Errors.php /usr/src/app/
-COPY ./index.php /usr/src/app/
+COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
