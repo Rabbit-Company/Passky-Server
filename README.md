@@ -2,7 +2,7 @@
 ## What is Passky?
 Passky is simple password manager, which works on a zero trust architecture. That means only user will be able to decrypt his passwords. So users can safelly store their passwords on any server. That means if a server on where all passwords are stored get hacked, hacker won't be able to decrypt passwords and data on this server will be useless for him.
 
-**We highly suggest you to deploy Passkey server via docker-compose for better security.**
+**We highly suggest you to deploy Passky server via docker-compose for better security.**
 
 Please be aware that this project is still work in progress.
 
