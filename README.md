@@ -1,15 +1,21 @@
 # Passky-Server
-This is just a server for Passky (Password manager), which includes database and API. We highly suggest you, to host a database and API on the same server for security reasons.
+## What is Passky?
+Passky is simple password manager, which works on a zero trust architecture. That means only user will be able to decrypt his passwords. So users can safelly store their passwords on any server. That means if a server on where all passwords are stored get hacked, hacker won't be able to decrypt passwords and data on this server will be useless for him.
+
+**We highly suggest you to deploy Passky server via docker-compose for better security.**
 
 Please be aware that this project is still work in progress.
 
-# Installation
-## Database
-1. Connect to your database server (**MySQL 8.0+ recommended**)
+## Installation
+### Docker compose
+1. Run command `docker-compose up -d`
+### Manually
+#### Database
+1. Connect to your database server (**MySQL 8.0+ required**)
 2. Copy and paste sql queries from database.sql file to your database server
 3. Database is now ready to be connected with API
 
-## API
+#### API
 1. Copy and paste all .php files to your website hosting provider (**PHP 8.0+ required**)
 2. Open Database.php file and edit host, database name, username and password
 3. API is now ready to be connected with database
