@@ -8,7 +8,7 @@ class Errors{
         "2" => "Password is incorrect!",
         "3" => "Something went wrong while inserting data to database!",
         "4" => "Username is already registered!",
-        "5" => "Password must be between 8 and 255 characters long and have at least one letter, one number and one special character!",
+        "5" => "Password must be encrypted with sha512 algorithm!",
         "6" => "Email is invalid!",
         "7" => "Username doesn't exist!",
         "8" => "You don't have any saved password.",

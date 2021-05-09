@@ -117,7 +117,7 @@ class Database{
 
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(12);
         if(!filter_var($sub_email, FILTER_VALIDATE_EMAIL)) return Display::json(6);
-        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         switch(self::isUsernameTaken($username)){
             case 1:
@@ -151,7 +151,7 @@ class Database{
 
     public static function deleteAccount(string $username, string $password) : string{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
-        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
                 return Display::json(2);
@@ -214,7 +214,7 @@ class Database{
     public static function savePassword(string $username, string $password, string $website, string $username2, string $password2) : string{
 
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
-        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || str_contains($password2, ' ') || str_contains($password2, '"') || str_contains($password2, "\\") || str_contains($password2, "'")) return Display::json(5);
         if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
@@ -267,7 +267,7 @@ class Database{
 
     public static function editPassword(string $username, string $password, int $password_id, string $website, string $username2, string $password2) : string{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
-        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || str_contains($password2, ' ') || str_contains($password2, '"') || str_contains($password2, "\\") || str_contains($password2, "'")) return Display::json(5);
         if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
@@ -320,7 +320,7 @@ class Database{
 
     public static function deletePassword(string $username, string $password, int $password_id) : string{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
-        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -367,7 +367,7 @@ class Database{
     }
 
     public static function getPasswords(string $username, string $password) : string{
-        if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,255}$/i", $password)) return Display::json(5);
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
