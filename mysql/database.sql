@@ -6,7 +6,7 @@ Database: MySQL 8.0
 */
 
 -- Create database section -------------------------------------------------
--- CREATE DATABASE `passky`;
+CREATE DATABASE IF NOT EXISTS `passky`;
 
 -- Create tables section -------------------------------------------------
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `passky`.`users`
   UNIQUE `user_id` (`user_id`)
 );
 
-ALTER TABLE `passky`.`users` ADD UNIQUE `username` (`username`);
+ALTER TABLE `passky`.`users` ADD UNIQUE IF NOT EXISTS `username` (`username`);
 
 -- Table passky.passwords
 
@@ -45,10 +45,10 @@ CREATE TABLE IF NOT EXISTS `passky`.`user_passwords`
   `user_id` Int NOT NULL
 );
 
-ALTER TABLE `passky`.`user_passwords` ADD PRIMARY KEY (`password_id`, `user_id`);
+ALTER TABLE `passky`.`user_passwords` ADD PRIMARY KEY IF NOT EXISTS (`password_id`, `user_id`);
 
 -- Create foreign keys (relationships) section -------------------------------------------------
 
-ALTER TABLE `passky`.`user_passwords` ADD CONSTRAINT `Relationship1` FOREIGN KEY (`password_id`) REFERENCES `passky`.`passwords` (`password_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `passky`.`user_passwords` ADD CONSTRAINT `Relationship1` FOREIGN KEY IF NOT EXISTS (`password_id`) REFERENCES `passky`.`passwords` (`password_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE `passky`.`user_passwords` ADD CONSTRAINT `Relationship2` FOREIGN KEY (`user_id`) REFERENCES `passky`.`users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `passky`.`user_passwords` ADD CONSTRAINT `Relationship2` FOREIGN KEY IF NOT EXISTS (`user_id`) REFERENCES `passky`.`users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

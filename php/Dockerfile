@@ -1,8 +1,8 @@
 FROM php:8.0-cli
 
-COPY . /usr/src/app
+COPY ./php /usr/src/app
 
-WORKDIR /usr/src/app/php
+WORKDIR /usr/src/app
 
 RUN docker-php-ext-install pdo_mysql
 
