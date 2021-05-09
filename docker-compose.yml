@@ -16,8 +16,6 @@ services:
       - /passky:/var/lib/mysql
     networks:
       - passky
-    ports:
-      - 3306:3306
   passky-php:
     container_name: passky-php
     build:
