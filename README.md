@@ -4,12 +4,15 @@ This is just a server for Passky (Password manager), which includes database and
 Please be aware that this project is still work in progress.
 
 # Installation
-## Database
-1. Connect to your database server (**MySQL 8.0+ recommended**)
+### Docker compose
+1. Run command `docker-compose up -d`
+### Manually
+#### Database
+1. Connect to your database server (**MySQL 8.0+ required**)
 2. Copy and paste sql queries from database.sql file to your database server
 3. Database is now ready to be connected with API
 
-## API
+#### API
 1. Copy and paste all .php files to your website hosting provider (**PHP 8.0+ required**)
 2. Open Database.php file and edit host, database name, username and password
 3. API is now ready to be connected with database
