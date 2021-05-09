@@ -1,9 +1,12 @@
 # Passky-Server
-This is just a server for Passky (Password manager), which includes database and API. We highly suggest you, to host a database and API on the same server for security reasons.
+## What is Passky?
+Passky is simple password manager, which works on a zero trust architecture. That means only user will be able to decrypt their passwords. So users can safelly store their passwords on any server. That means if server on where all passwords are stored get hacked, hacker won't be able to decrypt passwords and data on this server will be useless for him.
+
+**We highly suggest you to deploy Passkey server via docker-compose for better security.**
 
 Please be aware that this project is still work in progress.
 
-# Installation
+## Installation
 ### Docker compose
 1. Run command `docker-compose up -d`
 ### Manually
