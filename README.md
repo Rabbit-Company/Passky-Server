@@ -8,7 +8,11 @@ Please be aware that this project is still work in progress.
 
 ## Installation
 ### Docker compose
-1. Run command `docker-compose up -d`
+```yaml
+git clone https://github.com/Rabbit-Company/Passky-Server.git
+cd Passky-Server
+sudo docker-compose up -d
+```
 ### Manually
 #### Database
 1. Connect to your database server (**MySQL 8.0+ required**)
