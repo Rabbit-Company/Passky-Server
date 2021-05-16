@@ -9,8 +9,9 @@ Please be aware that this project is still work in progress.
 ## Installation
 ### Docker compose
 ```yaml
-git clone https://github.com/Rabbit-Company/Passky-Server.git
-cd Passky-Server
+wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.gz
+tar -xzvf passky-server.tar.gz
+cd passky-server
 sudo docker-compose up -d
 ```
 ### Manually
