@@ -33,6 +33,41 @@ class Database{
         return $_SERVER['REMOTE_ADDR'];
     }
 
+    public static function userSentToManyRequests(string $action) : bool{
+        $timer = 0;
+
+        switch($action){
+            case 'createAccount':
+                $timer = Settings::$limiter_createAccount;
+            break;
+            case 'getPasswords':
+                $timer = Settings::$limiter_getPasswords;
+            break;
+            case 'savePassword':
+                $timer = Settings::$limiter_savePassword;
+            break;
+            case 'editPassword':
+                $timer = Settings::$limiter_editPassword;
+            break;
+            case 'deletePassword':
+                $timer = Settings::$limiter_deletePassword;
+            break;
+            case 'deleteAccount':
+                $timer = Settings::$limiter_deleteAccount;
+            break;
+        }
+
+        $ips_array = json_decode(file_get_contents('ips.json'), true);
+
+		if(!empty($ips_array[$action][self::getUserIpAddress()])){
+			if((time() - $ips_array[$action][self::getUserIpAddress()]) < $timer) return true;
+		}
+
+		$ips_array[$action][self::getUserIpAddress()] = time();
+		file_put_contents('ips.json', json_encode($ips_array));
+        return false;
+    }
+
     public static function isPasswordCorrect(string $username, string $password) : int {
         try{
             $username = strtolower($username);

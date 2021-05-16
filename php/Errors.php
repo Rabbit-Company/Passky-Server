@@ -17,10 +17,11 @@ class Errors{
         "11" => "Something went wrong while deleting data from database!",
         "12" => "Username must be between 6 and 30 characters long and can only contains letters, numbers and dots!",
         "13" => "Something went wrong while updating data in database!",
-        "400" => "Action was not provided in POST!",
+        "400" => "Action was not provided in GET!",
         "401" => "Action is invalid!",
         "403" => "You didn't provide all required values in POST.",
         "404" => "Can't connect into API.",
+        "429" => "Too Many Requests",
         "505" => "Something went wrong while connecting to database!",
         "999" => "You don't have permission to use this endpoint."
     );
