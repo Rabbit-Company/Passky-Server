@@ -1,18 +1,14 @@
 <?php
 require_once "Errors.php";
 require_once "Display.php";
+require_once "Settings.php";
 
 class Database{
-
-    static string $mysql_host = "passky-mysql";
-    static string $mysql_database = "passky";
-    static string $mysql_username = "passky";
-    static string $mysql_password = "uDWjSd8wB2HRBHei489o";
 
     public static function isUsernameTaken(string $username) : int{
         try{
             $username = strtolower($username);
-        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        	$conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         	$stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
@@ -32,20 +28,15 @@ class Database{
     }
 
     public static function getUserIpAddress() : string {
-        if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }else{
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
+        if(!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
+        if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        return $_SERVER['REMOTE_ADDR'];
     }
 
     public static function isPasswordCorrect(string $username, string $password) : int {
         try{
             $username = strtolower($username);
-        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        	$conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         	$stmt = $conn->prepare("SELECT password FROM users WHERE username = :username");
@@ -67,7 +58,7 @@ class Database{
 
     public static function getUserCount(){
         try{
-            $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+            $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
@@ -90,7 +81,7 @@ class Database{
 
     public static function getUserId($username){
         try{
-            $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+            $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $username = strtolower($username);
@@ -134,7 +125,7 @@ class Database{
 
         try{
 
-            $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+            $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("INSERT INTO users(username, email, password) VALUES(:username, :email, :password);");
@@ -178,7 +169,7 @@ class Database{
 
         try{
 
-            $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+            $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :user_id;");
@@ -196,7 +187,7 @@ class Database{
 
       try{
         $username = strtolower($username);
-        $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $stmt = $conn->prepare("SELECT p.password_id FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username AND p.password_id = :password_id");
@@ -239,7 +230,7 @@ class Database{
 
         try{
 
-            $conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+            $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $conn->beginTransaction();
@@ -300,7 +291,7 @@ class Database{
         try{
             $website = strtolower($website);
             $username = strtolower($username);
-        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        	$conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("UPDATE passwords SET website = :website, username = :username, password = :password WHERE password_id = :password_id");
@@ -348,7 +339,7 @@ class Database{
 
         try{
             $username = strtolower($username);
-        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        	$conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         	$stmt = $conn->prepare("DELETE FROM user_passwords WHERE password_id = :password_id");
@@ -385,7 +376,7 @@ class Database{
 
         try{
 
-        	$conn = new PDO("mysql:host=" . self::$mysql_host . ";dbname=" . self::$mysql_database, self::$mysql_username, self::$mysql_password);
+        	$conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         	$stmt = $conn->prepare("SELECT p.password_id AS id, p.website, p.username, p.password FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username");
