@@ -22,5 +22,5 @@ sudo docker-compose up -d
 
 #### API
 1. Copy and paste all .php files to your website hosting provider (**PHP 8.0+ required**)
-2. Open Database.php file and edit host, database name, username and password
+2. Open Settings.php file and edit host, database name, username and password
 3. API is now ready to be connected with database
