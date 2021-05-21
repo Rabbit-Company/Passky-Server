@@ -36,26 +36,16 @@ class Database{
     public static function userSentToManyRequests(string $action) : bool{
         $timer = 0;
 
-        switch($action){
-            case 'createAccount':
-                $timer = Settings::$limiter_createAccount;
-            break;
-            case 'getPasswords':
-                $timer = Settings::$limiter_getPasswords;
-            break;
-            case 'savePassword':
-                $timer = Settings::$limiter_savePassword;
-            break;
-            case 'editPassword':
-                $timer = Settings::$limiter_editPassword;
-            break;
-            case 'deletePassword':
-                $timer = Settings::$limiter_deletePassword;
-            break;
-            case 'deleteAccount':
-                $timer = Settings::$limiter_deleteAccount;
-            break;
-        }
+        $timerOptions = [
+            'createAccount' => Settings::$limiter_createAccount,
+            'getPasswords' => Settings::$limiter_getPasswords,
+            'savePassword' => Settings::$limiter_savePassword,
+            'editPassword' => Settings::$limiter_editPassword,
+            'deletePassword' => Settings::$limiter_deletePassword,
+            'deleteAccount' => Settings::$limiter_deleteAccount
+        ];
+
+        $timer = $timerOptions[$action];
 
         $ips_array = json_decode(file_get_contents('ips.json'), true);
 
