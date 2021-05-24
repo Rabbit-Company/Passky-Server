@@ -40,6 +40,7 @@ class Database{
             'createAccount' => Settings::$limiter_createAccount,
             'getPasswords' => Settings::$limiter_getPasswords,
             'savePassword' => Settings::$limiter_savePassword,
+            'importPasswords' => Settings::$limiter_importPasswords,
             'editPassword' => Settings::$limiter_editPassword,
             'deletePassword' => Settings::$limiter_deletePassword,
             'deleteAccount' => Settings::$limiter_deleteAccount
@@ -297,13 +298,75 @@ class Database{
         $conn = null;
     }
 
-    public static function importPasswords(string $json_passwords) : string{
+    public static function importPasswords(string $username, string $password, string $json_passwords) : string{
+
+        if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+
         $password_obj = json_decode($json_passwords, true);
         if($password_obj === null && json_last_error() !== JSON_ERROR_NONE) return Display::json(14);
-        foreach($password_obj as &$password_data){
 
+        switch(self::isPasswordCorrect($username, $password)){
+            case 0:
+                return Display::json(2);
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
         }
-        
+
+        $user_id = self::getUserId($username);
+        if($user_id == null) return Display::json(1);
+
+        $password_count = self::getPasswordCount($user_id);
+        if($password_count == null) return Display::json(505);
+        if($password_count + count($password_obj) >= Settings::$max_passwords) return Display::json(16);
+
+        $num_success = 0;
+        $num_error = 0;
+
+        foreach($password_obj as &$password_data){
+            if(!(strlen($password_data["password"]) >= 8 && strlen($password_data["password"]) <= 255) || str_contains($password_data["password"], ' ') || str_contains($password_data["password"], '"') || str_contains($password_data["password"], "\\") || str_contains($password_data["password"], "'")){ $num_error++; continue; }
+            if(!(strlen($password_data["username"]) >= 3 && strlen($password_data["username"]) <= 255) || str_contains($password_data["username"], ' ') || str_contains($password_data["username"], '"') || str_contains($password_data["username"], "\\") || str_contains($password_data["username"], "'")){ $num_error++; continue; }
+            if(false === filter_var($password_data["website"], FILTER_VALIDATE_DOMAIN) || strlen($password_data["website"]) > 255 || str_contains($password_data["website"], ' ') || str_contains($password_data["website"], '"') || str_contains($password_data["website"], "\\") || str_contains($password_data["website"], "'")){ $num_error++; continue; }
+
+            $website = strtolower($password_data["website"]);
+
+            try{
+
+                $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
+                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+                $conn->beginTransaction();
+    
+                $stmt = $conn->prepare("INSERT INTO passwords(website, username, password) VALUES(:website, :username, :password);");
+                $stmt->bindParam(':website',  $website, PDO::PARAM_STR);
+                $stmt->bindParam(':username', $password_data["username"], PDO::PARAM_STR);
+                $stmt->bindParam(':password', $password_data["password"], PDO::PARAM_STR);
+    
+                $stmt->execute();
+                $password_id = $conn->lastInsertId("password_id");
+    
+                $stmt = $conn->prepare("INSERT INTO user_passwords(password_id, user_id) VALUES(:password_id, :user_id);");
+                $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+                $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    
+                $stmt->execute();
+    
+                ($conn->commit()) ? $num_success++ : $num_error++;
+            }catch(PDOException $e) {
+                $num_error++;
+            }
+            $conn = null;
+        }
+
+        $JSON_OBJ = new StdClass;
+        $JSON_OBJ->import_success = $num_success;
+        $JSON_OBJ->import_error = $num_error;
+        return Display::json(0, $JSON_OBJ);
     }
 
     public static function editPassword(string $username, string $password, int $password_id, string $website, string $username2, string $password2) : string{

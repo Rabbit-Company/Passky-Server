@@ -40,6 +40,7 @@ class Settings{
     public static int $limiter_deletePassword = 2;
     public static int $limiter_createAccount = 30;
     public static int $limiter_deleteAccount = 30;
+    public static int $limiter_importPasswords = 30;
 
 }
 

@@ -61,6 +61,19 @@ switch($_GET['action']){
 
 		echo Database::savePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['website'], $_POST['username'], $_POST['password']);
 	break;
+	case "importPasswords":
+		if(Database::userSentToManyRequests('importPasswords')){
+			echo Display::json(429);
+			return;
+		}
+
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || file_get_contents('php://input') == null){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::importPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], file_get_contents('php://input'));
+	break;
 	case "editPassword":
 		if(Database::userSentToManyRequests('editPassword')){
 			echo Display::json(429);

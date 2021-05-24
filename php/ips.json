@@ -1,8 +1,1 @@
-{
-    "getPasswords": {},
-    "savePassword": {},
-    "editPassword": {},
-    "deletePassword": {},
-    "createAccount": {},
-    "deleteAccount": {}
-}
+{"getPasswords":[],"savePassword":[],"importPasswords":{"127.0.0.1":1621854589},"editPassword":[],"deletePassword":[],"createAccount":[],"deleteAccount":[]}
