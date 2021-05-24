@@ -89,17 +89,25 @@ class Database{
             $stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
             $stmt->execute();
 
-    		if($stmt->rowCount() == 1){
-                $row = $stmt->fetch();
-                $JSON_OBJ = new StdClass;
-                $JSON_OBJ->amount = $row['amount'];
-                return Display::json(0, $JSON_OBJ);
-    		}else{
-                return Display::json(505);
-    		}
-
+            return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : null;
         }catch(PDOException $e) {
-            return Display::json(505);
+            return null;
+        }
+        $conn = null;
+    }
+
+    public static function getPasswordCount($user_id){
+        try{
+            $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM user_passwords WHERE user_id = :user_id;");
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : null;
+        }catch(PDOException $e) {
+            return null;
         }
         $conn = null;
     }
@@ -128,6 +136,10 @@ class Database{
     }
 
     public static function createAccount(string $username, string $email, string $password) : string{
+
+        $amount_of_accounts = self::getUserCount();
+        if($amount_of_accounts == null) return Display::json(505);
+        if($amount_of_accounts >= Settings::$max_accounts) return Display::json(15);
 
         $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
@@ -253,6 +265,10 @@ class Database{
 
         if($user_id == null) return Display::json(1);
 
+        $password_count = self::getPasswordCount($user_id);
+        if($password_count == null) return Display::json(505);
+        if($password_count >= Settings::$max_passwords) return Display::json(16);
+
         try{
 
             $conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
@@ -279,6 +295,15 @@ class Database{
             return Display::json(505);
         }
         $conn = null;
+    }
+
+    public static function importPasswords(string $json_passwords) : string{
+        $password_obj = json_decode($json_passwords, true);
+        if($password_obj === null && json_last_error() !== JSON_ERROR_NONE) return Display::json(14);
+        foreach($password_obj as &$password_data){
+
+        }
+        
     }
 
     public static function editPassword(string $username, string $password, int $password_id, string $website, string $username2, string $password2) : string{

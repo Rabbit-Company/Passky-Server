@@ -17,6 +17,17 @@ class Settings{
 
 /*
 
+    ACCOUNT SETTINGS
+
+    In this section you can set account limits.
+
+*/
+
+    public static int $max_accounts = 100;      // How many accounts can be created on this server.
+    public static int $max_passwords = 1000;    // How many passwords can each account have.
+
+/*
+
     API CALL LIMITER (Brute force mitigation)
     
     In this section you can set how many seconds users needs to wait until they can make new request to API for spacific action.
