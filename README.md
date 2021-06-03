@@ -4,8 +4,6 @@ Passky is simple password manager, which works on a zero trust architecture. Tha
 
 **We highly suggest you to deploy Passky server via docker-compose for better security.**
 
-Please be aware that this project is still work in progress.
-
 ## Installation
 
 ### Docker compose
