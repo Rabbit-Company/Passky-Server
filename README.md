@@ -7,6 +7,16 @@ Passky is simple password manager, which works on a zero trust architecture. Tha
 ## Installation
 
 ### Docker compose
+#### Docker (Debian & Ubuntu)
+```yaml
+# Install docker
+curl -sSL https://get.docker.com/ | CHANNEL=stable bash
+# Start docker on boot
+sudo systemctl enable --now docker
+# Install docker compose
+sudo apt install docker-compose
+```
+#### Passky containers
 ```yaml
 wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.gz
 tar -xzvf passky-server.tar.gz
