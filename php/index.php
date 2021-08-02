@@ -113,6 +113,19 @@ switch($_GET['action']){
 
 		echo Database::deleteAccount($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 	break;
+	case "forgotUsername":
+		if(Database::userSentToManyRequests('forgotUsername')){
+			echo Display::json(429);
+			return;
+		}
+	
+		if(!isset($_POST['email'])){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::forgotUsername($_POST['email']);
+    break;
     default:
     	echo Display::json(401);
     break;

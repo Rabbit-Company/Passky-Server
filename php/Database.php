@@ -1,7 +1,15 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 require_once "Errors.php";
 require_once "Display.php";
 require_once "Settings.php";
+
+require_once 'PHPMailer/src/Exception.php';
+require_once 'PHPMailer/src/PHPMailer.php';
+require_once 'PHPMailer/src/SMTP.php';
 
 class Database{
 
@@ -43,7 +51,8 @@ class Database{
             'importPasswords' => Settings::$limiter_importPasswords,
             'editPassword' => Settings::$limiter_editPassword,
             'deletePassword' => Settings::$limiter_deletePassword,
-            'deleteAccount' => Settings::$limiter_deleteAccount
+            'deleteAccount' => Settings::$limiter_deleteAccount,
+            'forgotUsername' => Settings::$limiter_forgotUsername
         ];
 
         $timer = $timerOptions[$action];
@@ -502,6 +511,66 @@ class Database{
                 return Display::json(0, $JSON_OBJ);
         	}else{
                 return Display::json(8);
+        	}
+
+        }catch(PDOException $e) {
+            return Display::json(505);
+        }
+        $conn = null;
+    }
+
+    public static function forgotUsername(string $email) : string{
+        $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
+        if(!filter_var($sub_email, FILTER_VALIDATE_EMAIL)) return Display::json(6);
+
+        try{
+
+        	$conn = new PDO("mysql:host=" . Settings::$mysql_host . ";dbname=" . Settings::$mysql_database, Settings::$mysql_username, Settings::$mysql_password);
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        	$stmt = $conn->prepare("SELECT username FROM users WHERE email = :email");
+        	$stmt->bindParam(':email', $sub_email, PDO::PARAM_STR);
+        	$stmt->execute();
+
+        	if($stmt->rowCount() > 0){
+                $message = "Usernames registered with your email: <ul>";
+
+                foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as &$array_username){
+                    $message .= "<li>" . $array_username["username"] . "</li>";
+                }
+
+                $message .= "</ul>";
+
+                $mail = new PHPMailer(true);
+
+                try {
+                    //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+                    //$mail->SMTPDebug = 2;
+                    $mail->isSMTP();
+                    $mail->Host       = Settings::$mail_host;
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = Settings::$mail_username;
+                    $mail->Password   = Settings::$mail_password;
+                    $mail->SMTPSecure = (Settings::$mail_tls) ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+                    $mail->Port       = Settings::$mail_port;
+                
+                    $mail->setFrom(Settings::$mail_username, 'Passky');
+                    $mail->addAddress($email);
+                    $mail->addReplyTo(Settings::$mail_username, 'Passky');
+                
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Usernames under your email';
+                    $mail->Body    = $message;
+                    $mail->AltBody = $message;
+
+                    if($mail->send()) return Display::json(0);
+                
+                    return Display::json(505);
+                } catch (Exception $e) {
+                    return Display::json(505);
+                }
+        	}else{
+                return Display::json(17);
         	}
 
         }catch(PDOException $e) {

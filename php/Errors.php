@@ -20,6 +20,7 @@ class Errors{
         "14" => "Json is invalid!",
         "15" => "This server can't accept more users!",
         "16" => "You have reached maximum amount of stored passwords!",
+        "17" => "Account with this email doesn't exist!",
         "400" => "Action was not provided in GET!",
         "401" => "Action is invalid!",
         "403" => "You didn't provide all required values in POST.",
