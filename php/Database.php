@@ -533,19 +533,29 @@ class Database{
         	$stmt->execute();
 
         	if($stmt->rowCount() > 0){
-                $message = "Usernames registered with your email: <ul>";
+                $message = "Usernames registered with your email: ";
+
+                $html = "<p>Usernames registered with your email: <ul>";
 
                 foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as &$array_username){
-                    $message .= "<li>" . $array_username["username"] . "</li>";
+                    $html .= "<li style='font-weight: bold;'>" . $array_username["username"] . "</li>";
+                    $message .= $array_username["username"] . ", ";
                 }
 
-                $message .= "</ul>";
+                $html .= "</ul></p>";
 
                 $mail = new PHPMailer(true);
 
                 try {
-                    //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
-                    //$mail->SMTPDebug = 2;
+                    /*
+
+                    Uncomment this if you want to debug SMTP connection
+
+                    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+                    $mail->SMTPDebug = 2;
+                    
+                    */
+
                     $mail->isSMTP();
                     $mail->Host       = Settings::$mail_host;
                     $mail->SMTPAuth   = true;
@@ -560,14 +570,14 @@ class Database{
                 
                     $mail->isHTML(true);
                     $mail->Subject = 'Usernames under your email';
-                    $mail->Body    = $message;
+                    $mail->Body    = $html;
                     $mail->AltBody = $message;
 
                     if($mail->send()) return Display::json(0);
                 
                     return Display::json(505);
                 } catch (Exception $e) {
-                    return Display::json(505);
+                    return Display::json(506);
                 }
         	}else{
                 return Display::json(17);

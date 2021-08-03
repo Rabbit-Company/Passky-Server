@@ -27,6 +27,7 @@ class Errors{
         "404" => "Can't connect into API.",
         "429" => "Too Many Requests",
         "505" => "Something went wrong while connecting to database!",
+        "506" => "Something went wrong while connecting to the mail server!",
         "999" => "You don't have permission to use this endpoint."
     );
 
