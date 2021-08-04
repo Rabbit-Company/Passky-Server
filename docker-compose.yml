@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: ./mysql/Dockerfile
     restart: always
+    # If you change environment values, make sure to change them in php/Settings.php file too. So API will be able to communicate with database.
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_DATABASE=passky
