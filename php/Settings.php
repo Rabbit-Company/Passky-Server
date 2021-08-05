@@ -13,7 +13,7 @@ class Settings{
     public static string $mysql_host     = "passky-mysql";
     public static string $mysql_database = "passky";
     public static string $mysql_username = "passky";
-    public static string $mysql_password = "uDWjSd8wB2HRBHei489o";
+    public static string $mysql_password = getenv("MYSQL_PASSWORD");
 
 /*
 
