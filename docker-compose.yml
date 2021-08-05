@@ -7,12 +7,11 @@ services:
       context: .
       dockerfile: ./mysql/Dockerfile
     restart: always
-    # If you are changing environment values, they need to be changed in the php/Settings.php file too. Otherwise the API can not communicate with the database.
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_DATABASE=passky
-      - MYSQL_USER=passky
-      - MYSQL_PASSWORD=uDWjSd8wB2HRBHei489o
+      - MYSQL_USER
+      - MYSQL_PASSWORD
     volumes:
       - /passky:/var/lib/mysql
     networks:
@@ -23,6 +22,29 @@ services:
       context: .
       dockerfile: ./php/Dockerfile
     restart: always
+    environment:
+      # Database
+      - MYSQL_HOST
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      # Mail
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
+      - MAIL_USE_TLS
+      # Account
+      - ACCOUNT_MAX
+      - ACCOUNT_MAX_PASSWORDS
+      # Limiter
+      - LIMITER_GET_PASSWORDS
+      - LIMITER_SAVE_PASSWORD
+      - LIMITER_EDIT_PASSWORD
+      - LIMITER_DELETE_PASSWORD
+      - LIMITER_CREATE_ACCOUNT
+      - LIMITER_DELETE_ACCOUNT
+      - LIMITER_IMPORT_PASSWORDS
+      - LIMITER_FORGOT_USERNAME
     networks:
       - passky
     ports:
