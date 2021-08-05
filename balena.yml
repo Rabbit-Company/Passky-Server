@@ -1,0 +1,27 @@
+
+name: passky
+type: sw.application
+description: >-
+  Passky for Balena
+assets:
+  repository:
+    type: blob.asset
+    data:
+      url: 'https://github.com/Kore-Development/Passky-Server'
+  logo:
+    type: blob.asset
+    data:
+      url: >-
+        https://passky.org/images/logo.png
+data:
+  applicationEnvironmentVariables:
+    - MYSQL_PASSWORD: uDWjSd8wB2HRBHei489o
+  defaultDeviceType: raspberry-pi
+  supportedDeviceTypes:
+    - raspberry-pi
+    - raspberry-pi2
+    - raspberrypi3
+    - raspberrypi4-64
+    - fincm3
+    - intel-nuc
+version: 3.5.2
