@@ -12,7 +12,7 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_DATABASE=passky
       - MYSQL_USER=passky
-      - MYSQL_PASSWORD=uDWjSd8wB2HRBHei489o
+      - MYSQL_PASSWORD
     volumes:
       - /passky:/var/lib/mysql
     networks:
@@ -23,6 +23,8 @@ services:
       context: .
       dockerfile: ./php/Dockerfile
     restart: always
+    environment:
+      - MYSQL_PASSWORD
     networks:
       - passky
     ports:
