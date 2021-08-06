@@ -3,6 +3,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+use PragmaRX\Google2FA\Google2FA;
+
 require_once "Errors.php";
 require_once "Display.php";
 require_once "Settings.php";
@@ -10,6 +12,11 @@ require_once "Settings.php";
 require_once 'PHPMailer/src/Exception.php';
 require_once 'PHPMailer/src/PHPMailer.php';
 require_once 'PHPMailer/src/SMTP.php';
+
+require_once 'Google2fa/Support/Constants.php';
+require_once 'Google2fa/Support/Base32.php';
+require_once 'Google2fa/Support/QRCode.php';
+require_once 'Google2fa/Google2FA.php';
 
 class Database{
 
