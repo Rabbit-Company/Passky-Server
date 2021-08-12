@@ -2,16 +2,15 @@ version: '3'
 services:
   passky-mysql:
     container_name: passky-mysql
-    command: --default-authentication-plugin=mysql_native_password
     build:
       context: .
       dockerfile: ./mysql/Dockerfile
     restart: always
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_DATABASE=passky
       - MYSQL_USER
       - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
     volumes:
       - /passky:/var/lib/mysql
     networks:

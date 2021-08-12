@@ -256,7 +256,7 @@ class Database{
       $conn = null;
     }
 
-    public static function savePassword(string $username, string $password, string $website, string $username2, string $password2) : string{
+    public static function savePassword(string $username, string $password, string $website, string $username2, string $password2, string $message) : string{
 
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
@@ -264,6 +264,7 @@ class Database{
         if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || str_contains($password2, ' ') || str_contains($password2, '"') || str_contains($password2, "\\") || str_contains($password2, "'")) return Display::json(5);
         if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
         if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ') || str_contains($website, '"') || str_contains($website, "\\") || str_contains($website, "'")) return Display::json(9);
+        if(strlen($message) > 10000) return Display::json(18); 
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -293,10 +294,11 @@ class Database{
 
             $conn->beginTransaction();
 
-            $stmt = $conn->prepare("INSERT INTO passwords(website, username, password) VALUES(:website, :username, :password);");
+            $stmt = $conn->prepare("INSERT INTO passwords(website, username, password, message) VALUES(:website, :username, :password, :message);");
             $stmt->bindParam(':website', $website, PDO::PARAM_STR);
             $stmt->bindParam(':username', $username2, PDO::PARAM_STR);
             $stmt->bindParam(':password', $password2, PDO::PARAM_STR);
+            $stmt->bindParam(':message', $message, PDO::PARAM_STR);
 
             $stmt->execute();
             $password_id = $conn->lastInsertId("password_id");
@@ -348,6 +350,7 @@ class Database{
             if(!(strlen($password_data["password"]) >= 8 && strlen($password_data["password"]) <= 255) || str_contains($password_data["password"], ' ') || str_contains($password_data["password"], '"') || str_contains($password_data["password"], "\\") || str_contains($password_data["password"], "'")){ $num_error++; continue; }
             if(!(strlen($password_data["username"]) >= 3 && strlen($password_data["username"]) <= 255) || str_contains($password_data["username"], ' ') || str_contains($password_data["username"], '"') || str_contains($password_data["username"], "\\") || str_contains($password_data["username"], "'")){ $num_error++; continue; }
             if(false === filter_var($password_data["website"], FILTER_VALIDATE_DOMAIN) || strlen($password_data["website"]) > 255 || str_contains($password_data["website"], ' ') || str_contains($password_data["website"], '"') || str_contains($password_data["website"], "\\") || str_contains($password_data["website"], "'")){ $num_error++; continue; }
+            if(strlen($password_data["message"]) > 10000){ $num_error++; continue; }
 
             $website = strtolower($password_data["website"]);
 
@@ -358,10 +361,11 @@ class Database{
     
                 $conn->beginTransaction();
     
-                $stmt = $conn->prepare("INSERT INTO passwords(website, username, password) VALUES(:website, :username, :password);");
+                $stmt = $conn->prepare("INSERT INTO passwords(website, username, password, message) VALUES(:website, :username, :password, :message);");
                 $stmt->bindParam(':website',  $website, PDO::PARAM_STR);
                 $stmt->bindParam(':username', $password_data["username"], PDO::PARAM_STR);
                 $stmt->bindParam(':password', $password_data["password"], PDO::PARAM_STR);
+                $stmt->bindParam(':message', $password_data["message"], PDO::PARAM_STR);
     
                 $stmt->execute();
                 $password_id = $conn->lastInsertId("password_id");
@@ -385,13 +389,14 @@ class Database{
         return Display::json(0, $JSON_OBJ);
     }
 
-    public static function editPassword(string $username, string $password, int $password_id, string $website, string $username2, string $password2) : string{
+    public static function editPassword(string $username, string $password, int $password_id, string $website, string $username2, string $password2, string $message) : string{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || str_contains($password2, ' ') || str_contains($password2, '"') || str_contains($password2, "\\") || str_contains($password2, "'")) return Display::json(5);
         if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
         if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ') || str_contains($website, '"') || str_contains($website, "\\") || str_contains($website, "'")) return Display::json(9);
+        if(strlen($message) > 10000) return Display::json(18);
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -423,10 +428,11 @@ class Database{
         	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $conn->prepare("UPDATE passwords SET website = :website, username = :username, password = :password WHERE password_id = :password_id");
+            $stmt = $conn->prepare("UPDATE passwords SET website = :website, username = :username, password = :password, message = :message WHERE password_id = :password_id");
             $stmt->bindParam(':website', $website, PDO::PARAM_STR);
             $stmt->bindParam(':username', $username2, PDO::PARAM_STR);
             $stmt->bindParam(':password', $password2, PDO::PARAM_STR);
+            $stmt->bindParam(':message', $message, PDO::PARAM_STR);
             $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
         	$stmt->execute();
 
@@ -508,7 +514,7 @@ class Database{
         	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        	$stmt = $conn->prepare("SELECT p.password_id AS id, p.website, p.username, p.password FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username");
+        	$stmt = $conn->prepare("SELECT p.password_id AS id, p.website, p.username, p.password, p.message FROM passwords p JOIN user_passwords up ON up.password_id = p.password_id JOIN users u ON u.user_id = up.user_id WHERE u.username = :username");
         	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 

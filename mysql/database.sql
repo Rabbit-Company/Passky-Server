@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `passky`.`passwords`
   `website` Char(255) NOT NULL,
   `username` Char(255) NOT NULL,
   `password` Char(255) NOT NULL,
-  `message` TEXT,
+  `message` VarChar(10000),
   PRIMARY KEY (`password_id`),
   UNIQUE `password_id` (`password_id`)
 );

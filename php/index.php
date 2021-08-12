@@ -54,12 +54,12 @@ switch($_GET['action']){
 			return;
 		}
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::savePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['website'], $_POST['username'], $_POST['password']);
+		echo Database::savePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message']);
 	break;
 	case "importPasswords":
 		if(Database::userSentToManyRequests('importPasswords')){
@@ -80,12 +80,12 @@ switch($_GET['action']){
 			return;
 		}
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::editPassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id'], $_POST['website'], $_POST['username'], $_POST['password']);
+		echo Database::editPassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message']);
 	break;
 	case "deletePassword":
 		if(Database::userSentToManyRequests('deletePassword')){
