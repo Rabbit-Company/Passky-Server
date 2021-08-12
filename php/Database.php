@@ -64,14 +64,14 @@ class Database{
 
         $timer = $timerOptions[$action];
 
-        $ips_array = json_decode(file_get_contents('ips.json'), true);
+        $ips_array = json_decode(file_get_contents('../api-limiter.json'), true);
 
 		if(!empty($ips_array[$action][self::getUserIpAddress()])){
 			if((time() - $ips_array[$action][self::getUserIpAddress()]) < $timer) return true;
 		}
 
 		$ips_array[$action][self::getUserIpAddress()] = time();
-		file_put_contents('ips.json', json_encode($ips_array));
+		file_put_contents('../api-limiter.json', json_encode($ips_array));
         return false;
     }
 

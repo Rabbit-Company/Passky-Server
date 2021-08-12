@@ -1,11 +1,27 @@
 FROM php:8.0-cli
 
+# Copy all files in php folder to docker container
 COPY ./php /usr/src/app
 
+# Switch workdir
 WORKDIR /usr/src/app
 
+# Install Mysql extension for PHP
 RUN docker-php-ext-install pdo_mysql
 
+# Expose port 8080 to other containers on the local network.
 EXPOSE 8080
 
+# Create json file for API Call Limiter in /usr/src folder which can't be accessed by public
+RUN echo "{}" > ../api-limiter.json
+
+# Install cron (So we can execute PHP code every X minutes)
+RUN apt-get update && apt-get install -y cron
+
+# Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
+COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab
+# Make script executable
+RUN chmod +x /etc/cron.daily/passky-daily-crontab
+
+# Start PHP server on port 8080
 CMD ["php", "-S", "0.0.0.0:8080"]

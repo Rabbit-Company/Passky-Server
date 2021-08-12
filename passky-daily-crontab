@@ -1,0 +1,3 @@
+#!/bin/sh
+
+php -r "file_put_contents('/usr/src/api-limiter.json', '{}');"
