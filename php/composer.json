@@ -1,0 +1,7 @@
+{
+    "require": {
+        "paragonie/constant_time_encoding": "v2.4.0",
+        "pragmarx/google2fa": "8.0.0",
+        "phpmailer/phpmailer": "v6.5.0"
+    }
+}

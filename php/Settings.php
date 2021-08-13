@@ -98,6 +98,10 @@ class Settings{
         return getenv("LIMITER_FORGOT_USERNAME", true) ?: getenv("LIMITER_FORGOT_USERNAME") ?: 600;
     }
 
+    public static function getLimiterEnable2fa() : int{
+        return getenv("LIMITER_ENABLE_2FA", true) ?: getenv("LIMITER_ENABLE_2FA") ?: 600;
+    }
+
 }
 
 ?>

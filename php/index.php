@@ -41,12 +41,12 @@ switch($_GET['action']){
 			return;
 		}
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['otp'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::getPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+		echo Database::getPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
 	break;
 	case "savePassword":
 		if(Database::userSentToManyRequests('savePassword')){
@@ -125,6 +125,19 @@ switch($_GET['action']){
 		}
 
 		echo Database::forgotUsername($_POST['email']);
+    break;
+	case "enable2fa":
+		if(Database::userSentToManyRequests('enable2fa')){
+			echo Display::json(429);
+			return;
+		}
+	
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::enable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
     break;
     default:
     	echo Display::json(401);

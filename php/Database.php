@@ -1,22 +1,15 @@
 <?php
+use PragmaRX\Google2FA\Google2FA;
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
-use PragmaRX\Google2FA\Google2FA;
 
 require_once "Errors.php";
 require_once "Display.php";
 require_once "Settings.php";
 
-require_once 'PHPMailer/src/Exception.php';
-require_once 'PHPMailer/src/PHPMailer.php';
-require_once 'PHPMailer/src/SMTP.php';
-
-require_once 'Google2fa/Support/Constants.php';
-require_once 'Google2fa/Support/Base32.php';
-require_once 'Google2fa/Support/QRCode.php';
-require_once 'Google2fa/Google2FA.php';
+require 'vendor/autoload.php';
 
 class Database{
 
@@ -59,7 +52,8 @@ class Database{
             'editPassword' => Settings::getLimiterEditPassword(),
             'deletePassword' => Settings::getLimiterDeletePassword(),
             'deleteAccount' => Settings::getLimiterDeleteAccount(),
-            'forgotUsername' => Settings::getLimiterForgotUsername()
+            'forgotUsername' => Settings::getLimiterForgotUsername(),
+            'enable2fa' => Settings::getLimiterEnable2fa()
         ];
 
         $timer = $timerOptions[$action];
@@ -96,6 +90,57 @@ class Database{
         	return 505;
         }
         $conn = null;
+    }
+
+    public static function is2FaEnabled(string $username) : int {
+        try{
+            $username = strtolower($username);
+        	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        	$stmt = $conn->prepare("SELECT 2fa_secret FROM users WHERE username = :username");
+        	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        	$stmt->execute();
+
+        	if($stmt->rowCount() == 1){
+                $row = $stmt->fetch();
+                return ($row["2fa_secret"] == null) ? 0 : 1;
+        	}else{
+                return 2;
+        	}
+
+        }catch(PDOException $e) {
+        	return 505;
+        }
+        $conn = null;
+    }
+
+    public static function is2FaValid(string $username, string $otp) : int {
+        $username = strtolower($username);
+
+        if(strlen($otp) == 6){
+            try{
+                $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                $stmt = $conn->prepare("SELECT 2fa_secret FROM users WHERE username = :username");
+                $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+                $stmt->execute();
+
+                if($stmt->rowCount() == 1){
+                    $row = $stmt->fetch();
+                    $google2fa = new Google2FA();
+                    return $google2fa->verifyKey($row["2fa_secret"], $otp);
+                }else{
+                    return 2;
+                }
+
+            }catch(PDOException $e) {
+                return 505;
+            }
+            $conn = null;
+        }
+        return 505;
     }
 
     public static function getUserCount(){
@@ -492,12 +537,34 @@ class Database{
         $conn = null;
     }
 
-    public static function getPasswords(string $username, string $password) : string{
+    public static function getPasswords(string $username, string $password, string $otp) : string{
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
                 return Display::json(2);
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
+        switch(self::is2FaEnabled($username)){
+            case 1:
+                switch(self::is2FaValid($username, $otp)){
+                    case 0:
+                        return Display::json(19);
+                    break;
+                    case 2:
+                        return Display::json(1);
+                    break;
+                    case 505:
+                        return Display::json(505);
+                    break;
+                }
             break;
             case 2:
                 return Display::json(1);
@@ -528,6 +595,50 @@ class Database{
 
         }catch(PDOException $e) {
             return Display::json(505);
+        }
+        $conn = null;
+    }
+
+    public static function enable2Fa(string $username, string $password) : string{
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+
+        switch(self::isPasswordCorrect($username, $password)){
+            case 0:
+                return Display::json(2);
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
+        $google2fa = new Google2FA();
+        $secret = $google2fa->generateSecretKey();
+
+        $codes = "";
+        for($i = 0; $i < 10; $i++) $codes .= rand(100000,999999) . ";";
+        $codes = substr($codes, 0, -1);
+
+        try{
+            $username = strtolower($username);
+        	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        	$stmt = $conn->prepare("UPDATE users SET 2fa_secret = :secret WHERE username = :username");
+            $stmt->bindParam(':secret', $secret, PDO::PARAM_STR);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        	$stmt->execute();
+
+        	$stmt = $conn->prepare("UPDATE users SET backup_codes = :codes WHERE username = :username");
+            $stmt->bindParam(':codes', $codes, PDO::PARAM_STR);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        	$stmt->execute();
+
+        	return Display::json(0);
+        }catch(PDOException $e) {
+        	return Display::json(505);
         }
         $conn = null;
     }
