@@ -35,6 +35,13 @@ class Database{
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
+    public static function generateCodes() : string{
+        $codes = "";
+        for($i = 0; $i < 10; $i++) $codes .= rand(100000,999999) . ";";
+        $codes = substr($codes, 0, -1);
+        return $codes;
+    }
+
     public static function getUserIpAddress() : string {
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
         if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -53,7 +60,8 @@ class Database{
             'deletePassword' => Settings::getLimiterDeletePassword(),
             'deleteAccount' => Settings::getLimiterDeleteAccount(),
             'forgotUsername' => Settings::getLimiterForgotUsername(),
-            'enable2fa' => Settings::getLimiterEnable2fa()
+            'enable2fa' => Settings::getLimiterEnable2fa(),
+            'disable2fa' => Settings::getLimiterDisable2fa()
         ];
 
         $timer = $timerOptions[$action];
@@ -139,8 +147,15 @@ class Database{
                 return 505;
             }
             $conn = null;
+        }else{
+            $otp_array = json_decode(file_get_contents('../otp.json'), true);
+
+            if(!empty($otp_array[$username])){
+                if($otp_array[$username] == $otp) return 1;
+            }
+    
+            return 0;
         }
-        return 505;
     }
 
     public static function getUserCount(){
@@ -552,9 +567,20 @@ class Database{
             break;
         }
 
+        $secret = false;
         switch(self::is2FaEnabled($username)){
             case 1:
                 switch(self::is2FaValid($username, $otp)){
+                    case 1:
+                        $otp_array = json_decode(file_get_contents('../otp.json'), true);
+                        if(empty($otp_array[$username])){
+                            $secret = self::encryptPassword(self::generateCodes());
+                            $otp_array[$username] = $secret;
+                            file_put_contents('../otp.json', json_encode($otp_array));
+                        }else{
+                            $secret = $otp_array[$username];
+                        }
+                    break;
                     case 0:
                         return Display::json(19);
                     break;
@@ -587,10 +613,13 @@ class Database{
 
         	if($stmt->rowCount() > 0){
                 $JSON_OBJ = new StdClass;
+                $JSON_OBJ->secret = $secret;
                 $JSON_OBJ->passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return Display::json(0, $JSON_OBJ);
         	}else{
-                return Display::json(8);
+                $JSON_OBJ = new StdClass;
+                $JSON_OBJ->secret = $secret;
+                return Display::json(8, $JSON_OBJ);
         	}
 
         }catch(PDOException $e) {
@@ -617,9 +646,7 @@ class Database{
         $google2fa = new Google2FA();
         $secret = $google2fa->generateSecretKey();
 
-        $codes = "";
-        for($i = 0; $i < 10; $i++) $codes .= rand(100000,999999) . ";";
-        $codes = substr($codes, 0, -1);
+        $codes = self::generateCodes();
 
         try{
             $username = strtolower($username);
@@ -633,6 +660,63 @@ class Database{
 
         	$stmt = $conn->prepare("UPDATE users SET backup_codes = :codes WHERE username = :username");
             $stmt->bindParam(':codes', $codes, PDO::PARAM_STR);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        	$stmt->execute();
+
+        	return Display::json(0);
+        }catch(PDOException $e) {
+        	return Display::json(505);
+        }
+        $conn = null;
+    }
+
+    public static function disable2Fa(string $username, string $password, string $otp) : string{
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+
+        switch(self::isPasswordCorrect($username, $password)){
+            case 0:
+                return Display::json(2);
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
+        switch(self::is2FaEnabled($username)){
+            case 1:
+                switch(self::is2FaValid($username, $otp)){
+                    case 0:
+                        return Display::json(19);
+                    break;
+                    case 2:
+                        return Display::json(1);
+                    break;
+                    case 505:
+                        return Display::json(505);
+                    break;
+                }
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
+        try{
+            $username = strtolower($username);
+        	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        	$stmt = $conn->prepare("UPDATE users SET 2fa_secret = null WHERE username = :username");
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        	$stmt->execute();
+
+        	$stmt = $conn->prepare("UPDATE users SET backup_codes = null WHERE username = :username");
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 

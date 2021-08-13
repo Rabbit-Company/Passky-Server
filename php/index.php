@@ -139,6 +139,19 @@ switch($_GET['action']){
 
 		echo Database::enable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
     break;
+	case "disable2fa":
+		if(Database::userSentToManyRequests('disable2fa')){
+			echo Display::json(429);
+			return;
+		}
+	
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['otp'])){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::disable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
+    break;
     default:
     	echo Display::json(401);
     break;

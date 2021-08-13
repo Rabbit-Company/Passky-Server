@@ -102,6 +102,10 @@ class Settings{
         return getenv("LIMITER_ENABLE_2FA", true) ?: getenv("LIMITER_ENABLE_2FA") ?: 600;
     }
 
+    public static function getLimiterDisable2fa() : int{
+        return getenv("LIMITER_DISABLE_2FA", true) ?: getenv("LIMITER_DISABLE_2FA") ?: 600;
+    }
+
 }
 
 ?>
