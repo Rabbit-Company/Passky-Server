@@ -254,9 +254,32 @@ class Database{
         $conn = null;
     }
 
-    public static function deleteAccount(string $username, string $password) : string{
+    public static function deleteAccount(string $username, string $password, string $otp) : string{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+
+        switch(self::is2FaEnabled($username)){
+            case 1:
+                switch(self::is2FaValid($username, $otp)){
+                    case 0:
+                        return Display::json(19);
+                    break;
+                    case 2:
+                        return Display::json(1);
+                    break;
+                    case 505:
+                        return Display::json(505);
+                    break;
+                }
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
                 return Display::json(2);
@@ -316,7 +339,7 @@ class Database{
       $conn = null;
     }
 
-    public static function savePassword(string $username, string $password, string $website, string $username2, string $password2, string $message) : string{
+    public static function savePassword(string $username, string $password, string $website, string $username2, string $password2, string $message, string $otp) : string{
 
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
@@ -325,6 +348,28 @@ class Database{
         if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
         if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ') || str_contains($website, '"') || str_contains($website, "\\") || str_contains($website, "'")) return Display::json(9);
         if(strlen($message) > 10000) return Display::json(18);
+
+        switch(self::is2FaEnabled($username)){
+            case 1:
+                switch(self::is2FaValid($username, $otp)){
+                    case 0:
+                        return Display::json(19);
+                    break;
+                    case 2:
+                        return Display::json(1);
+                    break;
+                    case 505:
+                        return Display::json(505);
+                    break;
+                }
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -449,7 +494,7 @@ class Database{
         return Display::json(0, $JSON_OBJ);
     }
 
-    public static function editPassword(string $username, string $password, int $password_id, string $website, string $username2, string $password2, string $message) : string{
+    public static function editPassword(string $username, string $password, int $password_id, string $website, string $username2, string $password2, string $message, string $otp) : string{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
@@ -457,6 +502,28 @@ class Database{
         if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
         if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ') || str_contains($website, '"') || str_contains($website, "\\") || str_contains($website, "'")) return Display::json(9);
         if(strlen($message) > 10000) return Display::json(18);
+
+        switch(self::is2FaEnabled($username)){
+            case 1:
+                switch(self::is2FaValid($username, $otp)){
+                    case 0:
+                        return Display::json(19);
+                    break;
+                    case 2:
+                        return Display::json(1);
+                    break;
+                    case 505:
+                        return Display::json(505);
+                    break;
+                }
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
@@ -504,9 +571,31 @@ class Database{
 
     }
 
-    public static function deletePassword(string $username, string $password, int $password_id) : string{
+    public static function deletePassword(string $username, string $password, int $password_id, string $otp) : string{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+
+        switch(self::is2FaEnabled($username)){
+            case 1:
+                switch(self::is2FaValid($username, $otp)){
+                    case 0:
+                        return Display::json(19);
+                    break;
+                    case 2:
+                        return Display::json(1);
+                    break;
+                    case 505:
+                        return Display::json(505);
+                    break;
+                }
+            break;
+            case 2:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
 
         switch(self::isPasswordCorrect($username, $password)){
             case 0:
