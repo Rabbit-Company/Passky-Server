@@ -752,7 +752,11 @@ class Database{
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 
-        	return Display::json(0);
+            $JSON_OBJ = new StdClass;
+            $JSON_OBJ->secret = $secret;
+            $JSON_OBJ->qrcode = $google2fa->getQRCodeUrl("Passky", $username, $secret);
+            $JSON_OBJ->codes = $codes;
+        	return Display::json(0, $JSON_OBJ);
         }catch(PDOException $e) {
         	return Display::json(505);
         }

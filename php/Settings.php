@@ -99,11 +99,11 @@ class Settings{
     }
 
     public static function getLimiterEnable2fa() : int{
-        return getenv("LIMITER_ENABLE_2FA", true) ?: getenv("LIMITER_ENABLE_2FA") ?: 600;
+        return getenv("LIMITER_ENABLE_2FA", true) ?: getenv("LIMITER_ENABLE_2FA") ?: 60;
     }
 
     public static function getLimiterDisable2fa() : int{
-        return getenv("LIMITER_DISABLE_2FA", true) ?: getenv("LIMITER_DISABLE_2FA") ?: 600;
+        return getenv("LIMITER_DISABLE_2FA", true) ?: getenv("LIMITER_DISABLE_2FA") ?: 60;
     }
 
 }
