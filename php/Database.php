@@ -297,7 +297,7 @@ class Database{
 
         if($user_id == null) return Display::json(1);
 
-        $passwords_obj = json_decode(self::getPasswords($username, $password), true);
+        $passwords_obj = json_decode(self::getPasswords($username, $password, $otp), true);
         if($passwords_obj["error"] == 0){
             foreach($passwords_obj["passwords"] as &$password_data){
                 self::deletePassword($username, $password, $password_data['id']);
