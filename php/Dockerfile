@@ -25,6 +25,9 @@ EXPOSE 8080
 RUN echo "{}" > ../api-limiter.json
 RUN echo "{}" > ../otp.json
 
+# Disable apt-compat in daily cron jobs
+RUN mv /etc/cron.daily/apt-compat /etc/cron.daily/apt-compat.disabled
+
 # Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
 COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab
 # Make script executable

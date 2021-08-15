@@ -1,3 +1,4 @@
 #!/bin/sh
 
 php -r "file_put_contents('/usr/src/api-limiter.json', '{}');"
+php -r "file_put_contents('/usr/src/otp.json', '{}');"
