@@ -21,7 +21,7 @@ class Errors{
         "15" => "This server can't accept more users!",
         "16" => "You have reached maximum amount of stored passwords!",
         "17" => "Account with this email doesn't exist!",
-        "18" => "Message is to long!",
+        "18" => "Message is too long!",
         "19" => "OTP is incorrect!",
         "400" => "Action was not provided in GET!",
         "401" => "Action is invalid!",
