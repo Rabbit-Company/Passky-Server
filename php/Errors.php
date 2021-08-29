@@ -15,7 +15,7 @@ class Errors{
         "9" => "Domain is invalid!",
         "10" => "User does not own this password!",
         "11" => "Something went wrong while deleting data from database!",
-        "12" => "Username must be between 6 and 30 characters long and can only contains letters, numbers and dots!",
+        "12" => "Username must be 6 to 30 characters long, and may only contain letters, numbers and dots!",
         "13" => "Something went wrong while updating data in database!",
         "14" => "Json is invalid!",
         "15" => "This server can't accept more users!",
@@ -27,10 +27,10 @@ class Errors{
         "401" => "Action is invalid!",
         "403" => "You didn't provide all required values in POST.",
         "404" => "Can't connect into API.",
-        "429" => "Too Many Requests",
+        "429" => "You are sending too many requests! Please wait before executing this action again.",
         "505" => "Something went wrong while connecting to database!",
         "506" => "Something went wrong while connecting to the mail server!",
-        "999" => "You don't have permission to use this endpoint."
+        "999" => "You do NOT have permission to use this endpoint."
     );
 
     public static function getError(string $error_code) : string{

@@ -344,9 +344,9 @@ class Database{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
-        if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || str_contains($password2, ' ') || str_contains($password2, '"') || str_contains($password2, "\\") || str_contains($password2, "'")) return Display::json(5);
-        if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
-        if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ') || str_contains($website, '"') || str_contains($website, "\\") || str_contains($website, "'")) return Display::json(9);
+        if(!(strlen($password2) >= 5 && strlen($password2) <= 255)) return Display::json(5);
+        if(!(strlen($username2) >= 3 && strlen($username2) <= 255)) return Display::json(1);
+        if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ')) return Display::json(9);
         if(strlen($message) > 10000) return Display::json(18);
 
         switch(self::is2FaEnabled($username)){
@@ -452,9 +452,9 @@ class Database{
         $num_error = 0;
 
         foreach($password_obj as &$password_data){
-            if(!(strlen($password_data["password"]) >= 8 && strlen($password_data["password"]) <= 255) || str_contains($password_data["password"], ' ') || str_contains($password_data["password"], '"') || str_contains($password_data["password"], "\\") || str_contains($password_data["password"], "'")){ $num_error++; continue; }
-            if(!(strlen($password_data["username"]) >= 3 && strlen($password_data["username"]) <= 255) || str_contains($password_data["username"], ' ') || str_contains($password_data["username"], '"') || str_contains($password_data["username"], "\\") || str_contains($password_data["username"], "'")){ $num_error++; continue; }
-            if(false === filter_var($password_data["website"], FILTER_VALIDATE_DOMAIN) || strlen($password_data["website"]) > 255 || str_contains($password_data["website"], ' ') || str_contains($password_data["website"], '"') || str_contains($password_data["website"], "\\") || str_contains($password_data["website"], "'")){ $num_error++; continue; }
+            if(!(strlen($password_data["password"]) >= 5 && strlen($password_data["password"]) <= 255)){ $num_error++; continue; }
+            if(!(strlen($password_data["username"]) >= 3 && strlen($password_data["username"]) <= 255)){ $num_error++; continue; }
+            if(false === filter_var($password_data["website"], FILTER_VALIDATE_DOMAIN) || strlen($password_data["website"]) > 255 || str_contains($password_data["website"], ' ')){ $num_error++; continue; }
             if(strlen($password_data["message"]) > 10000){ $num_error++; continue; }
 
             $website = strtolower($password_data["website"]);
@@ -498,9 +498,9 @@ class Database{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
-        if(!(strlen($password2) >= 8 && strlen($password2) <= 255) || str_contains($password2, ' ') || str_contains($password2, '"') || str_contains($password2, "\\") || str_contains($password2, "'")) return Display::json(5);
-        if(!(strlen($username2) >= 3 && strlen($username2) <= 255) || str_contains($username2, ' ') || str_contains($username2, '"') || str_contains($username2, "\\") || str_contains($username2, "'")) return Display::json(1);
-        if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ') || str_contains($website, '"') || str_contains($website, "\\") || str_contains($website, "'")) return Display::json(9);
+        if(!(strlen($password2) >= 5 && strlen($password2) <= 255)) return Display::json(5);
+        if(!(strlen($username2) >= 3 && strlen($username2) <= 255)) return Display::json(1);
+        if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ')) return Display::json(9);
         if(strlen($message) > 10000) return Display::json(18);
 
         switch(self::is2FaEnabled($username)){
