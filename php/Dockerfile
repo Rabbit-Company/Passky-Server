@@ -33,5 +33,10 @@ COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab
 # Make script executable
 RUN chmod +x /etc/cron.daily/passky-daily-crontab
 
+# Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
+COPY passky-entrypoint.sh /etc/passky-entrypoint.sh
+# Make script executable
+RUN chmod +x /etc/passky-entrypoint.sh
+
 # Start PHP server on port 8080
-CMD ["php", "-S", "0.0.0.0:8080"]
+ENTRYPOINT ["/etc/passky-entrypoint.sh"]
