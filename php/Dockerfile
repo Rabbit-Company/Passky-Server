@@ -33,7 +33,7 @@ COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab
 # Make script executable
 RUN chmod +x /etc/cron.daily/passky-daily-crontab
 
-# Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
+# Copy starting script to etc folder
 COPY passky-entrypoint.sh /etc/passky-entrypoint.sh
 # Make script executable
 RUN chmod +x /etc/passky-entrypoint.sh
