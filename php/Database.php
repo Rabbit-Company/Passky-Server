@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 require_once "Errors.php";
 require_once "Display.php";
 require_once "Settings.php";
+require_once "User.php";
 
 require 'vendor/autoload.php';
 
@@ -77,76 +78,13 @@ class Database{
         return false;
     }
 
-    public static function isPasswordCorrect(string $username, string $password) : int {
-        try{
-            $username = strtolower($username);
-        	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
-        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        	$stmt = $conn->prepare("SELECT password FROM users WHERE username = :username");
-        	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        	$stmt->execute();
-
-        	if($stmt->rowCount() == 1){
-                $row = $stmt->fetch();
-                return (password_verify($password, $row["password"])) ? 1 : 0;
-        	}else{
-                return 2;
-        	}
-
-        }catch(PDOException $e) {
-        	return 505;
-        }
-        $conn = null;
-    }
-
-    public static function is2FaEnabled(string $username) : int {
-        try{
-            $username = strtolower($username);
-        	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
-        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        	$stmt = $conn->prepare("SELECT 2fa_secret FROM users WHERE username = :username");
-        	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        	$stmt->execute();
-
-        	if($stmt->rowCount() == 1){
-                $row = $stmt->fetch();
-                return ($row["2fa_secret"] == null) ? 0 : 1;
-        	}else{
-                return 2;
-        	}
-
-        }catch(PDOException $e) {
-        	return 505;
-        }
-        $conn = null;
-    }
-
-    public static function is2FaValid(string $username, string $otp) : int {
-        $username = strtolower($username);
+    public static function is2FaValid(string $username, string $otp, string $secret) : int {
 
         if(strlen($otp) == 6){
-            try{
-                $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                $stmt = $conn->prepare("SELECT 2fa_secret FROM users WHERE username = :username");
-                $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-                $stmt->execute();
+            $google2fa = new Google2FA();
+            return $google2fa->verifyKey($secret, $otp);
 
-                if($stmt->rowCount() == 1){
-                    $row = $stmt->fetch();
-                    $google2fa = new Google2FA();
-                    return $google2fa->verifyKey($row["2fa_secret"], $otp);
-                }else{
-                    return 2;
-                }
-
-            }catch(PDOException $e) {
-                return 505;
-            }
-            $conn = null;
         }else{
             $otp_array = json_decode(file_get_contents('../otp.json'), true);
 
@@ -183,29 +121,6 @@ class Database{
             $stmt->execute();
 
             return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : null;
-        }catch(PDOException $e) {
-            return null;
-        }
-        $conn = null;
-    }
-
-    public static function getUserId($username){
-        try{
-            $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $username = strtolower($username);
-
-            $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = :username");
-            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-            $stmt->execute();
-
-    		if($stmt->rowCount() == 1){
-                return $stmt->fetch()['user_id'];
-    		}else{
-    			return null;
-    		}
-
         }catch(PDOException $e) {
             return null;
         }
@@ -258,21 +173,11 @@ class Database{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
-        switch(self::is2FaEnabled($username)){
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
             case 1:
-                switch(self::is2FaValid($username, $otp)){
-                    case 0:
-                        return Display::json(19);
-                    break;
-                    case 2:
-                        return Display::json(1);
-                    break;
-                    case 505:
-                        return Display::json(505);
-                    break;
-                }
-            break;
-            case 2:
                 return Display::json(1);
             break;
             case 505:
@@ -280,27 +185,16 @@ class Database{
             break;
         }
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
-                return Display::json(1);
-            break;
-            case 505:
-                return Display::json(505);
-            break;
+        if($user->secret != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
         }
 
-        $username = strtolower($username);
-        $user_id = self::getUserId($username);
+        if(!password_verify($password, $user->password)) return Display::json(2);
 
-        if($user_id == null) return Display::json(1);
-
-        $passwords_obj = json_decode(self::getPasswords($username, $password, $otp), true);
+        $passwords_obj = json_decode(self::getPasswords($user->username, $password, $otp), true);
         if($passwords_obj["error"] == 0){
             foreach($passwords_obj["passwords"] as &$password_data){
-                self::deletePassword($username, $password, $password_data['id']);
+                self::deletePassword($user->username, $password, $password_data['id'], $otp);
             }
         }
 
@@ -310,7 +204,7 @@ class Database{
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :user_id;");
-            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
 
             return ($stmt->execute()) ? Display::json(0) : Display::json(11);
         }catch(PDOException $e) {
@@ -349,21 +243,11 @@ class Database{
         if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ')) return Display::json(9);
         if(strlen($message) > 10000) return Display::json(18);
 
-        switch(self::is2FaEnabled($username)){
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
             case 1:
-                switch(self::is2FaValid($username, $otp)){
-                    case 0:
-                        return Display::json(19);
-                    break;
-                    case 2:
-                        return Display::json(1);
-                    break;
-                    case 505:
-                        return Display::json(505);
-                    break;
-                }
-            break;
-            case 2:
                 return Display::json(1);
             break;
             case 505:
@@ -371,24 +255,15 @@ class Database{
             break;
         }
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
-                return Display::json(1);
-            break;
-            case 505:
-                return Display::json(505);
-            break;
+        if($user->secret != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
         }
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
 
         $website = strtolower($website);
-        $user_id = self::getUserId($username);
 
-        if($user_id == null) return Display::json(1);
-
-        $password_count = self::getPasswordCount($user_id);
+        $password_count = self::getPasswordCount($user->user_id);
         if($password_count == null) return Display::json(505);
         if($password_count >= Settings::getMaxPasswords()) return Display::json(16);
 
@@ -410,7 +285,7 @@ class Database{
 
             $stmt = $conn->prepare("INSERT INTO user_passwords(password_id, user_id) VALUES(:password_id, :user_id);");
             $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
 
             $stmt->execute();
 
@@ -429,11 +304,11 @@ class Database{
         $password_obj = json_decode($json_passwords, true);
         if($password_obj === null && json_last_error() !== JSON_ERROR_NONE) return Display::json(14);
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
+            case 1:
                 return Display::json(1);
             break;
             case 505:
@@ -441,10 +316,9 @@ class Database{
             break;
         }
 
-        $user_id = self::getUserId($username);
-        if($user_id == null) return Display::json(1);
+        if(!password_verify($password, $user->password)) return Display::json(2);
 
-        $password_count = self::getPasswordCount($user_id);
+        $password_count = self::getPasswordCount($user->user_id);
         if($password_count == null) return Display::json(505);
         if($password_count + count($password_obj) >= Settings::getMaxPasswords()) return Display::json(16);
 
@@ -477,7 +351,7 @@ class Database{
     
                 $stmt = $conn->prepare("INSERT INTO user_passwords(password_id, user_id) VALUES(:password_id, :user_id);");
                 $stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-                $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+                $stmt->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
     
                 $stmt->execute();
     
@@ -503,21 +377,11 @@ class Database{
         if(false === filter_var($website, FILTER_VALIDATE_DOMAIN) || strlen($website) > 255 || str_contains($website, ' ')) return Display::json(9);
         if(strlen($message) > 10000) return Display::json(18);
 
-        switch(self::is2FaEnabled($username)){
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
             case 1:
-                switch(self::is2FaValid($username, $otp)){
-                    case 0:
-                        return Display::json(19);
-                    break;
-                    case 2:
-                        return Display::json(1);
-                    break;
-                    case 505:
-                        return Display::json(505);
-                    break;
-                }
-            break;
-            case 2:
                 return Display::json(1);
             break;
             case 505:
@@ -525,17 +389,11 @@ class Database{
             break;
         }
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
-                return Display::json(1);
-            break;
-            case 505:
-                return Display::json(505);
-            break;
+        if($user->secret != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
         }
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
 
         switch(self::isPasswordOwnedByUser($username, $password_id)){
             case 2:
@@ -551,7 +409,6 @@ class Database{
 
         try{
             $website = strtolower($website);
-            $username = strtolower($username);
         	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -575,21 +432,11 @@ class Database{
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
-        switch(self::is2FaEnabled($username)){
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
             case 1:
-                switch(self::is2FaValid($username, $otp)){
-                    case 0:
-                        return Display::json(19);
-                    break;
-                    case 2:
-                        return Display::json(1);
-                    break;
-                    case 505:
-                        return Display::json(505);
-                    break;
-                }
-            break;
-            case 2:
                 return Display::json(1);
             break;
             case 505:
@@ -597,17 +444,12 @@ class Database{
             break;
         }
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
-                return Display::json(1);
-            break;
-            case 505:
-                return Display::json(505);
-            break;
+        if($user->secret != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
         }
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
+
 
         switch(self::isPasswordOwnedByUser($username, $password_id)){
             case 2:
@@ -622,7 +464,6 @@ class Database{
         }
 
         try{
-            $username = strtolower($username);
         	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
         	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -644,11 +485,11 @@ class Database{
     public static function getPasswords(string $username, string $password, string $otp) : string{
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
+            case 1:
                 return Display::json(1);
             break;
             case 505:
@@ -657,37 +498,22 @@ class Database{
         }
 
         $secret = false;
-        switch(self::is2FaEnabled($username)){
-            case 1:
-                switch(self::is2FaValid($username, $otp)){
-                    case 1:
-                        $otp_array = json_decode(file_get_contents('../otp.json'), true);
-                        if(empty($otp_array[$username])){
-                            $secret = self::encryptPassword(self::generateCodes());
-                            $otp_array[$username] = $secret;
-                            file_put_contents('../otp.json', json_encode($otp_array));
-                        }else{
-                            $secret = $otp_array[$username];
-                        }
-                    break;
-                    case 0:
-                        return Display::json(19);
-                    break;
-                    case 2:
-                        return Display::json(1);
-                    break;
-                    case 505:
-                        return Display::json(505);
-                    break;
+        if($user->secret != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret) == 0){
+                return Display::json(19);
+            }else{
+                $otp_array = json_decode(file_get_contents('../otp.json'), true);
+                if(empty($otp_array[$username])){
+                    $secret = self::encryptPassword(self::generateCodes());
+                    $otp_array[$username] = $secret;
+                    file_put_contents('../otp.json', json_encode($otp_array));
+                }else{
+                    $secret = $otp_array[$username];
                 }
-            break;
-            case 2:
-                return Display::json(1);
-            break;
-            case 505:
-                return Display::json(505);
-            break;
+            }
         }
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
 
         $username = strtolower($username);
 
@@ -720,17 +546,19 @@ class Database{
     public static function enable2Fa(string $username, string $password) : string{
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
+            case 1:
                 return Display::json(1);
             break;
             case 505:
                 return Display::json(505);
             break;
         }
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
 
         $google2fa = new Google2FA();
         $secret = $google2fa->generateSecretKey();
@@ -766,11 +594,11 @@ class Database{
     public static function disable2Fa(string $username, string $password, string $otp) : string{
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
-        switch(self::isPasswordCorrect($username, $password)){
-            case 0:
-                return Display::json(2);
-            break;
-            case 2:
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
+            case 1:
                 return Display::json(1);
             break;
             case 505:
@@ -778,27 +606,11 @@ class Database{
             break;
         }
 
-        switch(self::is2FaEnabled($username)){
-            case 1:
-                switch(self::is2FaValid($username, $otp)){
-                    case 0:
-                        return Display::json(19);
-                    break;
-                    case 2:
-                        return Display::json(1);
-                    break;
-                    case 505:
-                        return Display::json(505);
-                    break;
-                }
-            break;
-            case 2:
-                return Display::json(1);
-            break;
-            case 505:
-                return Display::json(505);
-            break;
+        if($user->secret != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
         }
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
 
         try{
             $username = strtolower($username);
