@@ -120,6 +120,14 @@ class Settings{
         return getenv("LIMITER_DISABLE_2FA", true) ?: getenv("LIMITER_DISABLE_2FA") ?: 60;
     }
 
+    public static function getLimiterAddYubiKey() : int{
+        return getenv("LIMITER_ADD_YUBIKEY", true) ?: getenv("LIMITER_ADD_YUBIKEY") ?: 60;
+    }
+
+    public static function getLimiterRemoveYubiKey() : int{
+        return getenv("LIMITER_REMOVE_YUBIKEY", true) ?: getenv("LIMITER_REMOVE_YUBIKEY") ?: 60;
+    }
+
 }
 
 ?>

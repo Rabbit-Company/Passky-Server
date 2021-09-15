@@ -69,7 +69,9 @@ class Database{
             'deleteAccount' => Settings::getLimiterDeleteAccount(),
             'forgotUsername' => Settings::getLimiterForgotUsername(),
             'enable2fa' => Settings::getLimiterEnable2fa(),
-            'disable2fa' => Settings::getLimiterDisable2fa()
+            'disable2fa' => Settings::getLimiterDisable2fa(),
+            'addYubiKey' => Settings::getLimiterAddYubiKey(),
+            'removeYubiKey' => Settings::getLimiterRemoveYubiKey()
         ];
 
         $timer = $timerOptions[$action];
@@ -85,7 +87,10 @@ class Database{
         return false;
     }
 
-    public static function is2FaValid(string $username, string $otp, ?string $secret, ?string $otps) : int {
+    public static function is2FaValid(string $username, ?string $otp, ?string $secret, ?string $otps) : int {
+
+        if($secret == null && $otps == null) return 1;
+        if($otp == null) return 0;
 
         if(strlen($otp) == 6){
 
@@ -200,9 +205,7 @@ class Database{
             break;
         }
 
-        if($user->secret != null || $user->yubico_otp != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
-        }
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
 
@@ -270,9 +273,7 @@ class Database{
             break;
         }
 
-        if($user->secret != null || $user->yubico_otp != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
-        }
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
 
@@ -404,9 +405,7 @@ class Database{
             break;
         }
 
-        if($user->secret != null || $user->yubico_otp != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
-        }
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
 
@@ -459,9 +458,7 @@ class Database{
             break;
         }
 
-        if($user->secret != null || $user->yubico_otp != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
-        }
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
 
@@ -512,23 +509,18 @@ class Database{
             break;
         }
 
-        $secret = false;
-        if($user->secret != null || $user->yubico_otp != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0){
-                return Display::json(19);
-            }else{
-                $otp_array = json_decode(file_get_contents('../otp.json'), true);
-                if(empty($otp_array[$username])){
-                    $secret = self::encryptPassword(self::generateCodes());
-                    $otp_array[$username] = $secret;
-                    file_put_contents('../otp.json', json_encode($otp_array));
-                }else{
-                    $secret = $otp_array[$username];
-                }
-            }
-        }
-
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
+     
         if(!password_verify($password, $user->password)) return Display::json(2);
+
+        $otp_array = json_decode(file_get_contents('../otp.json'), true);
+        if(empty($otp_array[$username])){
+            $secret = self::encryptPassword(self::generateCodes());
+            $otp_array[$username] = $secret;
+            file_put_contents('../otp.json', json_encode($otp_array));
+        }else{
+            $secret = $otp_array[$username];
+        }
 
         $username = strtolower($username);
 
@@ -541,16 +533,17 @@ class Database{
         	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 
+            $JSON_OBJ = new StdClass;
+            $JSON_OBJ->secret = $secret;
+            $JSON_OBJ->auth = ($user->secret != null);
+            $JSON_OBJ->yubico = $user->yubico_otp;
+
         	if($stmt->rowCount() > 0){
-                $JSON_OBJ = new StdClass;
-                $JSON_OBJ->secret = $secret;
                 $JSON_OBJ->passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return Display::json(0, $JSON_OBJ);
-        	}else{
-                $JSON_OBJ = new StdClass;
-                $JSON_OBJ->secret = $secret;
-                return Display::json(8, $JSON_OBJ);
         	}
+
+            return Display::json(8, $JSON_OBJ);
 
         }catch(PDOException $e) {
             return Display::json(505);
@@ -558,7 +551,7 @@ class Database{
         $conn = null;
     }
 
-    public static function enable2Fa(string $username, string $password) : string{
+    public static function enable2Fa(string $username, string $password, string $otp) : string{
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
         $user = new User;
@@ -572,6 +565,8 @@ class Database{
                 return Display::json(505);
             break;
         }
+
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
 
@@ -621,12 +616,10 @@ class Database{
             break;
         }
 
-        if($user->secret != null || $user->yubico_otp != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
-        }
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
-
+        
         try{
             $username = strtolower($username);
         	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
@@ -636,11 +629,110 @@ class Database{
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 
-        	$stmt = $conn->prepare("UPDATE users SET backup_codes = null WHERE username = :username");
+        	return Display::json(0);
+        }catch(PDOException $e) {
+        	return Display::json(505);
+        }
+        $conn = null;
+    }
+
+    public static function addYubiKey(string $username, string $password, string $id, string $otp){
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+        if(strlen($id) != 12) return Display::json(23);
+
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
+            case 1:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
+
+        if($user->yubico_otp == null){
+            $yubico_otp = $id;
+        }else{
+            $yubi_keys = explode(';', $user->yubico_otp);
+            if(count($yubi_keys) >= 5) return Display::json(20);
+            if(in_array($id, $yubi_keys)) return Display::json(21);
+            $yubico_otp = $user->yubico_otp . ";" . $id;
+        }
+
+        $codes = self::generateCodes();
+
+        try{
+            $username = strtolower($username);
+        	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        	$stmt = $conn->prepare("UPDATE users SET yubico_otp = :yubico_otp WHERE username = :username");
+            $stmt->bindParam(':yubico_otp', $yubico_otp, PDO::PARAM_STR);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         	$stmt->execute();
 
-        	return Display::json(0);
+        	$stmt = $conn->prepare("UPDATE users SET backup_codes = :codes WHERE username = :username");
+            $stmt->bindParam(':codes', $codes, PDO::PARAM_STR);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        	$stmt->execute();
+
+            $JSON_OBJ = new StdClass;
+            $JSON_OBJ->yubico_otp = $yubico_otp;
+            $JSON_OBJ->codes = $codes;
+        	return Display::json(0, $JSON_OBJ);
+        }catch(PDOException $e) {
+        	return Display::json(505);
+        }
+        $conn = null;
+    }
+
+    public static function removeYubiKey(string $username, string $password, string $id, string $otp){
+        if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+        if(strlen($id) != 12) return Display::json(23);
+
+        $user = new User;
+        $user->fromUsername($username);
+
+        switch($user->response){
+            case 1:
+                return Display::json(1);
+            break;
+            case 505:
+                return Display::json(505);
+            break;
+        }
+
+        if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
+
+        if(!password_verify($password, $user->password)) return Display::json(2);
+        
+        if($user->yubico_otp == null) return Display::json(24);
+
+        $yubi_keys = explode(';', $user->yubico_otp);
+        if(!in_array($id, $yubi_keys)) return Display::json(24);
+
+        $yubico_otp = str_replace(';' . $id, '', $user->yubico_otp);
+        $yubico_otp = str_replace($id, '', $yubico_otp);
+
+        try{
+            $username = strtolower($username);
+        	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+        	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("UPDATE users SET yubico_otp = :yubico_otp WHERE username = :username");
+            $stmt->bindParam(':yubico_otp', $yubico_otp, PDO::PARAM_STR);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        	$stmt->execute();
+
+            $JSON_OBJ = new StdClass;
+            $JSON_OBJ->yubico_otp = $yubico_otp;
+        	return Display::json(0, $JSON_OBJ);
         }catch(PDOException $e) {
         	return Display::json(505);
         }

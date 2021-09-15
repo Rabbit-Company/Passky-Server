@@ -50,6 +50,10 @@ services:
       - LIMITER_DELETE_ACCOUNT
       - LIMITER_IMPORT_PASSWORDS
       - LIMITER_FORGOT_USERNAME
+      - LIMITER_ENABLE_2FA
+      - LIMITER_DISABLE_2FA
+      - LIMITER_ADD_YUBIKEY
+      - LIMITER_REMOVE_YUBIKEY
     networks:
       - passky
     ports:

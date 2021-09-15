@@ -132,12 +132,12 @@ switch($_GET['action']){
 			return;
 		}
 	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['otp'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::enable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+		echo Database::enable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
     break;
 	case "disable2fa":
 		if(Database::userSentToManyRequests('disable2fa')){
@@ -151,6 +151,32 @@ switch($_GET['action']){
 		}
 
 		echo Database::disable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
+    break;
+	case "addYubiKey":
+		if(Database::userSentToManyRequests('addYubiKey')){
+			echo Display::json(429);
+			return;
+		}
+	
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id']) || !isset($_POST['otp'])){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::addYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id'], $_POST['otp']);
+    break;
+	case "removeYubiKey":
+		if(Database::userSentToManyRequests('removeYubiKey')){
+			echo Display::json(429);
+			return;
+		}
+	
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id']) || !isset($_POST['otp'])){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::removeYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id'], $_POST['otp']);
     break;
     default:
     	echo Display::json(401);
