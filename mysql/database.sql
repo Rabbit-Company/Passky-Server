@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `passky`.`users`
   `email` Char(255) NOT NULL,
   `password` Char(255) NOT NULL,
   `2fa_secret` Char(20),
+  `yubico_otp` Char(64),
   `backup_codes` Char(69),
   PRIMARY KEY (`user_id`),
   UNIQUE `user_id` (`user_id`)

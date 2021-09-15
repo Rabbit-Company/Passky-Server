@@ -36,6 +36,13 @@ class Database{
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
+    public static function generateNonce() : string{
+        $nonce = "";
+        for($i = 0; $i < 5; $i++) $nonce .= rand(100000,999999) . "p";
+        $nonce = substr($nonce, 0, -1);
+        return $nonce;
+    }
+
     public static function generateCodes() : string{
         $codes = "";
         for($i = 0; $i < 10; $i++) $codes .= rand(100000,999999) . ";";
@@ -78,22 +85,30 @@ class Database{
         return false;
     }
 
-    public static function is2FaValid(string $username, string $otp, string $secret) : int {
+    public static function is2FaValid(string $username, string $otp, ?string $secret, ?string $otps) : int {
 
         if(strlen($otp) == 6){
 
+            if($secret == null) return 0;
             $google2fa = new Google2FA();
             return $google2fa->verifyKey($secret, $otp);
 
+        }else if(strlen($otp) == 44){
+            if($otps == null) return 0;
+            if(!str_contains($otps, substr($otp, 0, 12))) return 0;
+
+            $nonce = self::generateNonce();
+            $result = file_get_contents(Settings::getYubiCloud() . '?id=' . Settings::getYubiId() . '&nonce=' . $nonce . '&otp=' . $otp . '&sl=secure&timestamp=1');
+
+            if(str_contains($result, 'nonce=' . $nonce) && str_contains($result, 'status=OK')) return 1;
         }else{
             $otp_array = json_decode(file_get_contents('../otp.json'), true);
 
             if(!empty($otp_array[$username])){
                 if($otp_array[$username] == $otp) return 1;
             }
-    
-            return 0;
         }
+        return 0;
     }
 
     public static function getUserCount(){
@@ -185,8 +200,8 @@ class Database{
             break;
         }
 
-        if($user->secret != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
+        if($user->secret != null || $user->yubico_otp != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
         }
 
         if(!password_verify($password, $user->password)) return Display::json(2);
@@ -255,8 +270,8 @@ class Database{
             break;
         }
 
-        if($user->secret != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
+        if($user->secret != null || $user->yubico_otp != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
         }
 
         if(!password_verify($password, $user->password)) return Display::json(2);
@@ -389,8 +404,8 @@ class Database{
             break;
         }
 
-        if($user->secret != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
+        if($user->secret != null || $user->yubico_otp != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
         }
 
         if(!password_verify($password, $user->password)) return Display::json(2);
@@ -444,8 +459,8 @@ class Database{
             break;
         }
 
-        if($user->secret != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
+        if($user->secret != null || $user->yubico_otp != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
         }
 
         if(!password_verify($password, $user->password)) return Display::json(2);
@@ -498,8 +513,8 @@ class Database{
         }
 
         $secret = false;
-        if($user->secret != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret) == 0){
+        if($user->secret != null || $user->yubico_otp != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0){
                 return Display::json(19);
             }else{
                 $otp_array = json_decode(file_get_contents('../otp.json'), true);
@@ -606,8 +621,8 @@ class Database{
             break;
         }
 
-        if($user->secret != null){
-            if(self::is2FaValid($user->username, $otp, $user->secret) == 0) return Display::json(19);
+        if($user->secret != null || $user->yubico_otp != null){
+            if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
         }
 
         if(!password_verify($password, $user->password)) return Display::json(2);

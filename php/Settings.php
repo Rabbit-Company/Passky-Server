@@ -62,6 +62,20 @@ class Settings{
 
 /*
 
+    YUBICO SETTINGS
+
+*/
+
+    public static function getYubiCloud() : string{
+        return getenv("YUBI_CLOUD", true) ?: getenv("YUBI_CLOUD") ?: "https://api.yubico.com/wsapi/2.0/verify";
+    }
+
+    public static function getYubiId() : int{
+        return getenv("YUBI_ID", true) ?: getenv("YUBI_ID") ?: 67857;
+    }
+
+/*
+
     API CALL LIMITER (Brute force mitigation)
     
 */

@@ -9,6 +9,7 @@ class User {
     public ?string $email;
     public ?string $password;
     public ?string $secret;
+    public ?string $yubico_otp;
     public ?string $backup_codes;
     public int $response;
 
@@ -29,6 +30,7 @@ class User {
                 $this->email = $result['email'];
                 $this->password = $result['password'];
                 $this->secret = $result['2fa_secret'];
+                $this->yubico_otp = $result['yubico_otp'];
                 $this->backup_codes = $result['backup_codes'];
                 $this->response = 0;
     		}else{
@@ -60,6 +62,7 @@ class User {
                 $this->email = $result['email'];
                 $this->password = $result['password'];
                 $this->secret = $result['2fa_secret'];
+                $this->yubico_otp = $result['yubico_otp'];
                 $this->backup_codes = $result['backup_codes'];
                 $this->response = 0;
     		}else{

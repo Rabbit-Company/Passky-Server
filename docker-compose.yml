@@ -22,6 +22,9 @@ services:
       dockerfile: ./php/Dockerfile
     restart: always
     environment:
+      #
+      # Change environment variables in .env file 
+      #
       # Database
       - MYSQL_HOST
       - MYSQL_USER
@@ -35,6 +38,9 @@ services:
       # Account
       - ACCOUNT_MAX
       - ACCOUNT_MAX_PASSWORDS
+      # YUBICO
+      - YUBI_CLOUD
+      - YUBI_ID
       # Limiter
       - LIMITER_GET_PASSWORDS
       - LIMITER_SAVE_PASSWORD
