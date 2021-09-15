@@ -87,6 +87,16 @@ class Database{
         return false;
     }
 
+    public static function isYubiOTPValid(string $otp) : int{
+        if(strlen($otp) != 44) return 0;
+
+        $nonce = self::generateNonce();
+        $result = file_get_contents(Settings::getYubiCloud() . '?id=' . Settings::getYubiId() . '&nonce=' . $nonce . '&otp=' . $otp . '&sl=secure&timestamp=1');
+
+        if(str_contains($result, 'nonce=' . $nonce) && str_contains($result, 'status=OK')) return 1;
+        return 0;
+    }
+
     public static function is2FaValid(string $username, ?string $otp, ?string $secret, ?string $otps) : int {
 
         if($secret == null && $otps == null) return 1;
@@ -102,10 +112,7 @@ class Database{
             if($otps == null) return 0;
             if(!str_contains($otps, substr($otp, 0, 12))) return 0;
 
-            $nonce = self::generateNonce();
-            $result = file_get_contents(Settings::getYubiCloud() . '?id=' . Settings::getYubiId() . '&nonce=' . $nonce . '&otp=' . $otp . '&sl=secure&timestamp=1');
-
-            if(str_contains($result, 'nonce=' . $nonce) && str_contains($result, 'status=OK')) return 1;
+            return self::isYubiOTPValid($otp);
         }else{
             $otp_array = json_decode(file_get_contents('../otp.json'), true);
 
@@ -638,7 +645,7 @@ class Database{
 
     public static function addYubiKey(string $username, string $password, string $id, string $otp){
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
-        if(strlen($id) != 12) return Display::json(23);
+        if(strlen($id) != 44) return Display::json(23);
 
         $user = new User;
         $user->fromUsername($username);
@@ -655,6 +662,9 @@ class Database{
         if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
+
+        if(!self::isYubiOTPValid($id)) return Display::json(23);
+        $id = substr($id, 0, 12);
 
         if($user->yubico_otp == null){
             $yubico_otp = $id;
@@ -683,7 +693,7 @@ class Database{
         	$stmt->execute();
 
             $JSON_OBJ = new StdClass;
-            $JSON_OBJ->yubico_otp = $yubico_otp;
+            $JSON_OBJ->yubico = $yubico_otp;
             $JSON_OBJ->codes = $codes;
         	return Display::json(0, $JSON_OBJ);
         }catch(PDOException $e) {
@@ -694,7 +704,7 @@ class Database{
 
     public static function removeYubiKey(string $username, string $password, string $id, string $otp){
         if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
-        if(strlen($id) != 12) return Display::json(23);
+        if(strlen($id) != 44) return Display::json(23);
 
         $user = new User;
         $user->fromUsername($username);
@@ -711,7 +721,10 @@ class Database{
         if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 
         if(!password_verify($password, $user->password)) return Display::json(2);
-        
+
+        if(!self::isYubiOTPValid($id)) return Display::json(23);
+        $id = substr($id, 0, 12);
+
         if($user->yubico_otp == null) return Display::json(24);
 
         $yubi_keys = explode(';', $user->yubico_otp);
@@ -731,7 +744,7 @@ class Database{
         	$stmt->execute();
 
             $JSON_OBJ = new StdClass;
-            $JSON_OBJ->yubico_otp = $yubico_otp;
+            $JSON_OBJ->yubico = $yubico_otp;
         	return Display::json(0, $JSON_OBJ);
         }catch(PDOException $e) {
         	return Display::json(505);

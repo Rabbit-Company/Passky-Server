@@ -25,7 +25,7 @@ class Errors{
         "19" => "OTP is incorrect!",
         "20" => "You can only link up to 5 Yubikeys!",
         "21" => "This Yubikey is already linked with your account.",
-        "23" => "Provided Yubikey ID is invalid!",
+        "23" => "Provided Yubikey OTP is invalid!",
         "24" => "Yubikey with provided ID isn't linked to your account.",
         "400" => "Action was not provided in GET!",
         "401" => "Action is invalid!",
