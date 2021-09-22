@@ -1,4 +1,10 @@
-## Passky: The Ultimate Open-Source Password Manager
+# Passky: The Ultimate Open-Source Password Manager
+
+## What is Passky?
+
+Passky is simple, modern, lightweight, open source and secure password manager.
+
+## How Much Does it Cost?
 
 Passky is open-source. This means that anyone can download it, dig into its code, and customize it to their liking. Using Passky doesn’t require an upfront cost or monthly subscription. It’s completely free to download and can be hosted by anyone who has the space to do so.
 
