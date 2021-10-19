@@ -1,5 +1,7 @@
 # Passky: The Ultimate Open-Source Password Manager
 
+### [Download from Rabbit Store](https://rabbitstore.org/?app=com.rabbit-company.passky)
+
 ## Passky Clients
 
    * [Website](https://github.com/Rabbit-Company/Passky-Website#installation)
