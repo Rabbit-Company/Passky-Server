@@ -11,6 +11,8 @@ class User {
     public ?string $secret;
     public ?string $yubico_otp;
     public ?string $backup_codes;
+    public ?string $created;
+    public ?string $accessed;
     public int $response;
 
     public function fromId($id){
@@ -32,6 +34,8 @@ class User {
                 $this->secret = $result['2fa_secret'];
                 $this->yubico_otp = $result['yubico_otp'];
                 $this->backup_codes = $result['backup_codes'];
+                $this->created = $result['created'];
+                $this->accessed = $result['accessed'];
                 $this->response = 0;
     		}else{
                 $this->response = 1;
@@ -64,6 +68,8 @@ class User {
                 $this->secret = $result['2fa_secret'];
                 $this->yubico_otp = $result['yubico_otp'];
                 $this->backup_codes = $result['backup_codes'];
+                $this->created = $result['created'];
+                $this->accessed = $result['accessed'];
                 $this->response = 0;
     		}else{
                 $this->response = 1;

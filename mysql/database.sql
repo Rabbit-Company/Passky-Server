@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS `passky`.`users`
   `2fa_secret` Char(20),
   `yubico_otp` Char(64),
   `backup_codes` Char(69),
+  `created` Date DEFAULT CURRENT_DATE,
+  `accessed` Date DEFAULT CURRENT_DATE,
   PRIMARY KEY (`user_id`),
   UNIQUE `user_id` (`user_id`)
 );

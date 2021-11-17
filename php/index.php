@@ -22,21 +22,8 @@ if(empty($_GET['action'])){
 }
 
 switch($_GET['action']){
-	case "createAccount":
-		if(Database::userSentToManyRequests('createAccount')){
-			echo Display::json(429);
-			return;
-		}
-	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_POST['email']) || !isset($_SERVER['PHP_AUTH_PW'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::createAccount($_SERVER['PHP_AUTH_USER'], $_POST['email'], $_SERVER['PHP_AUTH_PW']);
-    break;
-	case "getPasswords":
-		if(Database::userSentToManyRequests('getPasswords')){
+	case "getToken":
+		if(Database::userSentToManyRequests('getToken')){
 			echo Display::json(429);
 			return;
 		}
@@ -46,7 +33,33 @@ switch($_GET['action']){
 			return;
 		}
 
-		echo Database::getPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
+		echo Database::getToken($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
+	break;
+	case "createAccount":
+		if(Database::userSentToManyRequests('createAccount')){
+			echo Display::json(429);
+			return;
+		}
+	
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['email'])){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::createAccount($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['email']);
+    break;
+	case "getPasswords":
+		if(Database::userSentToManyRequests('getPasswords')){
+			echo Display::json(429);
+			return;
+		}
+
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
+			echo Display::json(403);
+			return;
+		}
+
+		echo Database::getPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 	break;
 	case "savePassword":
 		if(Database::userSentToManyRequests('savePassword')){
@@ -54,12 +67,12 @@ switch($_GET['action']){
 			return;
 		}
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::savePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message'], $_POST['otp']);
+		echo Database::savePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message']);
 	break;
 	case "importPasswords":
 		if(Database::userSentToManyRequests('importPasswords')){
@@ -80,12 +93,12 @@ switch($_GET['action']){
 			return;
 		}
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::editPassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message'], $_POST['otp']);
+		echo Database::editPassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message']);
 	break;
 	case "deletePassword":
 		if(Database::userSentToManyRequests('deletePassword')){
@@ -93,12 +106,12 @@ switch($_GET['action']){
 			return;
 		}
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::deletePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id'], $_POST['otp']);
+		echo Database::deletePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id']);
 	break;
 	case "deleteAccount":
 		if(Database::userSentToManyRequests('deleteAccount')){
@@ -106,12 +119,12 @@ switch($_GET['action']){
 			return;
 		}
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::deleteAccount($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
+		echo Database::deleteAccount($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 	break;
 	case "forgotUsername":
 		if(Database::userSentToManyRequests('forgotUsername')){
@@ -132,12 +145,12 @@ switch($_GET['action']){
 			return;
 		}
 	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::enable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
+		echo Database::enable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
     break;
 	case "disable2fa":
 		if(Database::userSentToManyRequests('disable2fa')){
@@ -145,12 +158,12 @@ switch($_GET['action']){
 			return;
 		}
 	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::disable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
+		echo Database::disable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
     break;
 	case "addYubiKey":
 		if(Database::userSentToManyRequests('addYubiKey')){
@@ -158,12 +171,12 @@ switch($_GET['action']){
 			return;
 		}
 	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::addYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id'], $_POST['otp']);
+		echo Database::addYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id']);
     break;
 	case "removeYubiKey":
 		if(Database::userSentToManyRequests('removeYubiKey')){
@@ -171,12 +184,12 @@ switch($_GET['action']){
 			return;
 		}
 	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id']) || !isset($_POST['otp'])){
+		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id'])){
 			echo Display::json(403);
 			return;
 		}
 
-		echo Database::removeYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id'], $_POST['otp']);
+		echo Database::removeYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id']);
     break;
     default:
     	echo Display::json(401);

@@ -21,9 +21,9 @@ RUN composer update
 # Expose port 8080 to other containers on the local network.
 EXPOSE 8080
 
-# Create json file for API Call Limiter and OTP in /usr/src folder which can't be accessed by public
+# Create json file for API Call Limiter and Tokens in /usr/src folder which can't be accessed by public
 RUN echo "{}" > ../api-limiter.json
-RUN echo "{}" > ../otp.json
+RUN echo "{}" > ../tokens.json
 
 # Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
 COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab

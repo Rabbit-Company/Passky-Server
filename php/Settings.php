@@ -80,6 +80,10 @@ class Settings{
     
 */
 
+    public static function getLimiterGetToken() : int{
+        return getenv("LIMITER_GET_TOKEN", true) ?: getenv("LIMITER_GET_TOKEN") ?: 3;
+    }
+
     public static function getLimiterGetPasswords() : int{
         return getenv("LIMITER_GET_PASSWORDS", true) ?: getenv("LIMITER_GET_PASSWORDS") ?: 3;
     }
