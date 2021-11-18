@@ -4,16 +4,16 @@ require_once "Settings.php";
 
 class User {
 
-    public ?int $user_id;
-    public ?string $username;
-    public ?string $email;
-    public ?string $password;
-    public ?string $secret;
-    public ?string $yubico_otp;
-    public ?string $backup_codes;
-    public ?string $created;
-    public ?string $accessed;
-    public int $response;
+    public ?int $user_id = null;
+    public ?string $username = null;
+    public ?string $email = null;
+    public ?string $password = null;
+    public ?string $secret = null;
+    public ?string $yubico_otp = null;
+    public ?string $backup_codes = null;
+    public ?string $created = null;
+    public ?string $accessed = null;
+    public int $response = 505;
 
     public function fromId($id){
         try{
