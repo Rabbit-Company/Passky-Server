@@ -57,7 +57,6 @@ class Database{
     }
 
     public static function userSentToManyRequests(string $action) : bool{
-        $timer = 0;
 
         $timerOptions = [
             'getToken' => Settings::getLimiterGetToken(),
@@ -76,6 +75,7 @@ class Database{
         ];
 
         $timer = $timerOptions[$action];
+        if($timer < 1) return false;
 
         $ips_array = json_decode(file_get_contents('../api-limiter.json'), true);
 
