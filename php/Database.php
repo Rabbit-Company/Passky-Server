@@ -59,6 +59,7 @@ class Database{
     public static function userSentToManyRequests(string $action) : bool{
 
         $timerOptions = [
+            'getInfo' => Settings::getLimiterGetInfo(),
             'getToken' => Settings::getLimiterGetToken(),
             'createAccount' => Settings::getLimiterCreateAccount(),
             'getPasswords' => Settings::getLimiterGetPasswords(),
@@ -126,7 +127,7 @@ class Database{
         return 0;
     }
 
-    public static function getUserCount(){
+    public static function getUserCount() : int{
         try{
             $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -155,6 +156,15 @@ class Database{
             return null;
         }
         $conn = null;
+    }
+
+    public static function getInfo() : string{
+        $JSON_OBJ = new StdClass;
+        $JSON_OBJ->version = "v5.0.0";
+        $JSON_OBJ->users = self::getUserCount();
+        $JSON_OBJ->maxUsers = Settings::getMaxAccounts();
+        $JSON_OBJ->maxPasswords = Settings::getMaxPasswords();
+        return Display::json(0, $JSON_OBJ);
     }
 
     public static function createAccount(string $username, string $password, string $email) : string{

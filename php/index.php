@@ -22,6 +22,14 @@ if(empty($_GET['action'])){
 }
 
 switch($_GET['action']){
+	case "getInfo":
+		if(Database::userSentToManyRequests('getInfo')){
+			echo Display::json(429);
+			return;
+		}
+
+		echo Database::getInfo();
+	break;
 	case "getToken":
 		if(Database::userSentToManyRequests('getToken')){
 			echo Display::json(429);

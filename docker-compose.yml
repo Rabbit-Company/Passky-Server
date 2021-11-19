@@ -42,6 +42,7 @@ services:
       - YUBI_CLOUD
       - YUBI_ID
       # Limiter
+      - LIMITER_GET_INFO
       - LIMITER_GET_TOKEN
       - LIMITER_GET_PASSWORDS
       - LIMITER_SAVE_PASSWORD
