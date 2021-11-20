@@ -135,9 +135,9 @@ class Database{
             $stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
             $stmt->execute();
 
-            return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : null;
+            return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
         }catch(PDOException $e) {
-            return null;
+            return -1;
         }
         $conn = null;
     }
@@ -170,7 +170,7 @@ class Database{
     public static function createAccount(string $username, string $password, string $email) : string{
 
         $amount_of_accounts = self::getUserCount();
-        if($amount_of_accounts == null) return Display::json(505);
+        if($amount_of_accounts == -1) return Display::json(505);
         if($amount_of_accounts >= Settings::getMaxAccounts()) return Display::json(15);
 
         $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
