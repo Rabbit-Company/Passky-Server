@@ -142,7 +142,7 @@ class Database{
         $conn = null;
     }
 
-    public static function getPasswordCount($user_id){
+    public static function getPasswordCount($user_id) : int{
         try{
             $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -151,9 +151,9 @@ class Database{
             $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             $stmt->execute();
 
-            return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : null;
+            return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
         }catch(PDOException $e) {
-            return null;
+            return -1;
         }
         $conn = null;
     }
@@ -365,7 +365,7 @@ class Database{
         $website = strtolower($website);
 
         $password_count = self::getPasswordCount($user->user_id);
-        if($password_count == null) return Display::json(505);
+        if($password_count == -1) return Display::json(505);
         if($password_count >= Settings::getMaxPasswords()) return Display::json(16);
 
         try{
@@ -400,7 +400,7 @@ class Database{
     public static function importPasswords(string $username, string $token, string $json_passwords) : string{
 
         if(!preg_match("/^[a-z0-9.]{6,30}$/i", $username)) return Display::json(1);
-        if(self::isTokenValid($username, $token)) return Display::json(5);
+        if(!self::isTokenValid($username, $token)) return Display::json(25);
 
         $password_obj = json_decode($json_passwords, true);
         if($password_obj === null && json_last_error() !== JSON_ERROR_NONE) return Display::json(14);
@@ -418,7 +418,7 @@ class Database{
         }
 
         $password_count = self::getPasswordCount($user->user_id);
-        if($password_count == null) return Display::json(505);
+        if($password_count == -1) return Display::json(505);
         if($password_count + count($password_obj) >= Settings::getMaxPasswords()) return Display::json(16);
 
         $num_success = 0;
