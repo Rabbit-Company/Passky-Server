@@ -164,6 +164,7 @@ class Database{
         $JSON_OBJ->users = self::getUserCount();
         $JSON_OBJ->maxUsers = Settings::getMaxAccounts();
         $JSON_OBJ->maxPasswords = Settings::getMaxPasswords();
+        $JSON_OBJ->location = Settings::getLocation();
         return Display::json(0, $JSON_OBJ);
     }
 

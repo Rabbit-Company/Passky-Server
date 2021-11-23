@@ -4,6 +4,16 @@ class Settings{
 
 /*
 
+    SERVER SETTINGS
+
+*/
+
+    public static function getLocation() : string{
+        return getenv("SERVER_LOCATION", true) ?: getenv("SERVER_LOCATION") ?: "us";
+    }
+
+/*
+
     DATABASE SETTINGS
 
 */

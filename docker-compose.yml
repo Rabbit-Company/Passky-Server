@@ -25,6 +25,8 @@ services:
       #
       # Change environment variables in .env file 
       #
+      # Server
+      - SERVER_LOCATION
       # Database
       - MYSQL_HOST
       - MYSQL_USER
