@@ -51,9 +51,9 @@ class Database{
     }
 
     public static function getUserIpAddress() : string {
-        if(!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
-        if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        return $_SERVER['REMOTE_ADDR'];
+        if(!empty($_SERVER['HTTP_CLIENT_IP'])) return hash("sha256", $_SERVER['HTTP_CLIENT_IP'] . "passky2020");
+        if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return hash("sha256", $_SERVER['HTTP_X_FORWARDED_FOR'] . "passky2020");
+        return hash("sha256", $_SERVER['REMOTE_ADDR'] . "passky2020");
     }
 
     public static function userSentToManyRequests(string $action) : bool{
@@ -80,11 +80,12 @@ class Database{
 
         $ips_array = json_decode(file_get_contents('../api-limiter.json'), true);
 
-		if(!empty($ips_array[$action][self::getUserIpAddress()])){
-			if((time() - $ips_array[$action][self::getUserIpAddress()]) < $timer) return true;
+        $ip = self::getUserIpAddress();
+		if(!empty($ips_array[$action][$ip])){
+			if((time() - $ips_array[$action][$ip]) < $timer) return true;
 		}
 
-		$ips_array[$action][self::getUserIpAddress()] = time();
+		$ips_array[$action][$ip] = time();
 		file_put_contents('../api-limiter.json', json_encode($ips_array));
         return false;
     }
@@ -233,7 +234,7 @@ class Database{
         $token_array = json_decode(file_get_contents('../tokens.json'), true);
         $userID = $username . "-" . self::getUserIpAddress();
         if(empty($token_array[$userID])){
-            $token = self::encryptPassword(self::generateCodes());
+            $token = hash("sha256", self::generateCodes());
             $token_array[$userID] = $token;
             file_put_contents('../tokens.json', json_encode($token_array));
         }else{
