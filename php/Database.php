@@ -118,7 +118,7 @@ class Database{
     }
 
     public static function isTokenValid(string $username, string $token) : int{
-        if($token == null) return 0;
+        if($token == null || strlen($token) != 64) return 0;
 
         $token_array = json_decode(file_get_contents('../tokens.json'), true);
         $userID = $username . "-" . self::getUserIpAddress();
@@ -586,15 +586,6 @@ class Database{
             break;
         }
 
-        $otp_array = json_decode(file_get_contents('../otp.json'), true);
-        if(empty($otp_array[$username])){
-            $secret = self::encryptPassword(self::generateCodes());
-            $otp_array[$username] = $secret;
-            file_put_contents('../otp.json', json_encode($otp_array));
-        }else{
-            $secret = $otp_array[$username];
-        }
-
         $username = strtolower($username);
 
         try{
@@ -607,9 +598,6 @@ class Database{
         	$stmt->execute();
 
             $JSON_OBJ = new StdClass;
-            $JSON_OBJ->secret = $secret;
-            $JSON_OBJ->auth = ($user->secret != null);
-            $JSON_OBJ->yubico = $user->yubico_otp;
 
         	if($stmt->rowCount() > 0){
                 $JSON_OBJ->passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -639,6 +627,8 @@ class Database{
                 return Display::json(505);
             break;
         }
+
+        if($user->secret != null) return Display::json(26);
 
         $google2fa = new Google2FA();
         $secret = $google2fa->generateSecretKey();
@@ -687,6 +677,8 @@ class Database{
             break;
         }
         
+        if($user->secret == null) return Display::json(27);
+
         try{
             $username = strtolower($username);
         	$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
