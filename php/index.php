@@ -21,186 +21,67 @@ if(empty($_GET['action'])){
 	return;
 }
 
-switch($_GET['action']){
-	case "getInfo":
-		if(Database::userSentToManyRequests('getInfo')){
-			echo Display::json(429);
-			return;
-		}
+$argumentNames = [
+	'getInfo'			=> [],
+    'getToken'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'otp'],
+    'createAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'email'],
+    'getPasswords'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
+	'savePassword'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'website', 'username', 'password', 'message'],
+	'importPasswords'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'php://input'],
+	'editPassword'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'password_id', 'website', 'username', 'password', 'message'],
+	'deletePassword'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'password_id'],
+	'deleteAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
+	'forgotUsername'	=> ['email'],
+	'enable2fa'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
+	'disable2fa'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
+	'addYubiKey'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id'],
+	'removeYubiKey'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id']
+];
 
-		echo Database::getInfo();
-	break;
-	case "getToken":
-		if(Database::userSentToManyRequests('getToken')){
-			echo Display::json(429);
-			return;
-		}
+$action  = $_GET['action'] ?? 'No action given';
 
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['otp'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::getToken($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['otp']);
-	break;
-	case "createAccount":
-		if(Database::userSentToManyRequests('createAccount')){
-			echo Display::json(429);
-			return;
-		}
-	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['email'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::createAccount($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['email']);
-    break;
-	case "getPasswords":
-		if(Database::userSentToManyRequests('getPasswords')){
-			echo Display::json(429);
-			return;
-		}
-
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::getPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-	break;
-	case "savePassword":
-		if(Database::userSentToManyRequests('savePassword')){
-			echo Display::json(429);
-			return;
-		}
-
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::savePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message']);
-	break;
-	case "importPasswords":
-		if(Database::userSentToManyRequests('importPasswords')){
-			echo Display::json(429);
-			return;
-		}
-
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || file_get_contents('php://input') == null){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::importPasswords($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], file_get_contents('php://input'));
-	break;
-	case "editPassword":
-		if(Database::userSentToManyRequests('editPassword')){
-			echo Display::json(429);
-			return;
-		}
-
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id']) || !isset($_POST['website']) || !isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['message'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::editPassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id'], $_POST['website'], $_POST['username'], $_POST['password'], $_POST['message']);
-	break;
-	case "deletePassword":
-		if(Database::userSentToManyRequests('deletePassword')){
-			echo Display::json(429);
-			return;
-		}
-
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['password_id'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::deletePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['password_id']);
-	break;
-	case "deleteAccount":
-		if(Database::userSentToManyRequests('deleteAccount')){
-			echo Display::json(429);
-			return;
-		}
-
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::deleteAccount($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-	break;
-	case "forgotUsername":
-		if(Database::userSentToManyRequests('forgotUsername')){
-			echo Display::json(429);
-			return;
-		}
-	
-		if(!isset($_POST['email'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::forgotUsername($_POST['email']);
-    break;
-	case "enable2fa":
-		if(Database::userSentToManyRequests('enable2fa')){
-			echo Display::json(429);
-			return;
-		}
-	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::enable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-    break;
-	case "disable2fa":
-		if(Database::userSentToManyRequests('disable2fa')){
-			echo Display::json(429);
-			return;
-		}
-	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::disable2Fa($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-    break;
-	case "addYubiKey":
-		if(Database::userSentToManyRequests('addYubiKey')){
-			echo Display::json(429);
-			return;
-		}
-	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::addYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id']);
-    break;
-	case "removeYubiKey":
-		if(Database::userSentToManyRequests('removeYubiKey')){
-			echo Display::json(429);
-			return;
-		}
-	
-		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !isset($_POST['id'])){
-			echo Display::json(403);
-			return;
-		}
-
-		echo Database::removeYubiKey($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_POST['id']);
-    break;
-    default:
-    	echo Display::json(401);
-    break;
+if (!in_array($action, array_keys($argumentNames))){
+	echo Display::json(401);
+	return;
 }
+
+if (Database::userSentToManyRequests($action)) {
+	echo Display::json(429);
+	return;
+}
+
+$arguments = [];
+$errorNo = 0;
+
+foreach ($argumentNames[$action] as $argumentName) {
+	if($argumentName == 'PHP_AUTH_USER' || $argumentName == 'PHP_AUTH_PW'){
+		if(isset($_SERVER[$argumentName])){
+			$arguments[] = $_SERVER[$argumentName];
+		}else{
+			$errorNo = 403;
+			break;
+		}
+	}elseif($argumentName == 'php://input'){
+		if(file_get_contents('php://input') != null){
+			$arguments[] = file_get_contents('php://input');
+		}else{
+			$errorNo = 403;
+			break;
+		}
+	}else{
+		if(isset($_POST[$argumentName])){
+			$arguments[] = $_POST[$argumentName];
+		}else{
+			$errorNo = 403;
+			break;
+		}
+	}
+}
+
+if ($errorNo == 0){
+	echo call_user_func_array(__NAMESPACE__ . '\Database::' . $action, $arguments);
+}else{
+	echo Display::json($errorNo);
+}
+
 ?>
