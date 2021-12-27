@@ -22,19 +22,19 @@ if(empty($_GET['action'])){
 }
 
 $argumentNames = [
-	'getInfo'			=> [],
-    'getToken'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'otp'],
-    'createAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'email'],
-    'getPasswords'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
+	'getInfo'					=> [],
+  'getToken'				=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'otp'],
+  'createAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'email'],
+	'getPasswords'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
 	'savePassword'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'website', 'username', 'password', 'message'],
 	'importPasswords'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'php://input'],
 	'editPassword'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'password_id', 'website', 'username', 'password', 'message'],
 	'deletePassword'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'password_id'],
 	'deleteAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
 	'forgotUsername'	=> ['email'],
-	'enable2fa'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
-	'disable2fa'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
-	'addYubiKey'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id'],
+	'enable2fa'				=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
+	'disable2fa'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
+	'addYubiKey'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id'],
 	'removeYubiKey'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id']
 ];
 

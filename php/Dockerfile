@@ -1,4 +1,4 @@
-FROM php:8.0-cli
+FROM php:8.1.1-cli
 
 # Copy all files in php folder to docker container
 COPY ./php /usr/src/app

@@ -53,7 +53,7 @@ class Settings{
     }
 
     public static function getMailTLS() : bool{
-        return getenv("MAIL_USE_TLS", true);
+        return getenv("MAIL_USE_TLS", true) === "true";
     }
 
 /*
@@ -89,6 +89,10 @@ class Settings{
     API CALL LIMITER (Brute force mitigation)
     
 */
+
+    public static function getLimiter() : bool{
+        return getenv("LIMITER_ENABLED", true) === "true";
+    }
 
     public static function getLimiterGetInfo() : int{
         return getenv("LIMITER_GET_INFO", true) ?: getenv("LIMITER_GET_INFO") ?: 1;

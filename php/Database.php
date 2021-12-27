@@ -58,6 +58,8 @@ class Database{
 
     public static function userSentToManyRequests(string $action) : bool{
 
+        if(!Settings::getLimiter()) return false;
+
         $timerOptions = [
             'getInfo' => Settings::getLimiterGetInfo(),
             'getToken' => Settings::getLimiterGetToken(),
@@ -161,7 +163,7 @@ class Database{
 
     public static function getInfo() : string{
         $JSON_OBJ = new StdClass;
-        $JSON_OBJ->version = "v5.0.0";
+        $JSON_OBJ->version = "v5.1.0";
         $JSON_OBJ->users = self::getUserCount();
         $JSON_OBJ->maxUsers = Settings::getMaxAccounts();
         $JSON_OBJ->maxPasswords = Settings::getMaxPasswords();
