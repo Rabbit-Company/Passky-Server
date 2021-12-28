@@ -15,5 +15,8 @@ COPY passky-entrypoint-backup.sh /etc/passky-entrypoint-backup.sh
 # Make script executable
 RUN chmod +x /etc/passky-entrypoint-backup.sh
 
+# Disable app-compat
+RUN mv /etc/cron.daily/apt-compat /etc/cron.daily/apt-compat.disabled
+
 # Start MariaDB and Cron
 ENTRYPOINT ["/etc/passky-entrypoint-backup.sh"]
