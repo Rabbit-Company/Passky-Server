@@ -26,6 +26,10 @@ class Settings{
         return getenv("MYSQL_USER", true) ?: getenv("MYSQL_USER") ?: "passky";
     }
 
+    public static function getDBDatabase() : string{
+        return getenv("MYSQL_DATABASE", true) ?: getenv("MYSQL_DATABASE") ?: "passky";
+    }
+
     public static function getDBPassword() : string{
         return getenv("MYSQL_PASSWORD", true) ?: getenv("MYSQL_PASSWORD") ?: "uDWjSd8wB2HRBHei489o";
     }

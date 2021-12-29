@@ -17,7 +17,7 @@ class User {
 
     public function fromId($id){
         try{
-            $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+            $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBDatabase(), Settings::getDBUsername(), Settings::getDBPassword());
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = :id");
@@ -51,7 +51,7 @@ class User {
         $username = strtolower($username);
 
         try{
-            $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+            $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBDatabase(), Settings::getDBUsername(), Settings::getDBPassword());
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
