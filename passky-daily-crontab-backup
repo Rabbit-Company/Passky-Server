@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/sh -l
 
 if [ "$BACKUP_ENABLED" = true ]
 then
-  mysqldump -u $MYSQL_USER -p"$MYSQL_PASSWORD" $MYSQL_DATABASE > /home/passky_`date +\%Y-\%m-\%d`.sql
-  sshpass -p "$BACKUP_PASSWORD" scp -o "ConnectTimeout 3" -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -P $BACKUP_PORT /home/passky_`date +\%Y-\%m-\%d`.sql $BACKUP_USER@$BACKUP_HOST:$BACKUP_LOCATION
-  rm /home/passky_`date +\%Y-\%m-\%d`.sql
+  /usr/bin/mysqldump -u $MYSQL_USER -p"$MYSQL_PASSWORD" --single-transaction $MYSQL_DATABASE > /home/passky_`date +\%Y-\%m-\%d`.sql
+  /usr/bin/sshpass -p "$BACKUP_PASSWORD" /usr/bin/scp -o "ConnectTimeout 3" -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -P $BACKUP_PORT /home/passky_`date +\%Y-\%m-\%d`.sql $BACKUP_USER@$BACKUP_HOST:$BACKUP_LOCATION
+  /usr/bin/rm /home/passky_`date +\%Y-\%m-\%d`.sql
 fi

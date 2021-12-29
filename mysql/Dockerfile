@@ -5,18 +5,19 @@ COPY ./mysql/database.sql /docker-entrypoint-initdb.d/
 
 # Install zip unzip openssh-client sshpass and cron for Backups
 RUN apt-get update && apt-get install -y zip unzip cron sshpass openssh-client
-# Copy script to cron.daily folder that will execute it every day
-COPY passky-daily-crontab-backup /etc/cron.daily/passky-daily-crontab-backup
-# Makes script executable
-RUN chmod +x /etc/cron.daily/passky-daily-crontab-backup
 
 # Copy starting script to etc folder
 COPY passky-entrypoint-backup.sh /etc/passky-entrypoint-backup.sh
 # Make script executable
 RUN chmod +x /etc/passky-entrypoint-backup.sh
 
-# Disable app-compat
-RUN mv /etc/cron.daily/apt-compat /etc/cron.daily/apt-compat.disabled
+# Remove all daily cron tasks
+RUN rm /etc/cron.daily/*
+
+# Copy script to cron.daily folder that will be executed every day
+COPY passky-daily-crontab-backup /etc/cron.daily/passky-daily-crontab-backup
+# Makes script executable
+RUN chmod +x /etc/cron.daily/passky-daily-crontab-backup
 
 # Start MariaDB and Cron
 ENTRYPOINT ["/etc/passky-entrypoint-backup.sh"]
