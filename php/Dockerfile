@@ -25,13 +25,16 @@ EXPOSE 8080
 RUN echo "{}" > ../api-limiter.json
 RUN echo "{}" > ../tokens.json
 
+# Remove all daily cron tasks
+RUN rm /etc/cron.daily/*
+
 # Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
-COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab
+COPY ./scripts/passky-daily-crontab /etc/cron.daily/passky-daily-crontab
 # Make script executable
 RUN chmod +x /etc/cron.daily/passky-daily-crontab
 
 # Copy starting script to etc folder
-COPY passky-entrypoint.sh /etc/passky-entrypoint.sh
+COPY ./scripts/passky-entrypoint.sh /etc/passky-entrypoint.sh
 # Make script executable
 RUN chmod +x /etc/passky-entrypoint.sh
 

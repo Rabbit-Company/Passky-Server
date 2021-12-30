@@ -1,4 +1,7 @@
-#!/bin/sh -l
+#!/bin/bash
+
+# Load ENV variables from a file
+source /root/project_env.sh
 
 if [ "$BACKUP_ENABLED" = true ]
 then
