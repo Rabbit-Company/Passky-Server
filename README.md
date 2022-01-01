@@ -83,8 +83,8 @@ sudo apt install docker-compose
 ```
 #### Passky containers
 ```yaml
-wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.gz
-tar -xzvf passky-server.tar.gz
+wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.xz
+tar -xzvf passky-server.tar.xz
 cd passky-server
 # Make sure to edit settings in .env file before you start your Passky server with below command
 sudo docker-compose up -d
