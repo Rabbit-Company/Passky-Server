@@ -109,8 +109,8 @@ sudo docker stop passky-php passky-mysql
 sudo docker rm passky-php passky-mysql
 sudo docker rmi passky-server_passky-php passky-server_passky-mysql
 # Install new Passky Server
-wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.gz
-tar -xzvf passky-server.tar.gz
+wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.xz
+tar -xzvf passky-server.tar.xz
 cd passky-server
 sudo docker-compose up -d
 ```
