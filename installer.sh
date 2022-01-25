@@ -283,7 +283,7 @@ then
   echo "BACKUP_LOCATION=${BACKUP_LOCATION}" >> .env
 
   echo -e "${blue}${bold}Provide user for Backup server.${blue}"
-  echo -e "Setting up Backups is not required."
+  echo -e "Do not use root user. Create new user that doesn't have root premissions."
   echo -e "Example: backup"
 
   printf "\n${green}Backup user: "
