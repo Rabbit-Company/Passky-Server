@@ -19,7 +19,7 @@ class Settings{
 */
 
     public static function getDBHost() : string{
-        return getenv("MYSQL_HOST", true) ?: getenv("MYSQL_HOST") ?: "passky-mysql";
+        return getenv("MYSQL_HOST", true) ?: getenv("MYSQL_HOST") ?: "passky-database";
     }
 
     public static function getDBUsername() : string{
@@ -35,6 +35,10 @@ class Settings{
     EMAIL SETTINGS
 
 */
+
+    public static function getMail() : bool{
+        return getenv("MAIL_ENABLED", true) === "true";
+    }
 
     public static function getMailHost() : string{
         return getenv("MAIL_HOST", true) ?: getenv("MAIL_HOST") ?: "mail.passky.org";

@@ -29,6 +29,7 @@ data:
       - BACKUP_PASSWORD: XbZyoinZefqkOyp3UBCbg
       - BACKUP_LOCATION: /home/backup/Passky
       # Mail
+      - MAIL_ENABLED: true
       - MAIL_HOST: mail.passky.org
       - MAIL_PORT: 587
       - MAIL_USERNAME: info@passky.org

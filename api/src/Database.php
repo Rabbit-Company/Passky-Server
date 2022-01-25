@@ -10,7 +10,7 @@ require_once "Display.php";
 require_once "Settings.php";
 require_once "User.php";
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 class Database{
 
@@ -163,7 +163,7 @@ class Database{
 
     public static function getInfo() : string{
         $JSON_OBJ = new StdClass;
-        $JSON_OBJ->version = "v5.1.0";
+        $JSON_OBJ->version = "v5.2.0";
         $JSON_OBJ->users = self::getUserCount();
         $JSON_OBJ->maxUsers = Settings::getMaxAccounts();
         $JSON_OBJ->maxPasswords = Settings::getMaxPasswords();
@@ -801,6 +801,7 @@ class Database{
     }
 
     public static function forgotUsername(string $email) : string{
+        if(!Settings::getMail()) return Display::json(28);
         $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
         if(!filter_var($sub_email, FILTER_VALIDATE_EMAIL)) return Display::json(6);
 

@@ -1,10 +1,10 @@
 version: '3'
 services:
-  passky-mysql:
-    container_name: passky-mysql
+  passky-database:
+    container_name: passky-database
     build:
-      context: .
-      dockerfile: ./mysql/Dockerfile
+      context: ./database
+      #dockerfile: ./database/Dockerfile
     restart: always
     environment:
       #
@@ -26,11 +26,11 @@ services:
       - /passky:/var/lib/mysql
     networks:
       - passky
-  passky-php:
-    container_name: passky-php
+  passky-api:
+    container_name: passky-api
     build:
-      context: .
-      dockerfile: ./php/Dockerfile
+      context: ./api
+      #dockerfile: ./api/Dockerfile
     restart: always
     environment:
       #
@@ -43,6 +43,7 @@ services:
       - MYSQL_USER
       - MYSQL_PASSWORD
       # Mail
+      - MAIL_ENABLED
       - MAIL_HOST
       - MAIL_PORT
       - MAIL_USERNAME
@@ -75,7 +76,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - passky-mysql
+      - passky-database
 networks:
   passky:
     driver: bridge

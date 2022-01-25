@@ -30,6 +30,7 @@ class Errors{
         "25" => "Token is incorrect!",
         "26" => "Two-factor authentication is already enabled.",
         "27" => "Two-factor authentication is not enabled.",
+        "28" => "Mail is not enabled on this instance.",
         "400" => "Action was not provided in GET!",
         "401" => "Action is invalid!",
         "403" => "You didn't provide all required values in POST.",
