@@ -19,8 +19,8 @@ if(empty($_GET['action'])){
 
 $argumentNames = [
 	'getInfo'					=> [],
-  'getToken'				=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'otp'],
-  'createAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'email'],
+	'getToken'				=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'otp'],
+	'createAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'email'],
 	'getPasswords'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
 	'savePassword'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'website', 'username', 'password', 'message'],
 	'importPasswords'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'php://input'],
