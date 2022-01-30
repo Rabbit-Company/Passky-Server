@@ -1,7 +1,7 @@
 <?php
 
 header("Access-Control-Allow-Origin: *");
-header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; object-src: 'none'; base-uri 'none'; require-trusted-types-for 'script'; form-action 'none'");
+header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; require-trusted-types-for 'script'; form-action 'none'");
 header("X-Content-Type-Options: nosniff");
 header("X-XSS-Protection: 1; mode=block");
 header("X-Frame-Options: DENY");

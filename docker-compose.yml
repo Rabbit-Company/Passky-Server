@@ -4,7 +4,6 @@ services:
     container_name: passky-database
     build:
       context: ./database
-      #dockerfile: ./database/Dockerfile
     restart: always
     environment:
       #
@@ -30,7 +29,6 @@ services:
     container_name: passky-api
     build:
       context: ./api
-      #dockerfile: ./api/Dockerfile
     restart: always
     environment:
       #
