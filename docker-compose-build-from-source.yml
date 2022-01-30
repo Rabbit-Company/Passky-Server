@@ -2,13 +2,12 @@ version: '3'
 services:
   passky-database:
     container_name: passky-database
-    image: 'zigazajc007/passky-database:latest'
+    build:
+      context: ./database
     restart: always
     environment:
       #
-      # Change environment variables in .env file
-      # You can also run an installer.sh that would auto generate .env file
-      # or run installerGUI.sh for graphical configuration.
+      # Change environment variables in .env file 
       #
       # Database
       - MYSQL_DATABASE=passky
@@ -28,13 +27,12 @@ services:
       - passky
   passky-api:
     container_name: passky-api
-    image: 'zigazajc007/passky-api:latest'
+    build:
+      context: ./api
     restart: always
     environment:
       #
-      # Change environment variables in .env file
-      # You can also run an installer.sh that would auto generate .env file
-      # or run installerGUI.sh for graphical configuration.
+      # Change environment variables in .env file 
       #
       # Server
       - SERVER_LOCATION
