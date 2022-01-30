@@ -78,7 +78,7 @@ curl -sSL https://get.docker.com/ | CHANNEL=stable bash
 # Start docker on boot
 sudo systemctl enable --now docker
 # Install docker compose
-sudo apt install docker-compose
+sudo apt install docker-compose -y
 ```
 #### Passky containers
 ```yaml
