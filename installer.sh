@@ -47,9 +47,9 @@ read SERVER_LOCATION
 
 while [[ ! " ${validLocations[@]} " =~ " ${SERVER_LOCATION} " ]];
 do
-  echo -e "${red}Location '${SERVER_LOCATION}' is not a valid location. Make sure you use uppercase characters."
-  printf "${green}Server location: "
-  read SERVER_LOCATION
+	echo -e "${red}Location '${SERVER_LOCATION}' is not a valid location. Make sure you use uppercase characters."
+	printf "${green}Server location: "
+	read SERVER_LOCATION
 done
 
 echo "SERVER_LOCATION=${SERVER_LOCATION}" >> .env
@@ -63,9 +63,9 @@ read ACCOUNT_MAX
 
 while [[ ! "$ACCOUNT_MAX" =~ ^[0-9]{1,10}$ ]];
 do
-  echo -e "\n${red}'$ACCOUNT_MAX' is not a valid number. Make sure number is between 0 and 9999999999."
-  printf "\n${green}Maximum accounts created: "
-  read ACCOUNT_MAX
+	echo -e "\n${red}'$ACCOUNT_MAX' is not a valid number. Make sure number is between 0 and 9999999999."
+	printf "\n${green}Maximum accounts created: "
+	read ACCOUNT_MAX
 done
 
 echo "ACCOUNT_MAX=${ACCOUNT_MAX}" >> .env
@@ -79,9 +79,9 @@ read ACCOUNT_MAX_PASSWORDS
 
 while [[ ! "$ACCOUNT_MAX_PASSWORDS" =~ ^[0-9]{1,10}$ ]];
 do
-  echo -e "\n${red}'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between 0 and 9999999999."
-  printf "\n${green}Maximum passwords per account: "
-  read ACCOUNT_MAX_PASSWORDS
+	echo -e "\n${red}'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between 0 and 9999999999."
+	printf "\n${green}Maximum passwords per account: "
+	read ACCOUNT_MAX_PASSWORDS
 done
 
 echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
@@ -116,9 +116,9 @@ read -s MYSQL_PASSWORD
 
 while [[ ! "$MYSQL_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
 do
-  echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
-  printf "\n${green}Password: "
-  read -s MYSQL_PASSWORD
+	echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
+	printf "\n${green}Password: "
+	read -s MYSQL_PASSWORD
 done
 
 echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
@@ -132,9 +132,9 @@ read -s MYSQL_ROOT_PASSWORD
 
 while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
 do
-  echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
-  printf "\n${green}Password: "
-  read -s MYSQL_ROOT_PASSWORD
+	echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
+	printf "\n${green}Password: "
+	read -s MYSQL_ROOT_PASSWORD
 done
 
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
@@ -151,79 +151,79 @@ read MAIL_ENABLED
 
 while [[ ! " ${validBoolean[@]} " =~ " ${MAIL_ENABLED} " ]];
 do
-  echo -e "${red}'${MAIL_ENABLED}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
-  printf "\n${green}Enable mail: "
-  read MAIL_ENABLED
+	echo -e "${red}'${MAIL_ENABLED}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
+	printf "\n${green}Enable mail: "
+	read MAIL_ENABLED
 done
 
 echo "MAIL_ENABLED=${MAIL_ENABLED}" >> .env
 
 if [ "$MAIL_ENABLED" = true ]
 then
-  echo -e "${blue}${bold}Provide SMTP host.${blue}"
-  echo -e "Setting up SMTP is not required."
-  echo -e "Example: mail.passky.org"
+	echo -e "${blue}${bold}Provide SMTP host.${blue}"
+	echo -e "Setting up SMTP is not required."
+	echo -e "Example: mail.passky.org"
 
-  printf "\n${green}SMTP host: "
-  read MAIL_HOST
+	printf "\n${green}SMTP host: "
+	read MAIL_HOST
 
-  echo "MAIL_HOST=${MAIL_HOST}" >> .env
+	echo "MAIL_HOST=${MAIL_HOST}" >> .env
 
-  echo -e "\n${blue}${bold}Provide SMTP port.${blue}"
-  echo -e "Setting up SMTP is not required."
-  echo -e "Example: 587"
+	echo -e "\n${blue}${bold}Provide SMTP port.${blue}"
+	echo -e "Setting up SMTP is not required."
+	echo -e "Example: 587"
 
-  printf "\n${green}SMTP port: "
-  read MAIL_PORT
+	printf "\n${green}SMTP port: "
+	read MAIL_PORT
 
-  while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
-  do
-    echo -e "${red}'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535."
-    printf "\n${green}SMTP port: "
-    read MAIL_PORT
-  done
+	while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
+	do
+		echo -e "${red}'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535."
+		printf "\n${green}SMTP port: "
+		read MAIL_PORT
+	done
 
-  echo "MAIL_PORT=${MAIL_PORT}" >> .env
+	echo "MAIL_PORT=${MAIL_PORT}" >> .env
 
-  echo -e "\n${blue}${bold}Use TLS?.${blue}"
-  echo -e "Setting up SMTP is not required."
-  echo -e "Example: true"
+	echo -e "\n${blue}${bold}Use TLS?.${blue}"
+	echo -e "Setting up SMTP is not required."
+	echo -e "Example: true"
 
-  printf "\n${green}Use TLS: "
-  read MAIL_USE_TLS
+	printf "\n${green}Use TLS: "
+	read MAIL_USE_TLS
 
-  while [[ ! " ${validBoolean[@]} " =~ " ${MAIL_USE_TLS} " ]];
-  do
-    echo -e "${red}'${MAIL_USE_TLS}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
-    printf "\n${green}Enable mail: "
-    read MAIL_USE_TLS
-  done
+	while [[ ! " ${validBoolean[@]} " =~ " ${MAIL_USE_TLS} " ]];
+	do
+		echo -e "${red}'${MAIL_USE_TLS}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
+		printf "\n${green}Enable mail: "
+		read MAIL_USE_TLS
+	done
 
-  echo "MAIL_USE_TLS=${MAIL_USE_TLS}" >> .env
+	echo "MAIL_USE_TLS=${MAIL_USE_TLS}" >> .env
 
-  echo -e "\n${blue}${bold}Provide SMTP username.${blue}"
-  echo -e "Setting up SMTP is not required."
-  echo -e "Example: info@passky.org"
+	echo -e "\n${blue}${bold}Provide SMTP username.${blue}"
+	echo -e "Setting up SMTP is not required."
+	echo -e "Example: info@passky.org"
 
-  printf "\n${green}SMTP username: "
-  read MAIL_USERNAME
+	printf "\n${green}SMTP username: "
+	read MAIL_USERNAME
 
-  echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
+	echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
 
-  echo -e "\n${blue}${bold}Provide SMTP password.${blue}"
-  echo -e "Setting up SMTP is not required."
-  echo -e "Example: uDWjSd8wB2HRBHei489o"
+	echo -e "\n${blue}${bold}Provide SMTP password.${blue}"
+	echo -e "Setting up SMTP is not required."
+	echo -e "Example: uDWjSd8wB2HRBHei489o"
 
-  printf "\n${green}SMTP password: "
-  read -s MAIL_PASSWORD
+	printf "\n${green}SMTP password: "
+	read -s MAIL_PASSWORD
 
-  echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
+	echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
 else
-  echo "MAIL_HOST=" >> .env
-  echo "MAIL_PORT=" >> .env
-  echo "MAIL_USERNAME=" >> .env
-  echo "MAIL_PASSWORD=" >> .env
-  echo "MAIL_USE_TLS=" >> .env
+	echo "MAIL_HOST=" >> .env
+	echo "MAIL_PORT=" >> .env
+	echo "MAIL_USERNAME=" >> .env
+	echo "MAIL_PASSWORD=" >> .env
+	echo "MAIL_USE_TLS=" >> .env
 fi
 
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
@@ -239,72 +239,72 @@ read BACKUP_ENABLED
 
 while [[ ! " ${validBoolean[@]} " =~ " ${BACKUP_ENABLED} " ]];
 do
-  echo -e "${red}'${BACKUP_ENABLED}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
-  printf "\n${green}Backup enabled: "
-  read BACKUP_ENABLED
+	echo -e "${red}'${BACKUP_ENABLED}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
+	printf "\n${green}Backup enabled: "
+	read BACKUP_ENABLED
 done
 
 echo "BACKUP_ENABLED=${BACKUP_ENABLED}" >> .env
 
 if [ "$BACKUP_ENABLED" = true ]
 then
-  echo -e "${blue}${bold}Provide host for Backup server.${blue}"
-  echo -e "Setting up Backups is not required."
-  echo -e "Example: backups.passky.org"
+	echo -e "${blue}${bold}Provide host for Backup server.${blue}"
+	echo -e "Setting up Backups is not required."
+	echo -e "Example: backups.passky.org"
 
-  printf "\n${green}Backup host: "
-  read BACKUP_HOST
+	printf "\n${green}Backup host: "
+	read BACKUP_HOST
 
-  echo "BACKUP_HOST=${BACKUP_HOST}" >> .env
+	echo "BACKUP_HOST=${BACKUP_HOST}" >> .env
 
-  echo -e "\n${blue}${bold}Provide SSH port.${blue}"
-  echo -e "Setting up Backups is not required."
-  echo -e "Example: 22"
+	echo -e "\n${blue}${bold}Provide SSH port.${blue}"
+	echo -e "Setting up Backups is not required."
+	echo -e "Example: 22"
 
-  printf "\n${green}SSH port: "
-  read BACKUP_PORT
+	printf "\n${green}SSH port: "
+	read BACKUP_PORT
 
-  while [[ ! "$BACKUP_PORT" =~ ^[0-9]{1,5}$ ]];
-  do
-    echo -e "${red}'${BACKUP_PORT}' is not a valid port. Port must be a number between 1 and 65535."
-    printf "\n${green}SSH port: "
-    read BACKUP_PORT
-  done
+	while [[ ! "$BACKUP_PORT" =~ ^[0-9]{1,5}$ ]];
+	do
+		echo -e "${red}'${BACKUP_PORT}' is not a valid port. Port must be a number between 1 and 65535."
+		printf "\n${green}SSH port: "
+		read BACKUP_PORT
+	done
 
-  echo "BACKUP_PORT=${BACKUP_PORT}" >> .env
+	echo "BACKUP_PORT=${BACKUP_PORT}" >> .env
 
-  echo -e "${blue}${bold}Provide location for Backup server.${blue}"
-  echo -e "On this location backup would be saved every day."
-  echo -e "Example: /home/backup/Passky"
+	echo -e "${blue}${bold}Provide location for Backup server.${blue}"
+	echo -e "On this location backup would be saved every day."
+	echo -e "Example: /home/backup/Passky"
 
-  printf "\n${green}Backup location: "
-  read BACKUP_LOCATION
+	printf "\n${green}Backup location: "
+	read BACKUP_LOCATION
 
-  echo "BACKUP_LOCATION=${BACKUP_LOCATION}" >> .env
+	echo "BACKUP_LOCATION=${BACKUP_LOCATION}" >> .env
 
-  echo -e "${blue}${bold}Provide user for Backup server.${blue}"
-  echo -e "Do not use root user. Create new user that doesn't have root premissions."
-  echo -e "Example: backup"
+	echo -e "${blue}${bold}Provide user for Backup server.${blue}"
+	echo -e "Do not use root user. Create new user that doesn't have root premissions."
+	echo -e "Example: backup"
 
-  printf "\n${green}Backup user: "
-  read BACKUP_USER
+	printf "\n${green}Backup user: "
+	read BACKUP_USER
 
-  echo "BACKUP_USER=${BACKUP_USER}" >> .env
+	echo "BACKUP_USER=${BACKUP_USER}" >> .env
 
-  echo -e "\n${blue}${bold}Provide password for user '${BACKUP_USER}'.${blue}"
-  echo -e "Setting up Backups is not required."
-  echo -e "Example: uDWjSd8wB2HRBHei489o"
+	echo -e "\n${blue}${bold}Provide password for user '${BACKUP_USER}'.${blue}"
+	echo -e "Setting up Backups is not required."
+	echo -e "Example: uDWjSd8wB2HRBHei489o"
 
-  printf "\n${green}User password: "
-  read -s BACKUP_PASSWORD
+	printf "\n${green}User password: "
+	read -s BACKUP_PASSWORD
 
-  echo "BACKUP_PASSWORD=${BACKUP_PASSWORD}" >> .env
+	echo "BACKUP_PASSWORD=${BACKUP_PASSWORD}" >> .env
 else
-  echo "BACKUP_HOST=" >> .env
-  echo "BACKUP_PORT=" >> .env
-  echo "BACKUP_USER=" >> .env
-  echo "BACKUP_PASSWORD=" >> .env
-  echo "BACKUP_LOCATION=" >> .env
+	echo "BACKUP_HOST=" >> .env
+	echo "BACKUP_PORT=" >> .env
+	echo "BACKUP_USER=" >> .env
+	echo "BACKUP_PASSWORD=" >> .env
+	echo "BACKUP_LOCATION=" >> .env
 fi
 
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
@@ -320,9 +320,9 @@ read LIMITER_ENABLED
 
 while [[ ! " ${validBoolean[@]} " =~ " ${LIMITER_ENABLED} " ]];
 do
-  echo -e "${red}'${LIMITER_ENABLED}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
-  printf "\n${green}API call limiter enabled: "
-  read LIMITER_ENABLED
+	echo -e "${red}'${LIMITER_ENABLED}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
+	printf "\n${green}API call limiter enabled: "
+	read LIMITER_ENABLED
 done
 
 echo "LIMITER_ENABLED=${LIMITER_ENABLED}" >> .env

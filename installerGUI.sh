@@ -2,7 +2,7 @@
 
 if (! whiptail --title "Passky Installer" --yesno "Passkey Installer will remove your current .env file and create a new one based on your provided answers.\n\nDo you want to process with the installer?" 12 78);
 then
-  exit
+	exit
 fi
 
 now=$(date)
@@ -17,14 +17,14 @@ echo "SERVER_LOCATION=${SERVER_LOCATION}" >> .env
 ACCOUNT_MAX=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many accounts can be created on this Passky Server?\n\nWhen this amount would be reached, new users woun't be able to create their accounts on this server." 12 78 100 3>&1 1>&2 2>&3)
 while [[ ! "$ACCOUNT_MAX" =~ ^[0-9]{1,10}$ ]];
 do
-  ACCOUNT_MAX=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many accounts can be created on this Passky Server?\n\nWhen this amount would be reached, new users woun't be able to create their accounts on this server.\n\n'$ACCOUNT_MAX' is not a valid number. Make sure number is between 0 and 9999999999." 14 78 100 3>&1 1>&2 2>&3)
+	ACCOUNT_MAX=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many accounts can be created on this Passky Server?\n\nWhen this amount would be reached, new users woun't be able to create their accounts on this server.\n\n'$ACCOUNT_MAX' is not a valid number. Make sure number is between 0 and 9999999999." 14 78 100 3>&1 1>&2 2>&3)
 done
 echo "ACCOUNT_MAX=${ACCOUNT_MAX}" >> .env
 
 ACCOUNT_MAX_PASSWORDS=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many passwords can each account hold/have?\n\nWhen this amount would be reached, users won't be able to save new passwords." 12 78 1000 3>&1 1>&2 2>&3)
 while [[ ! "$ACCOUNT_MAX_PASSWORDS" =~ ^[0-9]{1,10}$ ]];
 do
-  ACCOUNT_MAX_PASSWORDS=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many passwords can each account hold/have?\n\nWhen this amount would be reached, users won't be able to save new passwords.\n\n'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between 0 and 9999999999." 14 78 1000 3>&1 1>&2 2>&3)
+	ACCOUNT_MAX_PASSWORDS=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many passwords can each account hold/have?\n\nWhen this amount would be reached, users won't be able to save new passwords.\n\n'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between 0 and 9999999999." 14 78 1000 3>&1 1>&2 2>&3)
 done
 echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
 
@@ -37,86 +37,86 @@ echo "MYSQL_USER=${MYSQL_USER}" >> .env
 MYSQL_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user '${MYSQL_USER}'.\n\nIf you are using docker, database with user will be created automatically" 12 78 3>&1 1>&2 2>&3)
 while [[ ! "$MYSQL_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
 do
-  MYSQL_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user '${MYSQL_USER}'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
+	MYSQL_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user '${MYSQL_USER}'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
 done
 echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
 
 MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically" 12 78 3>&1 1>&2 2>&3)
 while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
 do
-  MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
+	MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
 done
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
 
 if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want to enable SMTP mail?\n\nSetting up SMTP is not required." 12 78);
 then
-  echo "MAIL_ENABLED=true" >> .env
+	echo "MAIL_ENABLED=true" >> .env
 
-  MAIL_HOST=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP host.\n\nSetting up SMTP is not required." 12 78 mail.passky.org 3>&1 1>&2 2>&3)
-  echo "MAIL_HOST=${MAIL_HOST}" >> .env
+	MAIL_HOST=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP host.\n\nSetting up SMTP is not required." 12 78 mail.passky.org 3>&1 1>&2 2>&3)
+	echo "MAIL_HOST=${MAIL_HOST}" >> .env
 
-  MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required." 12 78 587 3>&1 1>&2 2>&3)
-  while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
-  do
-    MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required.\n\n'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 587 3>&1 1>&2 2>&3)
-  done
-  echo "MAIL_PORT=${MAIL_PORT}" >> .env
+	MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required." 12 78 587 3>&1 1>&2 2>&3)
+	while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
+	do
+		MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required.\n\n'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 587 3>&1 1>&2 2>&3)
+	done
+	echo "MAIL_PORT=${MAIL_PORT}" >> .env
 
-  if (whiptail --title "Passky Installer - Mail Settings" --yesno "Use TLS?\n\nSetting up SMTP is not required." 12 78); then
-    echo "MAIL_USE_TLS=true" >> .env
-  else
-    echo "MAIL_USE_TLS=false" >> .env
-  fi
+	if (whiptail --title "Passky Installer - Mail Settings" --yesno "Use TLS?\n\nSetting up SMTP is not required." 12 78); then
+		echo "MAIL_USE_TLS=true" >> .env
+	else
+		echo "MAIL_USE_TLS=false" >> .env
+	fi
 
-  MAIL_USERNAME=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP username.\n\nSetting up SMTP is not required." 12 78 info@passky.org 3>&1 1>&2 2>&3)
-  echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
+	MAIL_USERNAME=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP username.\n\nSetting up SMTP is not required." 12 78 info@passky.org 3>&1 1>&2 2>&3)
+	echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
 
-  MAIL_PASSWORD=$(whiptail --title "Passky Installer - Mail Settings" --passwordbox "Provide SMTP password.\n\nSetting up SMTP is not required." 12 78 3>&1 1>&2 2>&3)
-  echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
+	MAIL_PASSWORD=$(whiptail --title "Passky Installer - Mail Settings" --passwordbox "Provide SMTP password.\n\nSetting up SMTP is not required." 12 78 3>&1 1>&2 2>&3)
+	echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
 else
-  echo "MAIL_ENABLED=false" >> .env
-  echo "MAIL_HOST=" >> .env
-  echo "MAIL_PORT=" >> .env
-  echo "MAIL_USERNAME=" >> .env
-  echo "MAIL_PASSWORD=" >> .env
-  echo "MAIL_USE_TLS=" >> .env
+	echo "MAIL_ENABLED=false" >> .env
+	echo "MAIL_HOST=" >> .env
+	echo "MAIL_PORT=" >> .env
+	echo "MAIL_USERNAME=" >> .env
+	echo "MAIL_PASSWORD=" >> .env
+	echo "MAIL_USE_TLS=" >> .env
 fi
 
 if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want backups to be enabled?\n\nBackup perform every day and will export database to external server thru SSH (Using SCP).\n\nIf you don't have any external server ready for backups, leave it disabled." 14 78);
 then
-  echo "BACKUP_ENABLED=true" >> .env
+	echo "BACKUP_ENABLED=true" >> .env
 
-  BACKUP_HOST=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide host for Backup server.\n\nSetting up Backups is not required." 12 78 backups.passky.org 3>&1 1>&2 2>&3)
-  echo "BACKUP_HOST=${BACKUP_HOST}" >> .env
+	BACKUP_HOST=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide host for Backup server.\n\nSetting up Backups is not required." 12 78 backups.passky.org 3>&1 1>&2 2>&3)
+	echo "BACKUP_HOST=${BACKUP_HOST}" >> .env
 
-  BACKUP_PORT=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide SSH port.\n\nSetting up Backups is not required." 12 78 22 3>&1 1>&2 2>&3)
-  while [[ ! "$BACKUP_PORT" =~ ^[0-9]{1,5}$ ]];
-  do
-    BACKUP_PORT=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide SSH port.\n\nSetting up Backups is not required.\n\n'${BACKUP_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 22 3>&1 1>&2 2>&3)
-  done
-  echo "BACKUP_PORT=${BACKUP_PORT}" >> .env
+	BACKUP_PORT=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide SSH port.\n\nSetting up Backups is not required." 12 78 22 3>&1 1>&2 2>&3)
+	while [[ ! "$BACKUP_PORT" =~ ^[0-9]{1,5}$ ]];
+	do
+		BACKUP_PORT=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide SSH port.\n\nSetting up Backups is not required.\n\n'${BACKUP_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 22 3>&1 1>&2 2>&3)
+	done
+	echo "BACKUP_PORT=${BACKUP_PORT}" >> .env
 
-  BACKUP_LOCATION=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide location for Backup server.\n\nOn this location backup would be saved every day." 12 78 /home/backup/Passky 3>&1 1>&2 2>&3)
-  echo "BACKUP_LOCATION=${BACKUP_LOCATION}" >> .env
+	BACKUP_LOCATION=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide location for Backup server.\n\nOn this location backup would be saved every day." 12 78 /home/backup/Passky 3>&1 1>&2 2>&3)
+	echo "BACKUP_LOCATION=${BACKUP_LOCATION}" >> .env
 
-  BACKUP_USER=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide user for Backup server.\n\nDo not use root user. Create new user that doesn't have root premissions." 12 78 backup 3>&1 1>&2 2>&3)
-  echo "BACKUP_USER=${BACKUP_USER}" >> .env
+	BACKUP_USER=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide user for Backup server.\n\nDo not use root user. Create new user that doesn't have root premissions." 12 78 backup 3>&1 1>&2 2>&3)
+	echo "BACKUP_USER=${BACKUP_USER}" >> .env
 
-  BACKUP_PASSWORD=$(whiptail --title "Passky Installer - Backup Settings" --passwordbox "Provide password for user '${BACKUP_USER}'.\n\nSetting up Backups is not required." 12 78 3>&1 1>&2 2>&3)
-  echo "BACKUP_PASSWORD=${BACKUP_PASSWORD}" >> .env
+	BACKUP_PASSWORD=$(whiptail --title "Passky Installer - Backup Settings" --passwordbox "Provide password for user '${BACKUP_USER}'.\n\nSetting up Backups is not required." 12 78 3>&1 1>&2 2>&3)
+	echo "BACKUP_PASSWORD=${BACKUP_PASSWORD}" >> .env
 else
-  echo "BACKUP_ENABLED=false" >> .env
-  echo "BACKUP_HOST=" >> .env
-  echo "BACKUP_PORT=" >> .env
-  echo "BACKUP_USER=" >> .env
-  echo "BACKUP_PASSWORD=" >> .env
-  echo "BACKUP_LOCATION=" >> .env
+	echo "BACKUP_ENABLED=false" >> .env
+	echo "BACKUP_HOST=" >> .env
+	echo "BACKUP_PORT=" >> .env
+	echo "BACKUP_USER=" >> .env
+	echo "BACKUP_PASSWORD=" >> .env
+	echo "BACKUP_LOCATION=" >> .env
 fi
 
 if (whiptail --title "Passky Installer - API call limiter (Brute force mitigation)" --yesno "Do you want API call limiter to be enabled?\n\nAPI call limiter will only allow specific amount of calls for each device (IP).\n\nIf you expose this Passky Server to the internet, this should be enabled for security reasons." 14 78); then
-  echo "LIMITER_ENABLED=true" >> .env
+	echo "LIMITER_ENABLED=true" >> .env
 else
-  echo "LIMITER_ENABLED=false" >> .env
+	echo "LIMITER_ENABLED=false" >> .env
 fi
 
 echo "LIMITER_GET_INFO=1" >> .env

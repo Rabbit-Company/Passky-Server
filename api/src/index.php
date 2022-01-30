@@ -34,7 +34,7 @@ $argumentNames = [
 	'removeYubiKey'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id']
 ];
 
-$action  = $_GET['action'] ?? 'No action given';
+$action = $_GET['action'] ?? 'No action given';
 
 if (!in_array($action, array_keys($argumentNames))){
 	echo Display::json(401);
