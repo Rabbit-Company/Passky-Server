@@ -71,7 +71,6 @@ If you’re ready to try Passky out at no cost, you can get started by visiting 
 
 ## Installation
 
-### Docker compose
 #### Docker (Debian & Ubuntu)
 ```yaml
 # Install docker
@@ -96,7 +95,6 @@ sudo docker-compose up -d
 
 ## Upgrade
 
-### Docker compose
 ```yaml
 sudo docker-compose build
 sudo docker-compose up -d
@@ -104,7 +102,6 @@ sudo docker-compose up -d
 
 ## Uninstall
 
-### Docker compose
 ```yaml
 sudo docker-compose down
 ```
