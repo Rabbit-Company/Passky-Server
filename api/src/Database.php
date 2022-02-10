@@ -20,7 +20,7 @@ class Database{
 			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-			$stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
+			$stmt = $conn->prepare("SELECT user_id FROM users WHERE username = :username");
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 			return ($stmt->rowCount() == 0) ? 0 : 1;
@@ -132,7 +132,7 @@ class Database{
 			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-			$stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
+			$stmt = $conn->prepare("SELECT COUNT(1) AS 'amount' FROM users");
 			$stmt->execute();
 
 			return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
@@ -147,7 +147,7 @@ class Database{
 			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-			$stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM user_passwords WHERE user_id = :user_id;");
+			$stmt = $conn->prepare("SELECT COUNT(1) AS 'amount' FROM user_passwords WHERE user_id = :user_id;");
 			$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 			$stmt->execute();
 
