@@ -1,10 +1,10 @@
-FROM php:8.1.2-cli
+FROM php:8.1-apache
 
 # Copy all files in php folder to docker container
-COPY src/ /usr/src/app
+COPY src/ /var/www/html/
 
 # Switch workdir
-WORKDIR /usr/src/app
+WORKDIR /var/www/html/
 
 # Install Mysql extension for PHP
 RUN docker-php-ext-install pdo_mysql
@@ -16,30 +16,27 @@ RUN apt-get update && apt-get install -y zip unzip git cron
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy composer.json to docker container
-COPY composer.json /usr/src
+COPY composer.json /var/www
 
 # Install dependiencies from composer
-RUN composer update -d /usr/src
+RUN composer update -d /var/www
 
-# Expose port 8080 to other containers on the local network.
-EXPOSE 8080
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# Create json file for API Call Limiter and Tokens in /usr/src folder which can't be accessed by public
+# Create json file for API Call Limiter and Tokens in /var/www folder which can't be accessed by public
 RUN echo "{}" > ../api-limiter.json
 RUN echo "{}" > ../tokens.json
 
-# Remove all daily cron tasks
-RUN rm /etc/cron.daily/*
+# Give files permissions
+RUN chmod -R 777 /var/www
 
 # Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
 COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab
 # Make script executable
 RUN chmod +x /etc/cron.daily/passky-daily-crontab
 
-# Copy starting script to etc folder
-COPY passky-entrypoint.sh /etc/passky-entrypoint.sh
-# Make script executable
-RUN chmod +x /etc/passky-entrypoint.sh
+# Remove daily cron jobs, that are not needed
+RUN rm /etc/cron.daily/apt-compat /etc/cron.daily/dpkg /etc/cron.daily/exim4-base
 
-# Start PHP server on port 8080
-ENTRYPOINT ["/etc/passky-entrypoint.sh"]
+# Start cron
+RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground

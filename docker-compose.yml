@@ -3,7 +3,7 @@ services:
   passky-database:
     container_name: passky-database
     image: 'zigazajc007/passky-database:latest'
-    restart: always
+    restart: unless-stopped
     environment:
       #
       # Change environment variables in .env file
@@ -29,7 +29,7 @@ services:
   passky-api:
     container_name: passky-api
     image: 'zigazajc007/passky-api:latest'
-    restart: always
+    restart: unless-stopped
     environment:
       #
       # Change environment variables in .env file
@@ -58,6 +58,7 @@ services:
       # Limiter
       - LIMITER_ENABLED
       - LIMITER_GET_INFO
+      - LIMITER_GET_STATS
       - LIMITER_GET_TOKEN
       - LIMITER_GET_PASSWORDS
       - LIMITER_SAVE_PASSWORD
@@ -74,7 +75,7 @@ services:
     networks:
       - passky
     ports:
-      - 8080:8080
+      - 8080:80
     depends_on:
       - passky-database
 networks:

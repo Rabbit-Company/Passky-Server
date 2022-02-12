@@ -56,6 +56,7 @@ services:
       # Limiter
       - LIMITER_ENABLED
       - LIMITER_GET_INFO
+      - LIMITER_GET_STATS
       - LIMITER_GET_TOKEN
       - LIMITER_GET_PASSWORDS
       - LIMITER_SAVE_PASSWORD
@@ -72,7 +73,7 @@ services:
     networks:
       - passky
     ports:
-      - 8080:8080
+      - 8080:80
     depends_on:
       - passky-database
 networks:

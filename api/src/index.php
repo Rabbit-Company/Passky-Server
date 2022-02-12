@@ -1,14 +1,14 @@
 <?php
 
-if (isset($_SERVER['HTTP_ORIGIN'])) {
+if(isset($_SERVER['HTTP_ORIGIN'])) {
 	header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 	header('Access-Control-Allow-Credentials: true');
 	header('Access-Control-Max-Age: 86400');
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
-	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+	if(isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
+	if(isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
 	exit(0);
 }
 
@@ -30,6 +30,7 @@ if(empty($_GET['action'])){
 
 $argumentNames = [
 	'getInfo'					=> [],
+	'getStats'				=> [],
 	'getToken'				=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'otp'],
 	'createAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'email'],
 	'getPasswords'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
@@ -47,12 +48,12 @@ $argumentNames = [
 
 $action = $_GET['action'] ?? 'No action given';
 
-if (!in_array($action, array_keys($argumentNames))){
+if(!in_array($action, array_keys($argumentNames))){
 	echo Display::json(401);
 	return;
 }
 
-if (Database::userSentToManyRequests($action)) {
+if(Database::userSentToManyRequests($action)) {
 	echo Display::json(429);
 	return;
 }
@@ -61,31 +62,19 @@ $arguments = [];
 $errorNo = 0;
 
 foreach ($argumentNames[$action] as $argumentName) {
-	if($argumentName == 'PHP_AUTH_USER' || $argumentName == 'PHP_AUTH_PW'){
-		if(isset($_SERVER[$argumentName])){
-			$arguments[] = $_SERVER[$argumentName];
-		}else{
-			$errorNo = 403;
-			break;
-		}
-	}elseif($argumentName == 'php://input'){
-		if(file_get_contents('php://input') != null){
-			$arguments[] = file_get_contents('php://input');
-		}else{
-			$errorNo = 403;
-			break;
-		}
+	if(($argumentName == 'PHP_AUTH_USER' || $argumentName == 'PHP_AUTH_PW') && isset($_SERVER[$argumentName])){
+		$arguments[] = $_SERVER[$argumentName];
+	}elseif($argumentName == 'php://input' && file_get_contents('php://input') != null){
+		$arguments[] = file_get_contents('php://input');
+	}elseif(isset($_POST[$argumentName])){
+		$arguments[] = $_POST[$argumentName];
 	}else{
-		if(isset($_POST[$argumentName])){
-			$arguments[] = $_POST[$argumentName];
-		}else{
-			$errorNo = 403;
-			break;
-		}
+		$errorNo = 403;
+		break;
 	}
 }
 
-if ($errorNo == 0){
+if($errorNo == 0){
 	echo call_user_func_array(__NAMESPACE__ . '\Database::' . $action, $arguments);
 }else{
 	echo Display::json($errorNo);

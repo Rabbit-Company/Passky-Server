@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "{}" > /usr/src/api-limiter.json
-echo "{}" > /usr/src/tokens.json
+echo "{}" > /var/www/api-limiter.json
+echo "{}" > /var/www/tokens.json

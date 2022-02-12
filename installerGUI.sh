@@ -120,6 +120,7 @@ else
 fi
 
 echo "LIMITER_GET_INFO=1" >> .env
+echo "LIMITER_GET_STATS=1" >> .env
 echo "LIMITER_GET_TOKEN=3" >> .env
 echo "LIMITER_GET_PASSWORDS=2" >> .env
 echo "LIMITER_SAVE_PASSWORD=2" >> .env
