@@ -71,7 +71,8 @@ If you’re ready to try Passky out at no cost, you can get started by visiting 
 
 ## Installation
 
-#### Docker (Debian & Ubuntu)
+### Docker
+#### Debian & Ubuntu
 ```yaml
 # Install docker
 curl -sSL https://get.docker.com/ | CHANNEL=stable bash
@@ -80,7 +81,20 @@ sudo systemctl enable --now docker
 # Install docker compose
 sudo apt install docker-compose -y
 ```
-#### Passky containers
+#### Raspberry Pi OS
+```yaml
+# Install docker
+curl -sSL https://get.docker.com/ | CHANNEL=stable bash
+# Start docker on boot
+sudo systemctl enable --now docker
+# Install docker compose
+sudo apt-get install libffi-dev libssl-dev
+sudo apt install python3-dev
+sudo apt-get install -y python3 python3-pip
+sudo pip3 install docker-compose
+```
+
+### Passky containers
 ```yaml
 wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.xz
 tar -xf passky-server.tar.xz
@@ -96,7 +110,7 @@ sudo docker-compose up -d
 ## Upgrade
 
 ```yaml
-sudo docker-compose build
+sudo docker-compose pull
 sudo docker-compose up -d
 ```
 
