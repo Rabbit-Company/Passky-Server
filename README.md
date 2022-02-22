@@ -72,7 +72,7 @@ If you’re ready to try Passky out at no cost, you can get started by visiting 
 ## Installation
 
 ### Docker
-#### Debian & Ubuntu
+#### Debian & Ubuntu (x64)
 ```yaml
 # Install docker
 curl -sSL https://get.docker.com/ | CHANNEL=stable bash
@@ -81,7 +81,7 @@ sudo systemctl enable --now docker
 # Install docker compose
 sudo apt install docker-compose -y
 ```
-#### Raspberry Pi OS
+#### Raspberry Pi OS (arm64)
 ```yaml
 # Install docker
 curl -sSL https://get.docker.com/ | CHANNEL=stable bash
