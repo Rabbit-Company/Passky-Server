@@ -18,6 +18,8 @@
 
 Passky is simple, modern, lightweight, open source and secure password manager.
 
+[![Passky - Password manager](https://img.youtube.com/vi/yrk6cHkgVA8/0.jpg)](https://www.youtube.com/watch?v=yrk6cHkgVA8 "Click to watch!")
+
 ## How Much Does it Cost?
 
 Passky is open-source. This means that anyone can download it, dig into its code, and customize it to their liking. Using Passky doesn’t require an upfront cost or monthly subscription. It’s completely free to download and can be hosted by anyone who has the space to do so.
@@ -65,9 +67,6 @@ And when you donate, don’t think that you’re paying us to rest on our laurel
     • And more…
 
 If you’re ready to try Passky out at no cost, you can get started by visiting our website at https://passky.org. We currently have a desktop application available for Windows and Linux operating systems along with a mobile app on the Google Play Store. MacOS and iOS apps are currently being developed. In addition, we offer browser extensions for all major browsers except for Safari.
-
-## Passky Server Installation
-[![Passky Server Installation](https://img.youtube.com/vi/NLggfKS7qP8/0.jpg)](https://www.youtube.com/watch?v=NLggfKS7qP8 "Click to watch!")
 
 ## Installation
 
