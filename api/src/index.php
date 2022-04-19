@@ -19,14 +19,15 @@ header("X-Frame-Options: DENY");
 header("Referrer-Policy: no-referrer");
 header("Permissions-Policy: interest-cohort=()");
 
+if(empty($_GET['action'])){
+	header("Content-Security-Policy: default-src 'unsafe-inline'; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; require-trusted-types-for 'script'; form-action 'none'");
+	readfile("test.html");
+	return;
+}
+
 require_once "Display.php";
 require_once "Database.php";
 require_once "Settings.php";
-
-if(empty($_GET['action'])){
-	echo Display::json(400);
-	return;
-}
 
 $argumentNames = [
 	'getInfo'					=> [],

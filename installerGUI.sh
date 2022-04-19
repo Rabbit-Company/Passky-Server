@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if (! whiptail --title "Passky Installer" --yesno "Passkey Installer will remove your current .env file and create a new one based on your provided answers.\n\nDo you want to process with the installer?" 12 78);
+if (! whiptail --title "Passky Installer" --yesno "Passky Installer will remove your current .env file and create a new one based on your provided answers.\n\nDo you want to process with the installer?" 12 78);
 then
 	exit
 fi
