@@ -1,5 +1,18 @@
 <?php
 
+header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; require-trusted-types-for 'script'; form-action 'none'");
+header("X-Content-Type-Options: nosniff");
+header("X-XSS-Protection: 1; mode=block");
+header("X-Frame-Options: DENY");
+header("Referrer-Policy: no-referrer");
+header("Permissions-Policy: interest-cohort=()");
+
+if(empty($_GET['action'])){
+	header("Content-Security-Policy: default-src 'self'; style-src 'self'; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; form-action 'none'");
+	readfile("website/test.html");
+	return;
+}
+
 if(isset($_SERVER['HTTP_ORIGIN'])) {
 	header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 	header('Access-Control-Allow-Credentials: true');
@@ -10,19 +23,6 @@ if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	if(isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
 	if(isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
 	exit(0);
-}
-
-header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; require-trusted-types-for 'script'; form-action 'none'");
-header("X-Content-Type-Options: nosniff");
-header("X-XSS-Protection: 1; mode=block");
-header("X-Frame-Options: DENY");
-header("Referrer-Policy: no-referrer");
-header("Permissions-Policy: interest-cohort=()");
-
-if(empty($_GET['action'])){
-	header("Content-Security-Policy: default-src 'unsafe-inline'; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; require-trusted-types-for 'script'; form-action 'none'");
-	readfile("test.html");
-	return;
 }
 
 require_once "Display.php";
