@@ -5,15 +5,11 @@ Author: Rabbit Company
 Database: MySQL 8.0
 */
 
--- Create database section -------------------------------------------------
-
-CREATE DATABASE IF NOT EXISTS `passky`;
-
 -- Create tables section -------------------------------------------------
 
 -- Table passky.users
 
-CREATE TABLE IF NOT EXISTS `passky`.`users`
+CREATE TABLE IF NOT EXISTS `users`
 (
   `user_id` Int NOT NULL AUTO_INCREMENT,
   `username` Char(30) NOT NULL,
@@ -30,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `passky`.`users`
 
 -- Table passky.passwords
 
-CREATE TABLE IF NOT EXISTS `passky`.`passwords`
+CREATE TABLE IF NOT EXISTS `passwords`
 (
   `password_id` Int NOT NULL AUTO_INCREMENT,
   `owner` Char(30) NOT NULL,
@@ -42,4 +38,4 @@ CREATE TABLE IF NOT EXISTS `passky`.`passwords`
   UNIQUE `password_id` (`password_id`)
 );
 
-CREATE INDEX `owner_idx` ON `passky`.`passwords` (`owner`);
+CREATE INDEX `owner_idx` ON `passwords` (`owner`);
