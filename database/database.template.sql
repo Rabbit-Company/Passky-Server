@@ -5,11 +5,15 @@ Author: Rabbit Company
 Database: MySQL 8.0
 */
 
+-- Create database section -------------------------------------------------
+
+CREATE DATABASE IF NOT EXISTS `MYSQL_DATABASE`;
+
 -- Create tables section -------------------------------------------------
 
 -- Table passky.users
 
-CREATE TABLE IF NOT EXISTS `users`
+CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
 (
   `user_id` Int NOT NULL AUTO_INCREMENT,
   `username` Char(30) NOT NULL,
@@ -26,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `users`
 
 -- Table passky.passwords
 
-CREATE TABLE IF NOT EXISTS `passwords`
+CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`passwords`
 (
   `password_id` Int NOT NULL AUTO_INCREMENT,
   `owner` Char(30) NOT NULL,

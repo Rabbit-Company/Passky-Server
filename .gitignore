@@ -1,3 +1,4 @@
 .env
 api/vendor
 api/composer.lock
+database/database.sql

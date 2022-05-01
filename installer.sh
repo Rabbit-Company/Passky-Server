@@ -362,3 +362,7 @@ echo -e "${blue} If you made a mistake you can just re-run the installer with co
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 
 echo -e "${none}"
+
+export $(cat .env | xargs)
+cp database/database.template.sql database/database.sql
+sed -i "s/MYSQL_DATABASE/$MYSQL_DATABASE/" database/database.sql
