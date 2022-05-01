@@ -31,6 +31,9 @@ echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
 MYSQL_HOST=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide IP or host for your database.\n\nIf you are using docker, use container name" 12 78 passky-database 3>&1 1>&2 2>&3)
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
 
+MYSQL_DATABASE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide name for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
+echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
+
 MYSQL_USER=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide user for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
 echo "MYSQL_USER=${MYSQL_USER}" >> .env
 
@@ -138,4 +141,4 @@ echo "LIMITER_REMOVE_YUBIKEY=10" >> .env
 echo "YUBI_CLOUD=https://api.yubico.com/wsapi/2.0/verify" >> .env
 echo "YUBI_ID=67857" >> .env
 
-whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78 
+whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78

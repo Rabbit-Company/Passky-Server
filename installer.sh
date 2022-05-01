@@ -98,6 +98,15 @@ read MYSQL_HOST
 
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
 
+echo -e "\n${blue}${bold}Provide database name.${blue}"
+echo -e "If you are using docker, database with user will be created automatically"
+echo -e "Example: passky"
+
+printf "\n${green}Database name: "
+read MYSQL_DATABASE
+
+echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
+
 echo -e "\n${blue}${bold}Provide user for your database.${blue}"
 echo -e "If you are using docker, database with user will be created automatically"
 echo -e "Example: passky"
