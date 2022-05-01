@@ -10,7 +10,7 @@ services:
       # Change environment variables in .env file 
       #
       # Database
-      - MYSQL_DATABASE=passky
+      - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
       - MYSQL_ROOT_PASSWORD
@@ -38,6 +38,7 @@ services:
       - SERVER_LOCATION
       # Database
       - MYSQL_HOST
+      - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
       # Mail

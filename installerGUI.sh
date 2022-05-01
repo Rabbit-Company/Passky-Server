@@ -141,8 +141,4 @@ echo "LIMITER_REMOVE_YUBIKEY=10" >> .env
 echo "YUBI_CLOUD=https://api.yubico.com/wsapi/2.0/verify" >> .env
 echo "YUBI_ID=67857" >> .env
 
-whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78 
-
-export $(cat .env | xargs)
-cp database/database.template.sql database/database.sql
-sed -i "s/MYSQL_DATABASE/$MYSQL_DATABASE/" database/database.sql
+whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78
