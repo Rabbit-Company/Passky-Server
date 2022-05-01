@@ -16,7 +16,7 @@ class Database{
 
 	public static function isUsernameTaken(string $username) : int{
 		try{
-			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			$stmt = $conn->prepare("SELECT user_id FROM users WHERE username = :username");
