@@ -2,7 +2,7 @@ version: '3'
 services:
   passky-database:
     container_name: passky-database
-    image: 'zigazajc007/passky-database:latest'
+    image: 'rabbitcompany/passky-database:latest'
     restart: unless-stopped
     environment:
       #
@@ -28,7 +28,7 @@ services:
       - passky
   passky-api:
     container_name: passky-api
-    image: 'zigazajc007/passky-api:latest'
+    image: 'rabbitcompany/passky-api:latest'
     restart: unless-stopped
     environment:
       #
