@@ -10,8 +10,6 @@ require_once "Display.php";
 require_once "Settings.php";
 require_once "User.php";
 
-require '../vendor/autoload.php';
-
 class Database{
 
 	public static function isUsernameTaken(string $username) : int{
