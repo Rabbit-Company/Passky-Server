@@ -25,6 +25,14 @@ if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	exit(0);
 }
 
+require __DIR__ . '/../vendor/autoload.php';
+// This condition will pass on Shared Hosting and not inside docker.
+// So, it will load .env files and make it available to getenv to digest.
+// In docker env will be passed directly at runtime.
+if(isset($_SERVER['HTTP_HOST'])){
+	(new DevCoder\DotEnv(__DIR__ . '/../../.env'))->load();
+}
+
 require_once "Display.php";
 require_once "Database.php";
 require_once "Settings.php";
