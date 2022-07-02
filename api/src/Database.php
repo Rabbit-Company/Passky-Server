@@ -232,10 +232,11 @@ class Database{
 			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-			$stmt = $conn->prepare("INSERT INTO users(username, email, password) VALUES(:username, :email, :password);");
+			$stmt = $conn->prepare("INSERT INTO users(username, email, password, max_passwords) VALUES(:username, :email, :password, :max_passwords);");
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->bindParam(':email', $email, PDO::PARAM_STR);
 			$stmt->bindParam(':password', $encrypted_password, PDO::PARAM_STR);
+			$stmt->bindParam(':max_passwords', Settings::getMaxPasswords(), PDO::PARAM_INT);
 
 			return ($stmt->execute()) ? Display::json(0) : Display::json(3);
 		}catch(PDOException $e) {
@@ -358,6 +359,18 @@ class Database{
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
 		$username = strtolower($username);
 
+		$user = new User;
+		$user->fromUsername($username);
+
+		switch($user->response){
+			case 1:
+				return Display::json(1);
+			break;
+			case 505:
+				return Display::json(505);
+			break;
+		}
+
 		if(!(strlen($website) >= 44 && strlen($website) <= 255) || str_contains($website, ' ')) return Display::json(300);
 		if(!(strlen($username2) >= 44 && strlen($username2) <= 255) || str_contains($username2, ' ')) return Display::json(301);
 		if(!(strlen($password2) >= 44 && strlen($password2) <= 255) || str_contains($password2, ' ')) return Display::json(302);
@@ -365,7 +378,7 @@ class Database{
 
 		$password_count = self::getUserPasswordCount($username);
 		if($password_count == -1) return Display::json(505);
-		if($password_count >= Settings::getMaxPasswords()) return Display::json(16);
+		if($password_count >= $user->max_passwords) return Display::json(16);
 
 		try{
 			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
@@ -393,9 +406,21 @@ class Database{
 		$password_obj = json_decode($json_passwords, true);
 		if($password_obj === null && json_last_error() !== JSON_ERROR_NONE) return Display::json(14);
 
+		$user = new User;
+		$user->fromUsername($username);
+
+		switch($user->response){
+			case 1:
+				return Display::json(1);
+			break;
+			case 505:
+				return Display::json(505);
+			break;
+		}
+
 		$password_count = self::getUserPasswordCount($username);
 		if($password_count == -1) return Display::json(505);
-		if($password_count + count($password_obj) >= Settings::getMaxPasswords()) return Display::json(16);
+		if($password_count + count($password_obj) >= $user->max_passwords) return Display::json(16);
 
 		$num_success = 0;
 		$num_error = 0;

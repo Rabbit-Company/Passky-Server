@@ -24,7 +24,7 @@ class Settings{
 
 	public static function getDBName() : string{
 		return getenv("MYSQL_DATABASE", true) ?: getenv("MYSQL_DATABASE") ?: "passky";
-  }
+	}
 
 	public static function getDBUsername() : string{
 		return getenv("MYSQL_USER", true) ?: getenv("MYSQL_USER") ?: "passky";

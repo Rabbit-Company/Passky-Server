@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
   `2fa_secret` Char(20),
   `yubico_otp` Char(64),
   `backup_codes` Char(69),
+  `max_passwords` SmallInt UNSIGNED NOT NULL DEFAULT 100,
   `created` Date NOT NULL DEFAULT CURRENT_DATE,
   `accessed` Date NOT NULL DEFAULT CURRENT_DATE,
   PRIMARY KEY (`user_id`),
