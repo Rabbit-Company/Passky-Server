@@ -301,6 +301,7 @@ class Database{
 			$JSON_OBJ->token = $token;
 			$JSON_OBJ->auth = ($user->secret != null);
 			$JSON_OBJ->yubico = $user->yubico_otp;
+			$JSON_OBJ->max_passwords = $user->max_passwords;
 
 			if($stmt->rowCount() > 0){
 				$JSON_OBJ->passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
