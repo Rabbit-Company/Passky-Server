@@ -55,7 +55,7 @@ done
 echo "SERVER_LOCATION=${SERVER_LOCATION}" >> .env
 
 echo -e "\n${blue}${bold}How many accounts can be created on this Passky Server?${blue}"
-echo -e "When this amount would be reached, new users woun't be able to create their accounts on this server."
+echo -e "When this amount would be reached, new users won't be able to create their accounts on this server."
 echo -e "Example: 100"
 
 printf "\n${green}Maximum accounts created: "
