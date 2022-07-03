@@ -3,7 +3,7 @@ session_start();
 require_once "header.php";
 require_once "footer.php";
 
-$pageNames = array("server", "settings");
+$pageNames = array("server", "settings", "login");
 
 if(in_array($_SESSION['page'], $pageNames)){
   require_once $_SESSION['page'] . ".php";

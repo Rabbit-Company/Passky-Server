@@ -8,7 +8,7 @@ header("Referrer-Policy: no-referrer");
 header("Permissions-Policy: interest-cohort=()");
 
 if(empty($_GET['action'])){
-	header("Content-Security-Policy: default-src 'self'; style-src 'self'; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; form-action 'none'");
+	header("Content-Security-Policy: default-src 'self'; style-src 'self'; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'none';");
 	require_once "website/index.php";
 	return;
 }

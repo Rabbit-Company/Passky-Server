@@ -45,7 +45,7 @@ function displayHeader($location){
               <?php if(isset($_SESSION['username'])){ ?>
                 <a id="signout-link" href="./website/actions/logout.php" class="dangerButton px-3 py-2 rounded-md text-sm font-medium">Sign out</a>
               <?php }else{ ?>
-                <a id="login-link" href="." class="primaryButton px-3 py-2 rounded-md text-sm font-medium">Log in</a>
+                <a id="login-link" href="./website/actions/changePage.php?page=login" class="primaryButton px-3 py-2 rounded-md text-sm font-medium">Log in</a>
               <?php } ?>
             </div>
             <div class="flex items-center lg:hidden">
@@ -69,7 +69,7 @@ function displayHeader($location){
             <?php if(isset($_SESSION['username'])){ ?>
                 <a id="signout-link-mobile" href="./website/actions/logout.php" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Sign out</a>
             <?php }else{ ?>
-                <a id="login-link-mobile" href="." class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Log in</a>
+                <a id="login-link-mobile" href="./website/actions/changePage.php?page=login" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Log in</a>
             <?php } ?>
           </div>
       </div>
