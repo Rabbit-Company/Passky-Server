@@ -660,6 +660,10 @@ video {
   margin-bottom: -2rem;
 }
 
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
 .mt-20 {
   margin-top: 5rem;
 }
@@ -1450,6 +1454,11 @@ video {
   .sm\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
+  }
+
+  .sm\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
   }
 }
 
