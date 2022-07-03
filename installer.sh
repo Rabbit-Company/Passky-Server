@@ -30,10 +30,17 @@ echo -e "This installer will only create an .env file based on your answers.\n"
 echo -e "If you made a mistake just re-run the installer."
 
 now=$(date)
+cores=$(grep -c ^processor /proc/cpuinfo)
 echo "#" > .env
 echo "# Passky configuration file" >> .env
 echo "# Created ${now}" >> .env
 echo "#" >> .env
+
+if [ "$cores" -ge 1 ] && [ "$cores" -le 1024 ]; then
+	echo "SERVER_CORES=${cores}" >> .env
+else
+	echo "SERVER_CORES=1" >> .env
+fi
 
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${brown}       SERVER SETTINGS"

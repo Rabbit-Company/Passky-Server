@@ -36,6 +36,7 @@ services:
       #
       # Server
       - SERVER_LOCATION
+      - SERVER_CORES
       # Database
       - MYSQL_HOST
       - MYSQL_DATABASE

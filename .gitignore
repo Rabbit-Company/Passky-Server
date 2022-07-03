@@ -3,3 +3,4 @@ api/api-limiter.json
 api/tokens.json
 api/vendor
 api/composer.lock
+node_modules
