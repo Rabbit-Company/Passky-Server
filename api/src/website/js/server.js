@@ -24,8 +24,8 @@ function resetInfoStats(){
 	document.getElementById("stats-accounts-text").innerText = "0 / 0";
 	document.getElementById("stats-accounts-bar").style = "width: 0%";
 
-	document.getElementById("stats-passwords-text").innerText = "0 / 0";
-	document.getElementById("stats-passwords-bar").style = "width: 0%";
+	document.getElementById("stats-passwords-text").innerText = "0 (0)";
+	document.getElementById("stats-passwords-bar").style = "width: 100%";
 
 	document.getElementById("stats-version-text").innerText = "0.0.0";
 }
@@ -59,8 +59,8 @@ fetch(window.location.origin + "?action=getStats")
 			document.getElementById("stats-accounts-text").innerText = json.users + " / " + json.maxUsers;
 			document.getElementById("stats-accounts-bar").style = "width: " + (json.users/json.maxUsers)*100 + "%";
 	
-			document.getElementById("stats-passwords-text").innerText = json.passwords + " / " + (json.maxUsers*json.maxPasswords);
-			document.getElementById("stats-passwords-bar").style = "width: " + (json.passwords/(json.maxUsers*json.maxPasswords))*100 + "%";
+			document.getElementById("stats-passwords-text").innerText = json.passwords + " (" + json.maxPasswords + ")";
+			document.getElementById("stats-passwords-bar").style = "width: " + 100 + "%";
 	
 			document.getElementById("stats-version-text").innerText = json.version;
 		}else{

@@ -115,7 +115,7 @@
 											<p class="ml-16 text-sm font-medium secondaryColor truncate">Passwords</p>
 										</dt>
 										<dd class="ml-16 flex items-baseline">
-											<p id="stats-passwords-text" class="text-xl font-semibold secondaryColor">0 / 0</p>
+											<p id="stats-passwords-text" class="text-xl font-semibold secondaryColor">0 (0)</p>
 											<div class="absolute bottom-0 inset-x-0 secondaryBackgroundColor px-4 pb-4 sm:px-6">
 												<div class="w-full tertiaryBackgroundColor rounded-full">
 													<div id="stats-passwords-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full"></div>

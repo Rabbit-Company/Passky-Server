@@ -1,4 +1,3 @@
-<?php
-displayHeader(0);
-displayFooter(array('qrcode.js', 'index.js'));
-?>
+<?php displayHeader(0); ?>
+
+<?php displayFooter(array('index.js')); ?>
