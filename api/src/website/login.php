@@ -1,4 +1,4 @@
-<?php displayHeader(5); ?>
+<?php displayHeader(10); ?>
 
 <div class="primaryBackgroundColor mt-20 flex items-center justify-center py-6 px-4 sm:px-3 lg:px-8">
       <div class="max-w-md w-full space-y-6">

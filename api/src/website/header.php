@@ -38,7 +38,11 @@ function displayHeader($location){
               <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
                 <a id="home-link" href="./website/actions/changePage.php?page=home" class="<?= ($location == 0) ? $active : $inactive ?>">Home</a>
                 <a id="server-link" href="./website/actions/changePage.php?page=server" class="<?= ($location == 1) ? $active : $inactive ?>">Server</a>
-                <a id="settings-link" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 2) ? $active : $inactive ?>">Settings</a>
+                <?php if(isset($_SESSION['username'])){ ?>
+                  <a id="accounts-link" href="./website/actions/changePage.php?page=accounts" class="<?= ($location == 2) ? $active : $inactive ?>">Accounts</a>
+                  <a id="health-link" href="./website/actions/changePage.php?page=health" class="<?= ($location == 3) ? $active : $inactive ?>">Health</a>
+                  <a id="settings-link" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 4) ? $active : $inactive ?>">Settings</a>
+                <?php } ?>
               </div>
             </div>
             <div class="hidden lg:flex space-x-8 items-center justify-end lg:flex-1 lg:w-0">
@@ -65,11 +69,13 @@ function displayHeader($location){
           <div id="mobile-menu" class="hidden pt-2 pb-3 space-y-1">
             <a id="home-link-mobile" href="./website/actions/changePage.php?page=home" class="<?= ($location == 0) ? $activeMobile : $inactiveMobile ?>">Home</a>
             <a id="server-link-mobile" href="./website/actions/changePage.php?page=server" class="<?= ($location == 1) ? $activeMobile : $inactiveMobile ?>">Server</a>
-            <a id="settings-link-mobile" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 2) ? $activeMobile : $inactiveMobile ?>">Settings</a>
             <?php if(isset($_SESSION['username'])){ ?>
-                <a id="signout-link-mobile" href="./website/actions/logout.php" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Sign out</a>
+              <a id="accounts-link-mobile" href="./website/actions/changePage.php?page=accounts" class="<?= ($location == 2) ? $activeMobile : $inactiveMobile ?>">Accounts</a>
+              <a id="health-link-mobile" href="./website/actions/changePage.php?page=health" class="<?= ($location == 3) ? $activeMobile : $inactiveMobile ?>">Health</a>
+              <a id="settings-link-mobile" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 4) ? $activeMobile : $inactiveMobile ?>">Settings</a>
+              <a id="signout-link-mobile" href="./website/actions/logout.php" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Sign out</a>
             <?php }else{ ?>
-                <a id="login-link-mobile" href="./website/actions/changePage.php?page=login" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Log in</a>
+              <a id="login-link-mobile" href="./website/actions/changePage.php?page=login" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Log in</a>
             <?php } ?>
           </div>
       </div>
