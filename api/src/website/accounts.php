@@ -20,7 +20,7 @@ displayHeader(2);
 							$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
 							$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-							$stmt = $conn->prepare("SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(*) as passwords, u.max_passwords as max_passwords from users u JOIN passwords p ON u.username = p.owner GROUP BY u.username;");
+							$stmt = $conn->prepare("SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(*) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username;");
 							$stmt->execute();
 
 							$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -126,7 +126,7 @@ displayHeader(2);
 														</a>
 													</td>
 													<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-														<a id="delete-account-<?= $row['user_id'] ?>" href="#">
+														<a id="delete-account-<?= $row['username'] ?>" href="#">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 																<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
 																<line x1="4" y1="7" x2="20" y2="7" />
@@ -137,6 +137,12 @@ displayHeader(2);
 															</svg>
 														</a>
 													</td>
+													<script>
+														document.getElementById("delete-account-<?= $row['username'] ?>").addEventListener("click", () => {
+															changeDialog(3, "<?= $row['username'] ?>");
+															show('dialog');
+														});
+													</script>
 												</tr>
 											<?php }
 										}
