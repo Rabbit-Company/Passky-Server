@@ -12,6 +12,43 @@ document.getElementById("dialog-button-cancel").addEventListener("click", () => 
 
 function changeDialog(style, text) {
 	switch (style) {
+		case 1:
+			//Show account info dialog
+			document.getElementById('dialog-icon').className = "mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10";
+			document.getElementById('dialog-icon').innerHTML = "<svg class='h-6 w-6 text-green-500' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><circle cx='12' cy='12' r='9' /><line x1='12' y1='8' x2='12.01' y2='8' /><polyline points='11 12 12 12 12 16 13 16' /></svg>";
+
+			document.getElementById('dialog-title').innerText = "Account Info";
+
+			let data = "";
+			let accounts = JSON.parse(sessionStorage.getItem("accounts"));
+			accounts.forEach(account => {
+				if(account.username == text){
+					data += "<b>ID:</b> " + account.user_id + "</br>";
+					data += "<b>Username:</b> " + account.username + "</br>";
+					data += "<b>Email:</b> " + account.email + "</br>";
+					data += "<b>Passwords:</b> " + account.passwords + " / " + account.max_passwords + "</br>";
+					data += "<b>Created:</b> " + account.created + "</br>";
+					data += "<b>Accessed:</b> " + account.accessed + "</br></br>";
+					if(account.backup_codes == null){
+						data += "<b>Backup Codes</b>: Inactive";
+					}else{
+						let codes = account.backup_codes.split(';');
+						let backupCodes = "<ul>";
+						for (let i = 0; i < codes.length; i += 2) backupCodes += "<li>" + codes[i] + " " + codes[i + 1] + "</li>";
+						backupCodes += "</ul>";
+						data += "<b>Backup Codes:</b> " + backupCodes;
+					}
+				}
+			});
+
+			document.getElementById('dialog-text').innerHTML = data;
+
+			document.getElementById('dialog-button-cancel').style.display = 'initial';
+
+			document.getElementById('dialog-button').className = "primaryButton inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium focus:outline-none sm:w-auto sm:text-sm";
+			document.getElementById('dialog-button').innerText = "Ok";
+			document.getElementById('dialog-button').onclick = () => hide('dialog');
+		break;
 		case 3:
 			//Delete account dialog
 			document.getElementById('dialog-icon').className = "mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10";

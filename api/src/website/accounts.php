@@ -106,7 +106,7 @@ displayHeader(2);
 													</td>
 													<td class="w-full"></td>
 													<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-														<a id="show-info-<?= $row['user_id'] ?>" href="#">
+														<a id="show-info-<?= $row['username'] ?>" href="#">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 																<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
 																<circle cx="12" cy="12" r="9" />
@@ -116,7 +116,7 @@ displayHeader(2);
 														</a>
 													</td>
 													<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-														<a id="edit-account-<?= $row['user_id'] ?>" href="#">
+														<a id="edit-account-<?= $row['username'] ?>" href="#">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 																<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
 																<path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"></path>
@@ -138,6 +138,10 @@ displayHeader(2);
 														</a>
 													</td>
 													<script>
+														document.getElementById("show-info-<?= $row['username'] ?>").addEventListener("click", () => {
+															changeDialog(1, "<?= $row['username'] ?>");
+															show('dialog');
+														});
 														document.getElementById("delete-account-<?= $row['username'] ?>").addEventListener("click", () => {
 															changeDialog(3, "<?= $row['username'] ?>");
 															show('dialog');
