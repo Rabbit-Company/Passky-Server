@@ -45,6 +45,15 @@ function displayHeader($location){
                 <?php } ?>
               </div>
             </div>
+            <?php if($location == 2){ ?>
+              <div class="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-start">
+                <div class="flex-shrink-0">
+                  <span class="relative z-0 inline-flex shadow-sm rounded-md">
+                    <input type="text" id="search" class="relative inline-flex shadow focus:outline-none px-4 py-2 sm:text-sm rounded-md" placeholder="Search">
+                  </span>
+                </div>
+              </div>
+            <?php } ?>
             <div class="hidden lg:flex space-x-8 items-center justify-end lg:flex-1 lg:w-0">
               <?php if(isset($_SESSION['username'])){ ?>
                 <a id="signout-link" href="./website/actions/logout.php" class="dangerButton px-3 py-2 rounded-md text-sm font-medium">Sign out</a>

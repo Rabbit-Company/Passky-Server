@@ -626,6 +626,10 @@ video {
   z-index: 10;
 }
 
+.z-0 {
+  z-index: 0;
+}
+
 .m-8 {
   margin: 2rem;
 }
@@ -1571,6 +1575,10 @@ video {
 
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:justify-start {
+    justify-content: flex-start;
   }
 
   .lg\:space-x-8 > :not([hidden]) ~ :not([hidden]) {
