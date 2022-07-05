@@ -67,8 +67,8 @@ displayHeader(2);
 																</svg>
 															</div>
 															<div class="ml-4">
-																<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[27rem] lg:max-w-[35rem] xl:max-w-[45rem] 2xl:max-w-[45rem] overflow-hidden text-ellipsis"><?= $row['username'] ?></div>
-																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[27rem] lg:max-w-[35rem] xl:max-w-[45rem] 2xl:max-w-[45rem] overflow-hidden text-ellipsis"><?= $row['email'] ?></div>
+																<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['username'] ?></div>
+																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['email'] ?></div>
 															</div>
 														</div>
 													</td>
@@ -84,8 +84,8 @@ displayHeader(2);
 																</svg>
 															</div>
 															<div class="ml-4">
-																<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[27rem] lg:max-w-[35rem] xl:max-w-[45rem] 2xl:max-w-[45rem] overflow-hidden text-ellipsis">Passwords</div>
-																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[27rem] lg:max-w-[35rem] xl:max-w-[45rem] 2xl:max-w-[45rem] overflow-hidden text-ellipsis"><?= $row['passwords'] . " / " . $row['max_passwords'] ?></div>
+																<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Passwords</div>
+																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['passwords'] . " / " . $row['max_passwords'] ?></div>
 															</div>
 														</div>
 													</td>
@@ -99,8 +99,8 @@ displayHeader(2);
 																</svg>
 															</div>
 															<div class="ml-4">
-																<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[27rem] lg:max-w-[35rem] xl:max-w-[45rem] 2xl:max-w-[45rem] overflow-hidden text-ellipsis"><?= $row['created'] ?></div>
-																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[27rem] lg:max-w-[35rem] xl:max-w-[45rem] 2xl:max-w-[45rem] overflow-hidden text-ellipsis"><?= $row['accessed'] ?></div>
+																<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['created'] ?></div>
+																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['accessed'] ?></div>
 															</div>
 														</div>
 													</td>
