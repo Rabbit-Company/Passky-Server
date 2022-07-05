@@ -117,6 +117,7 @@ class Database{
 	}
 
 	public static function isTokenValid(string $username, string $token) : int{
+		$username = strtolower($username);
 		if($token == null || strlen($token) != 64) return 0;
 		$token_array = json_decode(file_get_contents('../tokens.json'), true);
 		$userID = $username . "-" . self::getUserIpAddress();
@@ -215,6 +216,7 @@ class Database{
 		if(!filter_var($sub_email, FILTER_VALIDATE_EMAIL)) return Display::json(6);
 		if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
+		$username = strtolower($username);
 		$email = strtolower($email);
 		$encrypted_password = self::encryptPassword($password);
 
@@ -247,6 +249,7 @@ class Database{
 	public static function getToken(string $username, string $password, string $otp) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(12);
 		if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
+		$username = strtolower($username);
 
 		$user = new User;
 		$user->fromUsername($username);
@@ -315,6 +318,7 @@ class Database{
 	public static function deleteAccount(string $username, string $token) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		try{
 			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
@@ -355,6 +359,7 @@ class Database{
 	public static function savePassword(string $username, string $token, string $website, string $username2, string $password2, string $message) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		$user = new User;
 		$user->fromUsername($username);
@@ -398,6 +403,7 @@ class Database{
 	public static function importPasswords(string $username, string $token, string $json_passwords) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		$password_obj = json_decode($json_passwords, true);
 		if($password_obj === null && json_last_error() !== JSON_ERROR_NONE) return Display::json(14);
@@ -454,6 +460,7 @@ class Database{
 	public static function editPassword(string $username, string $token, int $password_id, string $website, string $username2, string $password2, string $message) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		if(!(strlen($website) >= 44 && strlen($website) <= 255) || str_contains($website, ' ')) return Display::json(300);
 		if(!(strlen($username2) >= 44 && strlen($username2) <= 255) || str_contains($username2, ' ')) return Display::json(301);
@@ -494,6 +501,7 @@ class Database{
 	public static function deletePassword(string $username, string $token, int $password_id) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		switch(self::isPasswordOwnedByUser($username, $password_id)){
 			case 2:
@@ -525,6 +533,7 @@ class Database{
 	public static function getPasswords(string $username, string $token) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		try{
 			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
@@ -549,6 +558,7 @@ class Database{
 	public static function enable2Fa(string $username, string $token) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		$user = new User;
 		$user->fromUsername($username);
@@ -596,6 +606,7 @@ class Database{
 	public static function disable2Fa(string $username, string $token) : string{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
 
 		$user = new User;
 		$user->fromUsername($username);
@@ -630,6 +641,7 @@ class Database{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
 		if(strlen($id) != 44) return Display::json(23);
+		$username = strtolower($username);
 
 		$user = new User;
 		$user->fromUsername($username);
@@ -681,6 +693,7 @@ class Database{
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
 		if(strlen($id) != 44) return Display::json(23);
+		$username = strtolower($username);
 
 		$user = new User;
 		$user->fromUsername($username);
