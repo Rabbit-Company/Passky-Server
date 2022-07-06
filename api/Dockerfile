@@ -22,6 +22,13 @@ COPY composer.json /var/www
 RUN composer update -d /var/www
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+# Apply some php.ini settings for better security and performance
+RUN sed -i 's/session.use_strict_mode = 0/session.use_strict_mode = 1/g' $PHP_INI_DIR/php.ini
+RUN sed -i 's/session.cookie_httponly =/session.cookie_httponly = 1/g' $PHP_INI_DIR/php.ini
+RUN sed -i 's/session.cookie_samesite =/session.cookie_samesite = "Strict"/g' $PHP_INI_DIR/php.ini
+RUN sed -i 's/session.name = PHPSESSID/session.name = SSID/g' $PHP_INI_DIR/php.ini
+RUN sed -i 's/session.sid_length = 26/session.sid_length = 48/g' $PHP_INI_DIR/php.ini
+RUN sed -i 's/session.sid_bits_per_character = 5/session.sid_bits_per_character = 6/g' $PHP_INI_DIR/php.ini
 
 # Create json file for API Call Limiter and Tokens in /var/www folder which can't be accessed by public
 RUN echo "{}" > ../api-limiter.json
