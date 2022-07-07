@@ -1035,9 +1035,9 @@ video {
   background-color: rgb(254 226 226 / var(--tw-bg-opacity));
 }
 
-.bg-green-100 {
+.bg-green-300 {
   --tw-bg-opacity: 1;
-  background-color: rgb(220 252 231 / var(--tw-bg-opacity));
+  background-color: rgb(134 239 172 / var(--tw-bg-opacity));
 }
 
 .bg-gray-200 {
@@ -1269,9 +1269,9 @@ video {
   color: rgb(219 234 254 / var(--tw-text-opacity));
 }
 
-.text-green-500 {
+.text-green-900 {
   --tw-text-opacity: 1;
-  color: rgb(34 197 94 / var(--tw-text-opacity));
+  color: rgb(20 83 45 / var(--tw-text-opacity));
 }
 
 .shadow {
