@@ -1,0 +1,217 @@
+/*
+
+    Monokai theme
+
+*/
+
+/*
+    Text colors
+*/
+
+.primaryColor{
+	color: #55adbc !important;
+}
+
+.secondaryColor{
+	color: #6B7280 !important;
+}
+
+.tertiaryColor{
+	color: #DFE5EB !important;
+}
+
+/*
+	Background colors
+*/
+
+.primaryBackgroundColor{
+	background-color: #1e1f1c !important;
+}
+
+.secondaryBackgroundColor{
+	background-color: #272822 !important;
+}
+
+.tertiaryBackgroundColor{
+	background-color: #3e3d32 !important;
+}
+
+.quaternaryBackgroundColor{
+	background-color: #55adbc !important;
+}
+
+/*
+	Button colors
+*/
+
+.primaryButton{
+	background-color: #55adbc !important;
+	color: #DFE5EB !important;
+}
+
+.primaryButton:hover{
+	background-color: #49a6b6 !important;
+}
+
+.successButton{
+	background-color: #668628 !important;
+	color: #DFE5EB !important;
+}
+
+.successButton:hover{
+	background-color: #5a7623 !important;
+}
+
+.dangerButton{
+	background-color: #e9266b !important;
+	color: #DFE5EB !important;
+}
+
+.dangerButton:hover{
+	background-color: #e81760 !important;
+}
+
+.cancelButton{
+	background-color: #3e3d32 !important;
+	border-color: #3e3d32 !important;
+	color: #DFE5EB !important;
+}
+
+.cancelButton:hover{
+	background-color: #39382d !important;
+}
+
+/*
+	Elements
+*/
+
+input{
+	background-color: #3e3d32 !important;
+	color: #DFE5EB !important;
+	border-color: #16191d !important;
+}
+
+textarea{
+	background-color: #3e3d32 !important;
+	color: #DFE5EB !important;
+	border-color: #16191d !important;
+}
+
+svg{
+    stroke: #3e3d32 !important;
+}
+
+/*
+	Main menu
+*/
+
+.mainMenuLink{
+	background-color: #272822 !important;
+	color: #6B7280 !important;
+}
+
+.mainMenuLink:hover{
+	color: #DFE5EB !important;
+	border-color: #D1D5DB !important;
+}
+
+.mainMenuLinkSelected{
+	color: #DFE5EB !important;
+	border-color: #55adbc !important;
+}
+
+.mainMenuMobileLink{
+	background-color: #272822 !important;
+	color: #DFE5EB !important;
+}
+
+.mainMenuMobileLink:hover{
+	background-color: #3e3d32 !important;
+	border-color: #6B7280 !important;
+}
+
+.mainMenuMobileLinkSelected{
+	background-color: #3e3d32 !important;
+	border-color: #55adbc !important;
+	color: #55adbc !important;
+}
+
+#main-menu-toggle-btn{
+	color: #9CA3AF !important;
+}
+
+#main-menu-toggle-btn:hover{
+	color: #6B7280 !important;
+	background-color: #3e3d32 !important;
+}
+
+/*
+	Border colors
+*/
+
+.primaryBorderColor{
+	border-color: #16191d !important;
+}
+
+/*
+	Placeholder colors
+*/
+
+.primaryBorderColor::placeholder{
+	color: #6B7280;
+	opacity: 1;
+}
+
+.primaryBorderColor::-ms-input-placeholder { /* Microsoft Edge */
+	color: #6B7280;
+	opacity: 1;
+}
+
+/*
+	Stroke colors
+*/
+
+.primaryStrokeColor{
+	stroke: #DFE5EB !important;
+}
+
+/*
+	Passwords
+*/
+
+.passwordsBackgroundColor{
+	background-color: #1e1f1c !important;
+}
+
+.passwordsBorderColor{
+	border-color: #000000 !important;
+}
+
+/*
+	Import and Export buttons
+*/
+
+.importExportButtons{
+	color: #b1bfce !important;
+	border-color: #1e1f1c !important;
+}
+
+.importExportButtons:hover{
+	color: #91a6ba !important;
+}
+
+/*
+	Scroll bar
+*/
+
+::-webkit-scrollbar-track {
+	background: #272822;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #716f5b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555444;
+}

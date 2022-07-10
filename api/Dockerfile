@@ -21,7 +21,8 @@ COPY composer.json /var/www
 # Install dependiencies from composer
 RUN composer update -d /var/www
 
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+# Copy php.ini to the docker container
+COPY php.ini $PHP_INI_DIR
 
 # Create json file for API Call Limiter and Tokens in /var/www folder which can't be accessed by public
 RUN echo "{}" > ../api-limiter.json

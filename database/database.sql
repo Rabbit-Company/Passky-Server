@@ -1,6 +1,6 @@
 /*
 Created: 30/03/2021
-Modified: 15/06/2021
+Modified: 02/07/2021
 Author: Rabbit Company
 Database: MySQL 8.0
 */
@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
   `2fa_secret` Char(20),
   `yubico_otp` Char(64),
   `backup_codes` Char(69),
+  `max_passwords` SmallInt UNSIGNED NOT NULL DEFAULT 1000,
   `created` Date NOT NULL DEFAULT CURRENT_DATE,
   `accessed` Date NOT NULL DEFAULT CURRENT_DATE,
   PRIMARY KEY (`user_id`),

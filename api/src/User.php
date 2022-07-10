@@ -11,6 +11,7 @@ class User {
 	public ?string $secret = null;
 	public ?string $yubico_otp = null;
 	public ?string $backup_codes = null;
+	public ?int $max_passwords = null;
 	public ?string $created = null;
 	public ?string $accessed = null;
 	public int $response = 505;
@@ -34,6 +35,7 @@ class User {
 				$this->secret = $result['2fa_secret'];
 				$this->yubico_otp = $result['yubico_otp'];
 				$this->backup_codes = $result['backup_codes'];
+				$this->max_passwords = $result['max_passwords'];
 				$this->created = $result['created'];
 				$this->accessed = $result['accessed'];
 				$this->response = 0;
