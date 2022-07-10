@@ -14,8 +14,8 @@ function changeDialog(style, text) {
 	switch (style) {
 		case 1:
 			//Show account info dialog
-			document.getElementById('dialog-icon').className = "mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-300 sm:mx-0 sm:h-10 sm:w-10";
-			document.getElementById('dialog-icon').innerHTML = "<svg class='h-6 w-6 text-green-900' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><circle cx='12' cy='12' r='9' /><line x1='12' y1='8' x2='12.01' y2='8' /><polyline points='11 12 12 12 12 16 13 16' /></svg>";
+			document.getElementById('dialog-icon').className = "mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10";
+			document.getElementById('dialog-icon').innerHTML = "<svg class='h-6 w-6 text-green-600' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'><path stroke='none' d='M0 0h24v24H0z' fill='none'/><circle cx='12' cy='12' r='9' /><line x1='12' y1='8' x2='12.01' y2='8' /><polyline points='11 12 12 12 12 16 13 16' /></svg>";
 
 			document.getElementById('dialog-title').innerText = "Account Info";
 
