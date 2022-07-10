@@ -142,6 +142,10 @@ displayHeader(2);
 															changeDialog(1, "<?= $row['username'] ?>");
 															show('dialog');
 														});
+														document.getElementById("edit-account-<?= $row['username'] ?>").addEventListener("click", () => {
+															changeDialog(2, "<?= $row['username'] ?>");
+															show('dialog');
+														});
 														document.getElementById("delete-account-<?= $row['username'] ?>").addEventListener("click", () => {
 															changeDialog(3, "<?= $row['username'] ?>");
 															show('dialog');
