@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
   `yubico_otp` Char(64),
   `backup_codes` Char(69),
   `max_passwords` SmallInt UNSIGNED NOT NULL DEFAULT 1000,
-  `created` Date NOT NULL DEFAULT CURRENT_DATE,
-  `accessed` Date NOT NULL DEFAULT CURRENT_DATE,
+  `created` Date NOT NULL DEFAULT (CURRENT_DATE),
+  `accessed` Date NOT NULL DEFAULT (CURRENT_DATE),
   PRIMARY KEY (`user_id`),
   UNIQUE `username` (`username`)
 );
