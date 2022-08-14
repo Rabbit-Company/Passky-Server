@@ -98,11 +98,13 @@ function editAccount(username){
 	let email = document.getElementById("email").value;
 	let max_passwords = document.getElementById("max_passwords").value;
 	let disable2fa = document.getElementById("disable2fa").checked;
-	window.location.assign("./website/actions/editAccount.php?username=" + username + "&email=" + email + "&max_passwords=" + max_passwords + "&disable2fa=" + disable2fa);
+	let token = document.getElementById("token").value;
+	window.location.assign("./website/actions/editAccount.php?username=" + username + "&email=" + email + "&max_passwords=" + max_passwords + "&disable2fa=" + disable2fa + "&token=" + token);
 }
 
 function deleteAccount(username){
-	window.location.assign("./website/actions/deleteAccount.php?username=" + username);
+	let token = document.getElementById("token").value;
+	window.location.assign("./website/actions/deleteAccount.php?username=" + username + "&token=" + token);
 }
 
 function filterAccounts() {

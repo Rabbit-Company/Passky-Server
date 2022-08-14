@@ -1,5 +1,5 @@
 <?php
-if(!isset($_SESSION['username'])){
+if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
 	$_SESSION['page'] = "home";
 	header("Location: ../..");
 }
@@ -20,7 +20,7 @@ displayHeader(2);
 							$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
 							$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-							$stmt = $conn->prepare("SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(*) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username;");
+							$stmt = $conn->prepare("SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username;");
 							$stmt->execute();
 
 							$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -47,7 +47,7 @@ displayHeader(2);
 									</div>
 									<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
 										<dt class="text-sm font-medium secondaryColor truncate">Server Version</dt>
-										<dd class="mt-1 text-3xl font-semibold tertiaryColor">7.0.0</dd>
+										<dd class="mt-1 text-3xl font-semibold tertiaryColor">7.1.0</dd>
 									</div>
 								</dl>
 							</div>
@@ -157,6 +157,7 @@ displayHeader(2);
 									?>
 								</tbody>
 							</table>
+							<input type="hidden" id="token" value="<?php echo $_SESSION['token'] ?? ''; ?>">
 							<?php
 						}catch(PDOException $e) {
 							echo "<p class='text-base text-center mt-12 tertiaryColor'>" . $e->getMessage() . "</p>";

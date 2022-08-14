@@ -174,7 +174,7 @@ class Database{
 
 	public static function getInfo() : string{
 		$JSON_OBJ = new StdClass;
-		$JSON_OBJ->version = "v7.0.0";
+		$JSON_OBJ->version = "v7.1.0";
 		$JSON_OBJ->users = self::getUserCount();
 		$JSON_OBJ->maxUsers = Settings::getMaxAccounts();
 		$JSON_OBJ->passwords = self::getPasswordCount();
@@ -281,7 +281,7 @@ class Database{
 			try{
 				$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
 				$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		
+
 				$stmt = $conn->prepare("UPDATE users SET accessed = :accessed WHERE username = :username");
 				$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 				$stmt->bindParam(':accessed', $today, PDO::PARAM_STR);
@@ -436,7 +436,7 @@ class Database{
 			try{
 				$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
 				$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	
+
 				$stmt = $conn->prepare("INSERT INTO passwords(owner, website, username, password, message) VALUES(:owner, :website, :username, :password, :message)");
 				$stmt->bindParam(':owner', $username, PDO::PARAM_STR);
 				$stmt->bindParam(':website', $password_data["website"], PDO::PARAM_STR);
@@ -619,7 +619,7 @@ class Database{
 				return Display::json(505);
 			break;
 		}
-				
+
 		if($user->secret == null) return Display::json(27);
 
 		try{

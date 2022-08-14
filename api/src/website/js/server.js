@@ -25,7 +25,6 @@ function resetInfoStats(){
 	document.getElementById("stats-accounts-bar").style = "width: 0%";
 
 	document.getElementById("stats-passwords-text").innerText = "0 (0)";
-	document.getElementById("stats-passwords-bar").style = "width: 100%";
 
 	document.getElementById("stats-version-text").innerText = "0.0.0";
 }
@@ -38,10 +37,10 @@ fetch(window.location.origin + "?action=getStats")
 			let cpu = ((parseFloat(json.cpu) * 100) / json.cores).toFixed(0);
 			document.getElementById("stats-cpu-text").innerText = cpu + "%";
 			document.getElementById("stats-cpu-bar").style = "width: " + cpu + "%";
-	
+
 			document.getElementById("stats-ram-text").innerText = formatBytes(json.memoryUsed*1000, 0) + " / " + formatBytes(json.memoryTotal*1000, 0);
 			document.getElementById("stats-ram-bar").style = "width: " + (json.memoryUsed/json.memoryTotal)*100 + "%";
-	
+
 			document.getElementById("stats-storage-text").innerText = formatBytes(json.diskUsed, 0) + " / " + formatBytes(json.diskTotal, 0);
 			document.getElementById("stats-storage-bar").style = "width: " + (json.diskUsed/json.diskTotal)*100 + "%";
 		}else{
@@ -58,10 +57,8 @@ fetch(window.location.origin + "?action=getStats")
 		if(json.error == 0){
 			document.getElementById("stats-accounts-text").innerText = json.users + " / " + json.maxUsers;
 			document.getElementById("stats-accounts-bar").style = "width: " + (json.users/json.maxUsers)*100 + "%";
-	
+
 			document.getElementById("stats-passwords-text").innerText = json.passwords + " (" + json.maxPasswords + ")";
-			document.getElementById("stats-passwords-bar").style = "width: " + 100 + "%";
-	
 			document.getElementById("stats-version-text").innerText = json.version;
 		}else{
 			resetInfoStats();
