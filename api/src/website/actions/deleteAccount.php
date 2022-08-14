@@ -3,7 +3,9 @@ require_once "../../Settings.php";
 
 session_start();
 
-if(!isset($_SESSION['username'])){
+$token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+
+if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $token !== $_SESSION['token']){
   $_SESSION['page'] = "home";
   header("Location: ../..");
   return;

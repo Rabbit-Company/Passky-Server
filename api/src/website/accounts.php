@@ -1,5 +1,5 @@
 <?php
-if(!isset($_SESSION['username'])){
+if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
 	$_SESSION['page'] = "home";
 	header("Location: ../..");
 }
@@ -157,6 +157,7 @@ displayHeader(2);
 									?>
 								</tbody>
 							</table>
+							<input type="hidden" id="token" value="<?php echo $_SESSION['token'] ?? ''; ?>">
 							<?php
 						}catch(PDOException $e) {
 							echo "<p class='text-base text-center mt-12 tertiaryColor'>" . $e->getMessage() . "</p>";
