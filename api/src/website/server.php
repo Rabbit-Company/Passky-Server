@@ -118,7 +118,7 @@
 											<p id="stats-passwords-text" class="text-xl font-semibold secondaryColor">0 (0)</p>
 											<div class="absolute bottom-0 inset-x-0 secondaryBackgroundColor px-4 pb-4 sm:px-6">
 												<div class="w-full tertiaryBackgroundColor rounded-full">
-													<div id="stats-passwords-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full"></div>
+													<div id="stats-passwords-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full w-0"></div>
 												</div>
 											</div>
 										</dd>
@@ -139,7 +139,7 @@
 											<p id="stats-version-text" class="text-2xl font-semibold secondaryColor">0.0.0</p>
 											<div class="absolute bottom-0 inset-x-0 secondaryBackgroundColor px-4 pb-4 sm:px-6">
 												<div class="w-full tertiaryBackgroundColor rounded-full">
-													<div id="stats-version-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full"></div>
+													<div id="stats-version-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full w-0"></div>
 												</div>
 											</div>
 										</dd>

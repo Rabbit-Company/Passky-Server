@@ -1,7 +1,7 @@
 {
   "name": "passky-server",
   "description": "Server for Passky (password manager)",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "main": "tailwind.config.js",
   "scripts": {
     "build": "npx tailwindcss -i ./tailwind.css -o ./api/src/website/css/tailwind.min.css"
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Rabbit-Company/Passky-Server#readme",
   "devDependencies": {
-    "tailwindcss": "^3.1.5"
+    "tailwindcss": "^3.1.8"
   }
 }
