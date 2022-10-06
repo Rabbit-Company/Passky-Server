@@ -12,6 +12,24 @@ class Settings{
 		return getenv("SERVER_LOCATION", true) ?: getenv("SERVER_LOCATION") ?: "US";
 	}
 
+	public static function getCores() : int{
+		return getenv("SERVER_CORES", true) ?: getenv("SERVER_CORES") ?: 1;
+	}
+
+/*
+
+	ADMIN SETTINGS
+
+*/
+
+	public static function getAdminUsername() : string{
+		return getenv("ADMIN_USERNAME", true) ?: getenv("ADMIN_USERNAME") ?: "admin";
+	}
+
+	public static function getAdminPassword() : string{
+		return getenv("ADMIN_PASSWORD", true) ?: getenv("ADMIN_PASSWORD") ?: "fehu2UPmpragklWoJcbr4BajxoaGns";
+	}
+
 /*
 
 	DATABASE SETTINGS
@@ -24,7 +42,7 @@ class Settings{
 
 	public static function getDBName() : string{
 		return getenv("MYSQL_DATABASE", true) ?: getenv("MYSQL_DATABASE") ?: "passky";
-  }
+	}
 
 	public static function getDBUsername() : string{
 		return getenv("MYSQL_USER", true) ?: getenv("MYSQL_USER") ?: "passky";

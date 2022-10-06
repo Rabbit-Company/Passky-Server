@@ -38,6 +38,10 @@ services:
       #
       # Server
       - SERVER_LOCATION
+      - SERVER_CORES
+      # Admin Panel
+      - ADMIN_USERNAME
+      - ADMIN_PASSWORD
       # Database
       - MYSQL_HOST
       - MYSQL_DATABASE

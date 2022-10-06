@@ -1,0 +1,23 @@
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+body{
+    min-width: 500px;
+    min-height: 500px;
+    overflow-x: hidden;
+}
+
+select{
+    -webkit-appearance: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
