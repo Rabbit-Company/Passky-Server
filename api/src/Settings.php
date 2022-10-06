@@ -40,6 +40,10 @@ class Settings{
 		return getenv("MYSQL_HOST", true) ?: getenv("MYSQL_HOST") ?: "passky-database";
 	}
 
+	public static function getDBPort() : string{
+		return getenv("MYSQL_PORT", true) ?: getenv("MYSQL_PORT") ?: "3306";
+	}
+
 	public static function getDBName() : string{
 		return getenv("MYSQL_DATABASE", true) ?: getenv("MYSQL_DATABASE") ?: "passky";
 	}
@@ -113,7 +117,7 @@ class Settings{
 /*
 
 	API CALL LIMITER (Brute force mitigation)
-		
+
 */
 
 	public static function getLimiter() : bool{

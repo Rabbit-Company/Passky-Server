@@ -119,6 +119,13 @@ printf "\n${green}Database host: "
 read MYSQL_HOST
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
 
+echo -e "\n${blue}${bold}Provide database port.${blue}"
+echo -e "If you are using docker, use port 3306"
+echo -e "Example: 3306"
+printf "\n${green}Database port: "
+read MYSQL_PORT
+echo "MYSQL_PORT=${MYSQL_PORT}" >> .env
+
 echo -e "\n${blue}${bold}Provide database name.${blue}"
 echo -e "If you are using docker, database with user will be created automatically"
 echo -e "Example: passky"

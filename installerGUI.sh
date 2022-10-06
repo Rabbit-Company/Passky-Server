@@ -47,6 +47,9 @@ echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
 MYSQL_HOST=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide IP or host for your database.\n\nIf you are using docker, use container name" 12 78 passky-database 3>&1 1>&2 2>&3)
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
 
+MYSQL_PORT=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide port for your database.\n\nIf you are using docker, use port 3306" 12 78 3306 3>&1 1>&2 2>&3)
+echo "MYSQL_PORT=${MYSQL_PORT}" >> .env
+
 MYSQL_DATABASE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide name for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
 echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
 
