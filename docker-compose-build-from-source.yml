@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       #
-      # Change environment variables in .env file 
+      # Change environment variables in .env file
       #
       # Database
       - MYSQL_DATABASE
@@ -32,7 +32,7 @@ services:
     restart: always
     environment:
       #
-      # Change environment variables in .env file 
+      # Change environment variables in .env file
       #
       # Server
       - SERVER_LOCATION
@@ -42,9 +42,12 @@ services:
       - ADMIN_PASSWORD
       # Database
       - MYSQL_HOST
+      - MYSQL_PORT
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+      - MYSQL_SSL
+      - MYSQL_SSL_CA
       # Mail
       - MAIL_ENABLED
       - MAIL_HOST

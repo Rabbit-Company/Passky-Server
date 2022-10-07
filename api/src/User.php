@@ -18,8 +18,7 @@ class User {
 
 	public function fromUsername($username){
 		try{
-			$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
-			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$conn = Settings::createConnection();
 
 			$stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);

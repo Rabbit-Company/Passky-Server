@@ -56,6 +56,24 @@ class Settings{
 		return getenv("MYSQL_PASSWORD", true) ?: getenv("MYSQL_PASSWORD") ?: "uDWjSd8wB2HRBHei489o";
 	}
 
+	public static function getDBSSL() : bool{
+		return getenv("MYSQL_SSL", true) === "true";
+	}
+
+	public static function getDBSSLCA() : string{
+		return getenv("MYSQL_SSL_CA", true) ?: getenv("MYSQL_SSL_CA") ?: "/etc/ssl/certs/ca-certificates.crt";
+	}
+
+	public static function createConnection(){
+		$options = array();
+		if(self::getDBSSL()) $options = array(PDO::MYSQL_ATTR_SSL_CA => self::getDBSSLCA());
+
+		$conn = new PDO("mysql:host=" . self::getDBHost() . ";port=" . self::getDBPort() . ";dbname=" . self::getDBName(), self::getDBUsername(), self::getDBPassword(), $options);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		return $conn;
+	}
+
 /*
 
 	EMAIL SETTINGS

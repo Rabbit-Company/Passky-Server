@@ -48,6 +48,8 @@ services:
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+      - MYSQL_SSL
+      - MYSQL_SSL_CA
       # Mail
       - MAIL_ENABLED
       - MAIL_HOST
