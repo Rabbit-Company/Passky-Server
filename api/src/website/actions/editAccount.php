@@ -18,13 +18,12 @@ $disable2fa = $_GET['disable2fa'];
 
 $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
-if(!ctype_digit($maxPasswords)) $maxPasswords = Settings::getMaxPasswords();
-if($maxPasswords < 0) $maxPasswords = 0;
-if($maxPasswords > 50000) $maxPasswords = 50000;
+if(!is_numeric($maxPasswords)) $maxPasswords = Settings::getMaxPasswords();
+if($maxPasswords < 0) $maxPasswords = -1;
+if($maxPasswords > 1000000000) $maxPasswords = 1000000000;
 
 try{
-  $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $conn = Settings::createConnection();
 
   if(filter_var($sub_email, FILTER_VALIDATE_EMAIL)){
     $stmt = $conn->prepare("UPDATE users SET email = :email, max_passwords = :maxPasswords WHERE username = :username;");

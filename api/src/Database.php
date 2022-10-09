@@ -369,9 +369,11 @@ class Database{
 		if(!(strlen($password2) >= 36 && strlen($password2) <= 255) || str_contains($password2, ' ')) return Display::json(302);
 		if(!(strlen($message) >= 36 && strlen($message) <= 10000) || str_contains($message, ' ')) return Display::json(303);
 
-		$password_count = self::getUserPasswordCount($username);
-		if($password_count == -1) return Display::json(505);
-		if($password_count >= $user->max_passwords) return Display::json(16);
+		if($user->max_passwords >= 0){
+			$password_count = self::getUserPasswordCount($username);
+			if($password_count == -1) return Display::json(505);
+			if($password_count >= $user->max_passwords) return Display::json(16);
+		}
 
 		try{
 			$conn = Settings::createConnection();
@@ -410,9 +412,11 @@ class Database{
 			break;
 		}
 
-		$password_count = self::getUserPasswordCount($username);
-		if($password_count == -1) return Display::json(505);
-		if($password_count + count($password_obj) >= $user->max_passwords) return Display::json(16);
+		if($user->max_passwords >= 0){
+			$password_count = self::getUserPasswordCount($username);
+			if($password_count == -1) return Display::json(505);
+			if($password_count + count($password_obj) >= $user->max_passwords) return Display::json(16);
+		}
 
 		$num_success = 0;
 		$num_error = 0;

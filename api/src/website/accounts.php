@@ -17,8 +17,7 @@ displayHeader(2);
 					<?php
 
 						try{
-							$conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
-							$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+							$conn = Settings::createConnection();
 
 							$stmt = $conn->prepare("SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username;");
 							$stmt->execute();
@@ -47,7 +46,7 @@ displayHeader(2);
 									</div>
 									<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
 										<dt class="text-sm font-medium secondaryColor truncate">Server Version</dt>
-										<dd class="mt-1 text-3xl font-semibold tertiaryColor">7.1.0</dd>
+										<dd class="mt-1 text-3xl font-semibold tertiaryColor">8.0.0</dd>
 									</div>
 								</dl>
 							</div>
@@ -55,7 +54,10 @@ displayHeader(2);
 								<tbody id="table-data" class="secondaryBackgroundColor divide-y divide-gray-200">
 									<?php
 										if($stmt->rowCount() > 0){
-											foreach($data as $row){ ?>
+											foreach($data as $row){
+												$maxPasswords = $row['max_passwords'];
+												if($maxPasswords < 0) $maxPasswords = "∞";
+												?>
 												<tr class="passwordsBorderColor">
 													<td class="px-6 py-4 whitespace-nowrap">
 														<div class="flex">
@@ -85,7 +87,7 @@ displayHeader(2);
 															</div>
 															<div class="ml-4">
 																<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Passwords</div>
-																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['passwords'] . " / " . $row['max_passwords'] ?></div>
+																<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['passwords'] . " / " . $maxPasswords ?></div>
 															</div>
 														</div>
 													</td>

@@ -94,18 +94,16 @@ echo "ACCOUNT_MAX=${ACCOUNT_MAX}" >> .env
 
 echo -e "\n${blue}${bold}How many passwords can each account hold/have?${blue}"
 echo -e "When this amount would be reached, users won't be able to save new passwords."
+echo -e "For Unlimited passwords use -1"
 echo -e "Example: 1000"
 printf "\n${green}Maximum passwords per account: "
 read ACCOUNT_MAX_PASSWORDS
-while [[ ! "$ACCOUNT_MAX_PASSWORDS" =~ ^[0-9]{1,5}$ ]];
+while [[ !( "$ACCOUNT_MAX_PASSWORDS" =~ ^[-]?[0-9]+ && "$ACCOUNT_MAX_PASSWORDS" -ge -1 && "$ACCOUNT_MAX_PASSWORDS" -le 1000000000 ) ]];
 do
-	echo -e "\n${red}'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between 0 and 50000."
+	echo -e "\n${red}'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between -1 and 1000000000."
 	printf "\n${green}Maximum passwords per account: "
 	read ACCOUNT_MAX_PASSWORDS
 done
-if [ "$ACCOUNT_MAX_PASSWORDS" -gt 50000 ]; then
- ACCOUNT_MAX_PASSWORDS=50000
-fi
 echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
 
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"

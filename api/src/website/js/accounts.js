@@ -23,10 +23,12 @@ function changeDialog(style, text) {
 			let accounts = JSON.parse(sessionStorage.getItem("accounts"));
 			accounts.forEach(account => {
 				if(account.username == text){
+					let maxPasswords = account.max_passwords;
+					if(account.max_passwords < 0) maxPasswords = "∞";
 					data += "<b>ID:</b> " + account.user_id + "</br>";
 					data += "<b>Username:</b> " + account.username + "</br>";
 					data += "<b>Email:</b> " + account.email + "</br>";
-					data += "<b>Passwords:</b> " + account.passwords + " / " + account.max_passwords + "</br>";
+					data += "<b>Passwords:</b> " + account.passwords + " / " + maxPasswords + "</br>";
 					data += "<b>Created:</b> " + account.created + "</br>";
 					data += "<b>Accessed:</b> " + account.accessed + "</br></br>";
 					if(account.backup_codes == null){
