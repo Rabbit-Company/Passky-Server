@@ -81,12 +81,13 @@ echo "SERVER_LOCATION=${SERVER_LOCATION}" >> .env
 
 echo -e "\n${blue}${bold}How many accounts can be created on this Passky Server?${blue}"
 echo -e "When this amount would be reached, new users won't be able to create their accounts on this server."
+echo -e "For Unlimited accounts use -1"
 echo -e "Example: 100"
 printf "\n${green}Maximum accounts created: "
 read ACCOUNT_MAX
-while [[ ! "$ACCOUNT_MAX" =~ ^[0-9]{1,10}$ ]];
+while [[ !( "$ACCOUNT_MAX" =~ ^[-]?[0-9]+ && "$ACCOUNT_MAX" -ge -1 && "$ACCOUNT_MAX" -le 1000000000 ) ]];
 do
-	echo -e "\n${red}'$ACCOUNT_MAX' is not a valid number. Make sure number is between 0 and 9999999999."
+	echo -e "\n${red}'$ACCOUNT_MAX' is not a valid number. Make sure number is between -1 and 1000000000."
 	printf "\n${green}Maximum accounts created: "
 	read ACCOUNT_MAX
 done

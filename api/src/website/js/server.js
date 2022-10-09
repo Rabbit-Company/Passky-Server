@@ -21,7 +21,7 @@ function resetStats(){
 }
 
 function resetInfoStats(){
-	document.getElementById("stats-accounts-text").innerText = "0 / 0";
+	document.getElementById("stats-accounts-text").innerText = "0";
 	document.getElementById("stats-accounts-bar").style = "width: 0%";
 
 	document.getElementById("stats-passwords-text").innerText = "0 (0)";
@@ -55,12 +55,17 @@ fetch(window.location.origin + "?action=getStats")
 		if (response.ok) return response.json();
 	}).then(json => {
 		if(json.error == 0){
-			document.getElementById("stats-accounts-text").innerText = json.users + " / " + json.maxUsers;
-			document.getElementById("stats-accounts-bar").style = "width: " + (json.users/json.maxUsers)*100 + "%";
+			let maxAccounts = json.maxUsers;
+			if(maxAccounts >= 0){
+				document.getElementById("stats-accounts-text").innerText = json.users + " / " + json.maxUsers;
+				document.getElementById("stats-accounts-bar").style = "width: " + (json.users/json.maxUsers)*100 + "%";
+			}else{
+				document.getElementById("stats-accounts-text").innerText = json.users;
+				document.getElementById("stats-accounts-bar").style = "width: 0%";
+			}
 
 			let maxPasswords = json.maxPasswords;
 			if(maxPasswords < 0) maxPasswords = "∞";
-
 			document.getElementById("stats-passwords-text").innerText = json.passwords + " (" + maxPasswords + ")";
 			document.getElementById("stats-version-text").innerText = json.version;
 		}else{

@@ -58,7 +58,9 @@ fetch(domain + "?action=getInfo")
 	}else{
     addHealth(0, "API can successfully connect with a database.");
   }
-	if(json.users >= json.maxUsers){
+	if(json.maxUsers < 0){
+		addHealth(0, json.users + " accounts has been created.");
+	}else if(json.users >= json.maxUsers){
 		addHealth(1, "Users won't be able to create new accounts, because account limit has been reached. You can increase account limit by rerunning the installer or changing settings in .env file manually. You would need to recreate docker containers for changes to apply.");
 	}else{
     addHealth(0, json.users + " accounts has been created out of " + json.maxUsers + ".");

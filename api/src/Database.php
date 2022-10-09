@@ -202,9 +202,11 @@ class Database{
 
 	public static function createAccount(string $username, string $password, string $email) : string{
 
-		$amount_of_accounts = self::getUserCount();
-		if($amount_of_accounts == -1) return Display::json(505);
-		if($amount_of_accounts >= Settings::getMaxAccounts()) return Display::json(15);
+		if(Settings::getMaxAccounts() > 0){
+			$amount_of_accounts = self::getUserCount();
+			if($amount_of_accounts == -1) return Display::json(505);
+			if($amount_of_accounts >= Settings::getMaxAccounts()) return Display::json(15);
+		}
 
 		$sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
