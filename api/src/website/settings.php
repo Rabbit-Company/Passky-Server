@@ -15,13 +15,14 @@ displayHeader(4);
 				<div class="mt-1 sm:mt-0 sm:col-span-2">
 					<select id="settings-theme" class="mainMenuMobileLink border-transparent w-full block pl-3 pr-4 py-2 text-base focus:outline-none font-medium">
 						<option value="dark">Dark</option>
-						<option value="solarizedDark">Solarized Dark</option>
-						<option value="tokyoNight">Tokyo Night</option>
-						<option value="dracula">Dracula</option>
-						<option value="monokai">Monokai</option>
-						<option value="blue">Blue</option>
-						<option value="gray">Gray</option>
-						<option value="light">Light</option>
+            <option value="solarizedDark">Solarized Dark</option>
+            <option value="tokyoNight">Tokyo Night</option>
+      			<option value="dracula">Dracula</option>
+            <option value="monokai">Monokai</option>
+            <option value="blue">Blue</option>
+						<option value="nord">Nord</option>
+            <option value="gray">Gray</option>
+            <option value="light">Light</option>
 					</select>
 				</div>
 			</div>

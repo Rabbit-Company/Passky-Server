@@ -10,6 +10,12 @@ document.getElementById("dialog-button-cancel").addEventListener("click", () => 
 	hide('dialog');
 });
 
+document.getElementById("page").addEventListener("keypress", (event) => {
+	if (event.key !== "Enter") return;
+	event.preventDefault();
+	window.location = "?page=" + document.getElementById("page").value;
+});
+
 function changeDialog(style, text) {
 	switch (style) {
 		case 1:

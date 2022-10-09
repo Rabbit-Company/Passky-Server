@@ -1,22 +1,22 @@
 /*
 
-    Solarized Dark theme
+  Solarized Dark theme
 
 */
 
 /*
-    Text colors
+  Text colors
 */
 
-.primaryColor{
+.primaryColor {
 	color: #547013 !important;
 }
 
-.secondaryColor{
+.secondaryColor {
 	color: #6B7280 !important;
 }
 
-.tertiaryColor{
+.tertiaryColor {
 	color: #DFE5EB !important;
 }
 
@@ -24,19 +24,19 @@
 	Background colors
 */
 
-.primaryBackgroundColor{
+.primaryBackgroundColor {
 	background-color: #00212b !important;
 }
 
-.secondaryBackgroundColor{
+.secondaryBackgroundColor {
 	background-color: #002b36 !important;
 }
 
-.tertiaryBackgroundColor{
+.tertiaryBackgroundColor {
 	background-color: #073642 !important;
 }
 
-.quaternaryBackgroundColor{
+.quaternaryBackgroundColor {
 	background-color: #547013 !important;
 }
 
@@ -44,40 +44,40 @@
 	Button colors
 */
 
-.primaryButton{
+.primaryButton {
 	background-color: #547013 !important;
 	color: #DFE5EB !important;
 }
 
-.primaryButton:hover{
+.primaryButton:hover {
 	background-color: #526d12 !important;
 }
 
-.successButton{
+.successButton {
 	background-color: #547013 !important;
 	color: #DFE5EB !important;
 }
 
-.successButton:hover{
+.successButton:hover {
 	background-color: #526d12 !important;
 }
 
-.dangerButton{
+.dangerButton {
 	background-color: #b0461a !important;
 	color: #DFE5EB !important;
 }
 
-.dangerButton:hover{
+.dangerButton:hover {
 	background-color: #9b3f17 !important;
 }
 
-.cancelButton{
+.cancelButton {
 	background-color: #073642 !important;
 	border-color: #073642 !important;
 	color: #DFE5EB !important;
 }
 
-.cancelButton:hover{
+.cancelButton:hover {
 	background-color: #05262e !important;
 }
 
@@ -85,62 +85,66 @@
 	Elements
 */
 
-input{
+input {
 	background-color: #073642 !important;
 	color: #DFE5EB !important;
 	border-color: #16191d !important;
 }
 
-textarea{
+textarea {
 	background-color: #073642 !important;
 	color: #DFE5EB !important;
 	border-color: #16191d !important;
 }
 
-svg{
-    stroke: #0a4c5c !important;
+svg {
+	stroke: #0a4c5c !important;
+}
+
+input[type="checkbox"] {
+	accent-color: #547013;
 }
 
 /*
 	Main menu
 */
 
-.mainMenuLink{
+.mainMenuLink {
 	background-color: #002b36 !important;
 	color: #6B7280 !important;
 }
 
-.mainMenuLink:hover{
+.mainMenuLink:hover {
 	color: #DFE5EB !important;
 	border-color: #D1D5DB !important;
 }
 
-.mainMenuLinkSelected{
+.mainMenuLinkSelected {
 	color: #DFE5EB !important;
 	border-color: #547013 !important;
 }
 
-.mainMenuMobileLink{
+.mainMenuMobileLink {
 	background-color: #002b36 !important;
 	color: #DFE5EB !important;
 }
 
-.mainMenuMobileLink:hover{
+.mainMenuMobileLink:hover {
 	background-color: #073642 !important;
 	border-color: #6B7280 !important;
 }
 
-.mainMenuMobileLinkSelected{
+.mainMenuMobileLinkSelected {
 	background-color: #073642 !important;
 	border-color: #547013 !important;
 	color: #547013 !important;
 }
 
-#main-menu-toggle-btn{
+#main-menu-toggle-btn {
 	color: #9CA3AF !important;
 }
 
-#main-menu-toggle-btn:hover{
+#main-menu-toggle-btn:hover {
 	color: #6B7280 !important;
 	background-color: #073642 !important;
 }
@@ -149,7 +153,7 @@ svg{
 	Border colors
 */
 
-.primaryBorderColor{
+.primaryBorderColor {
 	border-color: #16191d !important;
 }
 
@@ -157,12 +161,12 @@ svg{
 	Placeholder colors
 */
 
-.primaryBorderColor::placeholder{
+.primaryBorderColor::placeholder {
 	color: #6B7280;
 	opacity: 1;
 }
 
-.primaryBorderColor::-ms-input-placeholder { /* Microsoft Edge */
+.primaryBorderColor::-ms-input-placeholder {
 	color: #6B7280;
 	opacity: 1;
 }
@@ -171,7 +175,7 @@ svg{
 	Stroke colors
 */
 
-.primaryStrokeColor{
+.primaryStrokeColor {
 	stroke: #DFE5EB !important;
 }
 
@@ -179,11 +183,11 @@ svg{
 	Passwords
 */
 
-.passwordsBackgroundColor{
+.passwordsBackgroundColor {
 	background-color: #00212b !important;
 }
 
-.passwordsBorderColor{
+.passwordsBorderColor {
 	border-color: #000000 !important;
 }
 
@@ -191,12 +195,12 @@ svg{
 	Import and Export buttons
 */
 
-.importExportButtons{
+.importExportButtons {
 	color: #b1bfce !important;
 	border-color: #00212b !important;
 }
 
-.importExportButtons:hover{
+.importExportButtons:hover {
 	color: #91a6ba !important;
 }
 
