@@ -58,7 +58,10 @@ fetch(window.location.origin + "?action=getStats")
 			document.getElementById("stats-accounts-text").innerText = json.users + " / " + json.maxUsers;
 			document.getElementById("stats-accounts-bar").style = "width: " + (json.users/json.maxUsers)*100 + "%";
 
-			document.getElementById("stats-passwords-text").innerText = json.passwords + " (" + json.maxPasswords + ")";
+			let maxPasswords = json.maxPasswords;
+			if(maxPasswords < 0) maxPasswords = "∞";
+
+			document.getElementById("stats-passwords-text").innerText = json.passwords + " (" + maxPasswords + ")";
 			document.getElementById("stats-version-text").innerText = json.version;
 		}else{
 			resetInfoStats();
