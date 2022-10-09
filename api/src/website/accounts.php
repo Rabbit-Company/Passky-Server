@@ -6,6 +6,21 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
 
 require_once "Settings.php";
 
+if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+	$page = $_GET["page"];
+}else{
+	$page = 1;
+}
+
+if (isset($_GET["limit"]) && is_numeric($_GET["limit"])) {
+	$per_page_records = $_GET["limit"];
+}else{
+	$per_page_records = 50;
+}
+
+$start_from = ($page - 1) * $per_page_records;
+$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT " . $start_from . "," . $per_page_records . ";";
+
 displayHeader(2);
 ?>
 
@@ -17,28 +32,31 @@ displayHeader(2);
 					<?php
 
 						try{
+
 							$conn = Settings::createConnection();
 
-							$stmt = $conn->prepare("SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username;");
+							$stmt = $conn->prepare($query);
 							$stmt->execute();
-
 							$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+							$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM users;");
+							$stmt2->execute();
+							$totalAccounts = $stmt2->fetch()['amount'];
+
+							$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM passwords;");
+							$stmt3->execute();
+							$totalPasswords = $stmt3->fetch()['amount'];
+
+							$total_pages = ceil($totalAccounts / $per_page_records);
 							?>
 							<script>
 								sessionStorage.setItem("accounts", JSON.stringify(<?= json_encode($data) ?>));
 							</script>
-							<?php
-
-							$totalPasswords = 0;
-							foreach($data as $row){
-								$totalPasswords += $row['passwords'];
-							}
-							?>
 							<div class="hidden mb-8 md:block">
 								<dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
 									<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
 										<dt class="text-sm font-medium secondaryColor truncate">Total Accounts</dt>
-										<dd id="stats-accounts" class="mt-1 text-3xl font-semibold tertiaryColor"><?= $stmt->rowCount() ?></dd>
+										<dd id="stats-accounts" class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalAccounts ?></dd>
 									</div>
 									<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
 										<dt class="text-sm font-medium secondaryColor truncate">Total Passwords</dt>
@@ -159,6 +177,48 @@ displayHeader(2);
 									?>
 								</tbody>
 							</table>
+							<div class="flex items-center justify-between shadow passwordsBorderColor border-t secondaryBackgroundColor px-4 py-3 sm:px-6">
+								<div class="flex flex-1 justify-between sm:hidden">
+									<a href="#" class="relative inline-flex items-center rounded-md border primaryBorderColor secondaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor">Previous</a>
+									<a href="#" class="relative ml-3 inline-flex items-center rounded-md border primaryBorderColor secondaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor">Next</a>
+								</div>
+								<div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+									<div>
+										<p class="text-sm secondaryColor">
+											Showing
+											<span class="font-medium"><?= $start_from + 1 ?></span>
+											to
+											<span class="font-medium"><?= $start_from + $per_page_records ?></span>
+											of
+											<span class="font-medium"><?= $totalAccounts ?></span>
+											accounts
+										</p>
+									</div>
+									<div>
+										<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+											<a href="#" class="relative inline-flex items-center rounded-l-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
+												<span class="sr-only">Previous</span>
+												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+													<path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+												</svg>
+											</a>
+											<a href="#" class="relative inline-flex items-center border primaryBorderColor secondaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor focus:z-20">1</a>
+											<a href="#" class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor focus:z-20">2</a>
+											<a href="#" class="relative hidden items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor focus:z-20 md:inline-flex">3</a>
+											<span class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor">...</span>
+											<a href="#" class="relative hidden items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor focus:z-20 md:inline-flex">8</a>
+											<a href="#" class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor focus:z-20">9</a>
+											<a href="#" class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor focus:z-20">10</a>
+											<a href="#" class="relative inline-flex items-center rounded-r-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
+												<span class="sr-only">Next</span>
+												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+													<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+												</svg>
+											</a>
+										</nav>
+									</div>
+								</div>
+							</div>
 							<input type="hidden" id="token" value="<?php echo $_SESSION['token'] ?? ''; ?>">
 							<?php
 						}catch(PDOException $e) {
