@@ -2,8 +2,10 @@ document.getElementById("main-menu-toggle-btn").addEventListener("click", () => 
 	toggleMenu();
 });
 
-document.getElementById("search").addEventListener("keyup", () => {
-	filterAccounts();
+document.getElementById("search").addEventListener("keypress", (event) => {
+	if (event.key !== "Enter") return;
+	event.preventDefault();
+	window.location = "?search=" + document.getElementById("search").value;
 });
 
 document.getElementById("dialog-button-cancel").addEventListener("click", () => {
@@ -113,24 +115,4 @@ function editAccount(username){
 function deleteAccount(username){
 	let token = document.getElementById("token").value;
 	window.location.assign("./website/actions/deleteAccount.php?username=" + username + "&token=" + token);
-}
-
-function filterAccounts() {
-	let input, filter, table, tr, td, i, txtValue;
-	input = document.getElementById("search");
-	filter = input.value.toUpperCase();
-	table = document.getElementById("table-accounts");
-	tr = table.getElementsByTagName("tr");
-
-	for (i = 0; i < tr.length; i++) {
-		td = tr[i].getElementsByTagName("td")[0];
-		if (td) {
-			txtValue = td.textContent || td.innerText;
-			if (txtValue.toUpperCase().indexOf(filter) > -1) {
-				tr[i].style.display = "";
-			} else {
-				tr[i].style.display = "none";
-			}
-		}
-	}
 }

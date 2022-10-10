@@ -6,14 +6,21 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
 
 require_once "Settings.php";
 
-if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+if (isset($_GET["page"]) && is_numeric($_GET["page"]) && $_GET["page"] >= 1) {
 	$page = $_GET["page"];
 }else{
 	$page = 1;
 }
 
-if (!isset($_SESSION["limit"]) || !is_numeric($_SESSION["limit"])) {
+if (!isset($_SESSION["limit"]) || !is_numeric($_SESSION["limit"]) || $_SESSION["limit"] < 1) {
 	$_SESSION["limit"] = 25;
+}
+
+$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT :startFrom,:limit;";
+
+if (isset($_GET["search"]) && strlen($_GET["search"]) >= 1) {
+	$search = $_GET["search"] . "%";
+	$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner WHERE u.username LIKE :search OR u.email LIKE :search GROUP BY u.username;";
 }
 
 $startFrom = ($page - 1) * $_SESSION["limit"];
@@ -32,7 +39,13 @@ try{
 	$stmt3->execute();
 	$totalPasswords = $stmt3->fetch()['amount'];
 
-	$stmt = $conn->prepare("SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT " . $startFrom . "," . $_SESSION["limit"] . ";");
+	$stmt = $conn->prepare($query);
+	if(isset($search)){
+		$stmt->bindParam(':search', $search, PDO::PARAM_STR);
+	}else{
+		$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
+		$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
+	}
 	$stmt->execute();
 	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }catch(PDOException) {}
@@ -174,54 +187,56 @@ displayHeader(2);
 								?>
 						</tbody>
 					</table>
-					<div class="flex items-center justify-between shadow passwordsBorderColor border-t secondaryBackgroundColor px-4 py-3 sm:px-6">
-						<div class="flex flex-1 justify-between sm:hidden">
-							<a href="#" class="relative inline-flex items-center rounded-md border primaryBorderColor secondaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor">Previous</a>
-							<a href="#" class="relative ml-3 inline-flex items-center rounded-md border primaryBorderColor secondaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor">Next</a>
-						</div>
-						<div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-							<div>
-								<p class="text-sm secondaryColor">
-									Showing
-									<span class="font-medium"><?= $startFrom + 1 ?></span>
-									to
-									<span class="font-medium"><?= ($startFrom + $_SESSION["limit"] > $totalAccounts) ? $totalAccounts : $startFrom + $_SESSION["limit"] ?></span>
-									of
-									<span class="font-medium"><?= $totalAccounts ?></span>
-									accounts
-								</p>
+					<?php if(!isset($search)){ ?>
+						<div class="flex items-center justify-between shadow passwordsBorderColor border-t secondaryBackgroundColor px-4 py-3 sm:px-6">
+							<div class="flex flex-1 justify-between sm:hidden">
+								<a href="#" class="relative inline-flex items-center rounded-md border primaryBorderColor secondaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor">Previous</a>
+								<a href="#" class="relative ml-3 inline-flex items-center rounded-md border primaryBorderColor secondaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor">Next</a>
 							</div>
-							<?php if($totalPages != 1){ ?>
-							<div>
-								<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-									<?php if($page != 1){ ?>
-										<a href="?page=<?= $page - 1 ?>" class="relative inline-flex items-center rounded-l-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
-											<span class="sr-only">Previous</span>
-											<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-												<path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-											</svg>
-										</a>
-									<?php } ?>
+							<div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+								<div>
+									<p class="text-sm secondaryColor">
+										Showing
+										<span class="font-medium"><?= $startFrom + 1 ?></span>
+										to
+										<span class="font-medium"><?= ($startFrom + $_SESSION["limit"] > $totalAccounts) ? $totalAccounts : $startFrom + $_SESSION["limit"] ?></span>
+										of
+										<span class="font-medium"><?= $totalAccounts ?></span>
+										accounts
+									</p>
+								</div>
+								<?php if($totalPages != 1){ ?>
+								<div>
+									<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+										<?php if($page != 1){ ?>
+											<a href="?page=<?= $page - 1 ?>" class="relative inline-flex items-center rounded-l-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
+												<span class="sr-only">Previous</span>
+												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+													<path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+												</svg>
+											</a>
+										<?php } ?>
 
-									<?php if($totalPages >= 4){ ?>
-										<input id="page" type="number" value="<?= $page ?>" min="1" max="<?= $totalPages ?>" class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor appearance-none text-center focus:outline-none px-4 py-2 text-sm font-medium secondaryColor">
-									<?php }else{ ?>
-										<span class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor"><?= $page ?></span>
-									<?php } ?>
+										<?php if($totalPages >= 4){ ?>
+											<input id="page" type="number" value="<?= $page ?>" min="1" max="<?= $totalPages ?>" class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor appearance-none text-center focus:outline-none px-4 py-2 text-sm font-medium secondaryColor">
+										<?php }else{ ?>
+											<span class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor"><?= $page ?></span>
+										<?php } ?>
 
-									<?php if($page != $totalPages){ ?>
-										<a href="?page=<?= $page + 1 ?>" class="relative inline-flex items-center rounded-r-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
-											<span class="sr-only">Next</span>
-											<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-												<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-											</svg>
-										</a>
-									<?php } ?>
-								</nav>
+										<?php if($page != $totalPages){ ?>
+											<a href="?page=<?= $page + 1 ?>" class="relative inline-flex items-center rounded-r-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
+												<span class="sr-only">Next</span>
+												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+													<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+												</svg>
+											</a>
+										<?php } ?>
+									</nav>
+								</div>
+								<?php } ?>
 							</div>
-							<?php } ?>
 						</div>
-					</div>
+					<?php } ?>
 					<input type="hidden" id="token" value="<?php echo $_SESSION['token'] ?? ''; ?>">
 				</div>
 			</div>
