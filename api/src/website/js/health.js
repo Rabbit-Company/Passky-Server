@@ -78,8 +78,8 @@ function checkLatestVersion(version){
 		if(typeof(json) == 'undefined') return;
 		if(typeof(json.tag_name) == 'undefined') return;
     addHealth(0, "Connection with Github API has been successful.");
-		if(version != json.tag_name){
-			addHealth(1, "Your Passky Server is outdated. You are running version " + version + ", while version " + json.tag_name + " has already been released.");
+		if(version != json.tag_name.replace('v','')){
+			addHealth(1, "Your Passky Server is outdated. You are running version " + version + ", while version " + json.tag_name.replace('v','') + " has already been released.");
 		}else{
       addHealth(0, "You are using the latest Passky Server.");
     }

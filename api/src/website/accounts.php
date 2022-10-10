@@ -74,7 +74,7 @@ displayHeader(2);
 							</div>
 							<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
 								<dt class="text-sm font-medium secondaryColor truncate">Server Version</dt>
-								<dd class="mt-1 text-3xl font-semibold tertiaryColor">8.0.0</dd>
+								<dd class="mt-1 text-3xl font-semibold tertiaryColor"><?= Settings::getVersion() ?></dd>
 							</div>
 						</dl>
 					</div>

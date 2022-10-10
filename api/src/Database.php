@@ -170,7 +170,7 @@ class Database{
 
 	public static function getInfo() : string{
 		$JSON_OBJ = new StdClass;
-		$JSON_OBJ->version = "v8.0.0";
+		$JSON_OBJ->version = Settings::getVersion();
 		$JSON_OBJ->users = self::getUserCount();
 		$JSON_OBJ->maxUsers = Settings::getMaxAccounts();
 		$JSON_OBJ->passwords = self::getPasswordCount();

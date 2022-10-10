@@ -8,6 +8,10 @@ class Settings{
 
 */
 
+	public static function getVersion() : string{
+		return "8.0.0";
+	}
+
 	public static function getLocation() : string{
 		return getenv("SERVER_LOCATION", true) ?: getenv("SERVER_LOCATION") ?: "US";
 	}
