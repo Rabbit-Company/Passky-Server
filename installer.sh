@@ -81,12 +81,13 @@ echo "SERVER_LOCATION=${SERVER_LOCATION}" >> .env
 
 echo -e "\n${blue}${bold}How many accounts can be created on this Passky Server?${blue}"
 echo -e "When this amount would be reached, new users won't be able to create their accounts on this server."
+echo -e "For Unlimited accounts use -1"
 echo -e "Example: 100"
 printf "\n${green}Maximum accounts created: "
 read ACCOUNT_MAX
-while [[ ! "$ACCOUNT_MAX" =~ ^[0-9]{1,10}$ ]];
+while [[ !( "$ACCOUNT_MAX" =~ ^[-]?[0-9]+ && "$ACCOUNT_MAX" -ge -1 && "$ACCOUNT_MAX" -le 1000000000 ) ]];
 do
-	echo -e "\n${red}'$ACCOUNT_MAX' is not a valid number. Make sure number is between 0 and 9999999999."
+	echo -e "\n${red}'$ACCOUNT_MAX' is not a valid number. Make sure number is between -1 and 1000000000."
 	printf "\n${green}Maximum accounts created: "
 	read ACCOUNT_MAX
 done
@@ -94,18 +95,16 @@ echo "ACCOUNT_MAX=${ACCOUNT_MAX}" >> .env
 
 echo -e "\n${blue}${bold}How many passwords can each account hold/have?${blue}"
 echo -e "When this amount would be reached, users won't be able to save new passwords."
+echo -e "For Unlimited passwords use -1"
 echo -e "Example: 1000"
 printf "\n${green}Maximum passwords per account: "
 read ACCOUNT_MAX_PASSWORDS
-while [[ ! "$ACCOUNT_MAX_PASSWORDS" =~ ^[0-9]{1,5}$ ]];
+while [[ !( "$ACCOUNT_MAX_PASSWORDS" =~ ^[-]?[0-9]+ && "$ACCOUNT_MAX_PASSWORDS" -ge -1 && "$ACCOUNT_MAX_PASSWORDS" -le 1000000000 ) ]];
 do
-	echo -e "\n${red}'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between 0 and 50000."
+	echo -e "\n${red}'$ACCOUNT_MAX_PASSWORDS' is not a valid number. Make sure number is between -1 and 1000000000."
 	printf "\n${green}Maximum passwords per account: "
 	read ACCOUNT_MAX_PASSWORDS
 done
-if [ "$ACCOUNT_MAX_PASSWORDS" -gt 50000 ]; then
- ACCOUNT_MAX_PASSWORDS=50000
-fi
 echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
 
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
@@ -118,6 +117,13 @@ echo -e "Example: passky-database"
 printf "\n${green}Database host: "
 read MYSQL_HOST
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
+
+echo -e "\n${blue}${bold}Provide database port.${blue}"
+echo -e "If you are using docker, use port 3306"
+echo -e "Example: 3306"
+printf "\n${green}Database port: "
+read MYSQL_PORT
+echo "MYSQL_PORT=${MYSQL_PORT}" >> .env
 
 echo -e "\n${blue}${bold}Provide database name.${blue}"
 echo -e "If you are using docker, database with user will be created automatically"

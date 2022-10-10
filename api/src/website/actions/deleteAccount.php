@@ -14,8 +14,7 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $to
 $username = $_GET['username'];
 
 try{
-  $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=" . Settings::getDBName(), Settings::getDBUsername(), Settings::getDBPassword());
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $conn = Settings::createConnection();
 
   $stmt = $conn->prepare("DELETE FROM passwords WHERE owner = :owner;");
   $stmt->bindParam(':owner', $username, PDO::PARAM_STR);

@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
   `2fa_secret` Char(20),
   `yubico_otp` Char(64),
   `backup_codes` Char(69),
-  `max_passwords` SmallInt UNSIGNED NOT NULL DEFAULT 1000,
+  `max_passwords` Int NOT NULL DEFAULT 1000,
   `created` Date NOT NULL DEFAULT (CURRENT_DATE),
   `accessed` Date NOT NULL DEFAULT (CURRENT_DATE),
   PRIMARY KEY (`user_id`),
@@ -39,8 +39,7 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`passwords`
   `username` Char(255) NOT NULL,
   `password` Char(255) NOT NULL,
   `message` VarChar(10000) NOT NULL,
-  PRIMARY KEY (`password_id`),
-  UNIQUE `password_id` (`password_id`)
+  PRIMARY KEY (`password_id`)
 );
 
 CREATE INDEX `owner_idx` ON `MYSQL_DATABASE`.`passwords` (`owner`);

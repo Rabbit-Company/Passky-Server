@@ -35,7 +35,7 @@
 											<p id="stats-cpu-text" class="text-2xl font-semibold secondaryColor">0%</p>
 											<div class="absolute bottom-0 inset-x-0 secondaryBackgroundColor px-4 pb-4 sm:px-6">
 												<div class="w-full tertiaryBackgroundColor rounded-full">
-													<div id="stats-cpu-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full"></div>
+													<div id="stats-cpu-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full w-0"></div>
 												</div>
 											</div>
 										</dd>
@@ -55,7 +55,7 @@
 											<p id="stats-ram-text" class="text-xl font-semibold secondaryColor">0%</p>
 											<div class="absolute bottom-0 inset-x-0 secondaryBackgroundColor px-4 pb-4 sm:px-6">
 												<div class="w-full tertiaryBackgroundColor rounded-full">
-													<div id="stats-ram-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full"></div>
+													<div id="stats-ram-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full w-0"></div>
 												</div>
 											</div>
 										</dd>
@@ -77,7 +77,7 @@
 											<p id="stats-storage-text" class="text-xl font-semibold secondaryColor">0%</p>
 											<div class="absolute bottom-0 inset-x-0 secondaryBackgroundColor px-4 pb-4 sm:px-6">
 												<div class="w-full tertiaryBackgroundColor rounded-full">
-													<div id="stats-storage-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full"></div>
+													<div id="stats-storage-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full w-0"></div>
 												</div>
 											</div>
 										</dd>
@@ -94,10 +94,10 @@
 											<p class="ml-16 text-sm font-medium secondaryColor truncate">Accounts</p>
 										</dt>
 										<dd class="ml-16 flex items-baseline">
-											<p id="stats-accounts-text" class="text-xl font-semibold secondaryColor">0 / 0</p>
+											<p id="stats-accounts-text" class="text-xl font-semibold secondaryColor">0</p>
 											<div class="absolute bottom-0 inset-x-0 secondaryBackgroundColor px-4 pb-4 sm:px-6">
 												<div class="w-full tertiaryBackgroundColor rounded-full">
-													<div id="stats-accounts-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full"></div>
+													<div id="stats-accounts-bar" class="quaternaryBackgroundColor text-xs font-medium text-blue-100 text-center h-2 leading-none rounded-full w-0"></div>
 												</div>
 											</div>
 										</dd>

@@ -44,9 +44,12 @@ services:
       - ADMIN_PASSWORD
       # Database
       - MYSQL_HOST
+      - MYSQL_PORT
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+      - MYSQL_SSL
+      - MYSQL_SSL_CA
       # Mail
       - MAIL_ENABLED
       - MAIL_HOST
