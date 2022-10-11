@@ -9,6 +9,7 @@ require_once "Errors.php";
 require_once "Display.php";
 require_once "Settings.php";
 require_once "User.php";
+require_once "License.php";
 
 require '../vendor/autoload.php';
 
@@ -71,7 +72,8 @@ class Database{
 			'enable2fa' => Settings::getLimiterEnable2fa(),
 			'disable2fa' => Settings::getLimiterDisable2fa(),
 			'addYubiKey' => Settings::getLimiterAddYubiKey(),
-			'removeYubiKey' => Settings::getLimiterRemoveYubiKey()
+			'removeYubiKey' => Settings::getLimiterRemoveYubiKey(),
+			'upgradeAccount' => Settings::getLimiterUpgradeAccount()
 		];
 
 		$timer = $timerOptions[$action];
@@ -774,6 +776,72 @@ class Database{
 				return Display::json(506);
 			}
 		}catch(PDOException $e) {
+			return Display::json(505);
+		}
+		$conn = null;
+	}
+
+	public static function upgradeAccount(string $username, string $token, string $license) : string{
+		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
+		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		if(strlen($license) != 29) return Display::json(29);
+		$username = strtolower($username);
+
+		$user = new User;
+		$user->fromUsername($username);
+
+		switch($user->response){
+			case 1:
+				return Display::json(1);
+			break;
+			case 505:
+				return Display::json(505);
+			break;
+		}
+
+		$licenseObj = new License;
+		$licenseObj->fromLicense($license);
+
+		switch($licenseObj->response){
+			case 29:
+				return Display::json(29);
+			break;
+			case 505:
+				return Display::json(505);
+			break;
+		}
+
+		$today = date('Y-m-d');
+		$premium = Settings::getPremium();
+		if($licenseObj->linked != null) return Display::json(30);
+
+		try{
+			$conn = Settings::createConnection();
+
+			$conn->beginTransaction();
+
+			if($user->premium_expires == null){
+				$expires = date('Y-m-d', strtotime($today . '+ ' . $licenseObj->duration . 'days'));
+			}else{
+				$expires = date('Y-m-d', strtotime($user->premium_expires . '+ ' . $licenseObj->duration . 'days'));
+			}
+
+			$stmt = $conn->prepare("UPDATE users SET max_passwords = :max_passwords, premium_expires = :premium_expires WHERE username = :username");
+			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+			$stmt->bindParam(':max_passwords', $premium, PDO::PARAM_INT);
+			$stmt->bindParam(':premium_expires', $expires, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$stmt = $conn->prepare("UPDATE licenses SET used = :used, linked = :linked WHERE license = :license");
+			$stmt->bindParam(':license', $license, PDO::PARAM_STR);
+			$stmt->bindParam(':used', $today, PDO::PARAM_STR);
+			$stmt->bindParam(':linked', $username, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$conn->commit();
+			return Display::json(0);
+		}catch(PDOException $e) {
+			$conn->rollBack();
 			return Display::json(505);
 		}
 		$conn = null;

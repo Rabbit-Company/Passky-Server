@@ -28,6 +28,8 @@ class Errors{
 		"26" => "Two-factor authentication is already enabled.",
 		"27" => "Two-factor authentication is not enabled.",
 		"28" => "Mail is not enabled on this server.",
+		"29" => "License key is invalid!",
+		"30" => "This license key has already been used.",
 		"300" => "Website needs to be encrypted with XChaCha20.",
 		"301" => "Username needs to be encrypted with XChaCha20.",
 		"302" => "Password needs to be encrypted with XChaCha20.",

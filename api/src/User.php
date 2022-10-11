@@ -12,6 +12,7 @@ class User {
 	public ?string $yubico_otp = null;
 	public ?string $backup_codes = null;
 	public ?int $max_passwords = null;
+	public ?string $premium_expires = null;
 	public ?string $created = null;
 	public ?string $accessed = null;
 	public int $response = 505;

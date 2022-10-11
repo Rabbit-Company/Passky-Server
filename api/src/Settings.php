@@ -210,5 +210,9 @@ class Settings{
 		return getenv("LIMITER_REMOVE_YUBIKEY", true) ?: getenv("LIMITER_REMOVE_YUBIKEY") ?: 10;
 	}
 
+	public static function getLimiterUpgradeAccount() : int{
+		return getenv("LIMITER_UPGRADE_ACCOUNT", true) ?: getenv("LIMITER_UPGRADE_ACCOUNT") ?: 10;
+	}
+
 }
 ?>
