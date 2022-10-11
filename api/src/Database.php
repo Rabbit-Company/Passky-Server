@@ -34,14 +34,14 @@ class Database{
 
 	public static function generateNonce() : string{
 		$nonce = "";
-		for($i = 0; $i < 5; $i++) $nonce .= rand(100000,999999) . "p";
+		for($i = 0; $i < 5; $i++) $nonce .= random_int(100000,999999) . "p";
 		$nonce = substr($nonce, 0, -1);
 		return $nonce;
 	}
 
 	public static function generateCodes() : string{
 		$codes = "";
-		for($i = 0; $i < 10; $i++) $codes .= rand(100000,999999) . ";";
+		for($i = 0; $i < 10; $i++) $codes .= random_int(100000,999999) . ";";
 		$codes = substr($codes, 0, -1);
 		return $codes;
 	}

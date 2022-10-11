@@ -46,7 +46,7 @@ function displayHeader($location){
                 <?php } ?>
               </div>
             </div>
-            <?php if($location == 2){ ?>
+            <?php if($location == 2 || $location == 5){ ?>
               <div class="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-start">
                 <div class="flex-shrink-0">
                   <span class="relative z-0 inline-flex shadow-sm rounded-md">

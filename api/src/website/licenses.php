@@ -20,7 +20,7 @@ $query = "SELECT * FROM licenses LIMIT :startFrom,:limit";
 
 if (isset($_GET["search"]) && strlen($_GET["search"]) >= 1) {
 	$search = $_GET["search"] . "%";
-	$query = "SELECT * FROM licenses WHERE key LIKE :search OR linked LIKE :search";
+	$query = "SELECT * FROM licenses WHERE license LIKE :search OR linked LIKE :search";
 }
 
 $startFrom = ($page - 1) * $_SESSION["limit"];
@@ -35,7 +35,7 @@ try{
 	$totalPages = ceil($totalLicenses / $_SESSION["limit"]);
 	if($totalPages != 0 && $page > $totalPages) header("Location: ../..?page=" . $totalPages);
 
-	$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses WHERE linked = null;");
+	$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses WHERE linked IS NULL;");
 	$stmt3->execute();
 	$totalUnusedLicenses = $stmt3->fetch()['amount'];
 
@@ -95,7 +95,7 @@ displayHeader(5);
 													</div>
 													<div class="ml-4">
 														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['linked'] != null) ? $row['linked'] : "Unused" ?></div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['key'] ?></div>
+														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['license'] ?></div>
 													</div>
 												</div>
 											</td>
@@ -114,7 +114,7 @@ displayHeader(5);
 													</div>
 													<div class="ml-4">
 														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Duration</div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['days'] . " days" ?></div>
+														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['duration'] . " days" ?></div>
 													</div>
 												</div>
 											</td>
@@ -135,7 +135,7 @@ displayHeader(5);
 											</td>
 											<td class="w-full"></td>
 											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="show-info-<?= $row['key'] ?>" href="#">
+												<a id="show-info-<?= $row['license'] ?>" href="#">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
 														<circle cx="12" cy="12" r="9" />
@@ -145,7 +145,7 @@ displayHeader(5);
 												</a>
 											</td>
 											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="edit-license-<?= $row['key'] ?>" href="#">
+												<a id="edit-license-<?= $row['license'] ?>" href="#">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
 														<path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"></path>
@@ -155,7 +155,7 @@ displayHeader(5);
 												</a>
 											</td>
 											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="delete-license-<?= $row['key'] ?>" href="#">
+												<a id="delete-license-<?= $row['license'] ?>" href="#">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
 														<line x1="4" y1="7" x2="20" y2="7" />
@@ -167,16 +167,16 @@ displayHeader(5);
 												</a>
 											</td>
 											<script>
-												document.getElementById("show-info-<?= $row['key'] ?>").addEventListener("click", () => {
-													changeDialog(1, "<?= $row['key'] ?>");
+												document.getElementById("show-info-<?= $row['license'] ?>").addEventListener("click", () => {
+													changeDialog(1, "<?= $row['license'] ?>");
 													show('dialog');
 												});
-												document.getElementById("edit-license-<?= $row['key'] ?>").addEventListener("click", () => {
-													changeDialog(2, "<?= $row['key'] ?>");
+												document.getElementById("edit-license-<?= $row['license'] ?>").addEventListener("click", () => {
+													changeDialog(2, "<?= $row['license'] ?>");
 													show('dialog');
 												});
-												document.getElementById("delete-license-<?= $row['key'] ?>").addEventListener("click", () => {
-													changeDialog(3, "<?= $row['key'] ?>");
+												document.getElementById("delete-license-<?= $row['license'] ?>").addEventListener("click", () => {
+													changeDialog(3, "<?= $row['license'] ?>");
 													show('dialog')
 												});
 											</script>

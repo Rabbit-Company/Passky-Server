@@ -47,12 +47,12 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`passwords`
 
 CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`licenses`
 (
-  `key` Char(30) NOT NULL,
-  `days` Int NOT NULL DEFAULT 365,
+  `license` Char(30) NOT NULL,
+  `duration` Int NOT NULL DEFAULT 365,
   `created` Date NOT NULL DEFAULT (CURRENT_DATE),
   `used` Date,
   `linked` Char(30) DEFAULT NULL,
-  PRIMARY KEY (`key`)
+  PRIMARY KEY (`license`)
 );
 
 CREATE INDEX `owner_idx` ON `MYSQL_DATABASE`.`passwords` (`owner`);
