@@ -122,6 +122,10 @@ class Settings{
 		return getenv("ACCOUNT_MAX_PASSWORDS", true) ?: getenv("ACCOUNT_MAX_PASSWORDS") ?: 1000;
 	}
 
+	public static function getPremium() : int{
+		return getenv("ACCOUNT_PREMIUM", true) ?: getenv("ACCOUNT_PREMIUM") ?: -1;
+	}
+
 /*
 
 	YUBICO SETTINGS

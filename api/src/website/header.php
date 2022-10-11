@@ -40,6 +40,7 @@ function displayHeader($location){
                 <a id="server-link" href="./website/actions/changePage.php?page=server" class="<?= ($location == 1) ? $active : $inactive ?>">Server</a>
                 <?php if(isset($_SESSION['username']) && isset($_SESSION['token'])){ ?>
                   <a id="accounts-link" href="./website/actions/changePage.php?page=accounts" class="<?= ($location == 2) ? $active : $inactive ?>">Accounts</a>
+									<a id="licenses-link" href="./website/actions/changePage.php?page=licenses" class="<?= ($location == 5) ? $active : $inactive ?>">Licenses</a>
                   <a id="health-link" href="./website/actions/changePage.php?page=health" class="<?= ($location == 3) ? $active : $inactive ?>">Health</a>
                   <a id="settings-link" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 4) ? $active : $inactive ?>">Settings</a>
                 <?php } ?>
@@ -80,6 +81,7 @@ function displayHeader($location){
             <a id="server-link-mobile" href="./website/actions/changePage.php?page=server" class="<?= ($location == 1) ? $activeMobile : $inactiveMobile ?>">Server</a>
             <?php if(isset($_SESSION['username']) && isset($_SESSION['token'])){ ?>
               <a id="accounts-link-mobile" href="./website/actions/changePage.php?page=accounts" class="<?= ($location == 2) ? $activeMobile : $inactiveMobile ?>">Accounts</a>
+							<a id="licenses-link-mobile" href="./website/actions/changePage.php?page=licenses" class="<?= ($location == 5) ? $activeMobile : $inactiveMobile ?>">Licenses</a>
               <a id="health-link-mobile" href="./website/actions/changePage.php?page=health" class="<?= ($location == 3) ? $activeMobile : $inactiveMobile ?>">Health</a>
               <a id="settings-link-mobile" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 4) ? $activeMobile : $inactiveMobile ?>">Settings</a>
               <a id="signout-link-mobile" href="./website/actions/logout.php" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Sign out</a>

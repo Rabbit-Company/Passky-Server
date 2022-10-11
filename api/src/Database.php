@@ -298,6 +298,7 @@ class Database{
 			$JSON_OBJ->auth = ($user->secret != null);
 			$JSON_OBJ->yubico = $user->yubico_otp;
 			$JSON_OBJ->max_passwords = $user->max_passwords;
+			$JSON_OBJ->premium_expires = $user->premium_expires;
 
 			if($stmt->rowCount() > 0){
 				$JSON_OBJ->passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -775,6 +776,17 @@ class Database{
 		}catch(PDOException $e) {
 			return Display::json(505);
 		}
+		$conn = null;
+	}
+
+	public static function checkPremiumAccounts(){
+		try{
+			$conn = Settings::createConnection();
+
+			$stmt = $conn->prepare("UPDATE users SET max_passwords=:max_passwords,premium_expires=null WHERE CURDATE() > premium_expires");
+			$stmt->bindParam(':max_passwords', Settings::getMaxPasswords(), PDO::PARAM_INT);
+			$stmt->execute();
+		}catch(PDOException) {}
 		$conn = null;
 	}
 }

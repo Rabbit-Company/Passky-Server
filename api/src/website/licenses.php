@@ -1,6 +1,6 @@
 <?php
 if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
-	$_SESSION['page'] = "home";
+  $_SESSION['page'] = "home";
 	header("Location: ../..");
 }
 
@@ -16,11 +16,11 @@ if (!isset($_SESSION["limit"]) || !is_numeric($_SESSION["limit"]) || $_SESSION["
 	$_SESSION["limit"] = 25;
 }
 
-$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT :startFrom,:limit;";
+$query = "SELECT * FROM licenses LIMIT :startFrom,:limit";
 
 if (isset($_GET["search"]) && strlen($_GET["search"]) >= 1) {
 	$search = $_GET["search"] . "%";
-	$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner WHERE u.username LIKE :search OR u.email LIKE :search GROUP BY u.username;";
+	$query = "SELECT * FROM licenses WHERE key LIKE :search OR linked LIKE :search";
 }
 
 $startFrom = ($page - 1) * $_SESSION["limit"];
@@ -28,16 +28,16 @@ $startFrom = ($page - 1) * $_SESSION["limit"];
 try{
 	$conn = Settings::createConnection();
 
-	$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM users;");
+	$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses;");
 	$stmt2->execute();
-	$totalAccounts = $stmt2->fetch()['amount'];
+	$totalLicenses = $stmt2->fetch()['amount'];
 
-	$totalPages = ceil($totalAccounts / $_SESSION["limit"]);
+	$totalPages = ceil($totalLicenses / $_SESSION["limit"]);
 	if($totalPages != 0 && $page > $totalPages) header("Location: ../..?page=" . $totalPages);
 
-	$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM passwords;");
+	$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses WHERE linked = null;");
 	$stmt3->execute();
-	$totalPasswords = $stmt3->fetch()['amount'];
+	$totalUnusedLicenses = $stmt3->fetch()['amount'];
 
 	$stmt = $conn->prepare($query);
 	if(isset($search)){
@@ -51,7 +51,7 @@ try{
 }catch(PDOException) {}
 $conn = null;
 
-displayHeader(2);
+displayHeader(5);
 ?>
 
 <div class="flex flex-col">
@@ -60,32 +60,29 @@ displayHeader(2);
 			<div class="overflow-hidden sm:rounded-lg">
 				<div class="max-w-7xl mx-auto lg:px-8">
 					<script>
-						sessionStorage.setItem("accounts", JSON.stringify(<?= json_encode($data) ?>));
+						sessionStorage.setItem("licenses", JSON.stringify(<?= json_encode($data) ?>));
 					</script>
 					<div class="hidden mb-8 md:block">
 						<dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
 							<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
-								<dt class="text-sm font-medium secondaryColor truncate">Total Accounts</dt>
-								<dd id="stats-accounts" class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalAccounts ?></dd>
+								<dt class="text-sm font-medium secondaryColor truncate">Total Licenses</dt>
+								<dd class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalLicenses ?></dd>
 							</div>
 							<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
-								<dt class="text-sm font-medium secondaryColor truncate">Total Passwords</dt>
-								<dd id="stats-passwords" class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalPasswords ?></dd>
+								<dt class="text-sm font-medium secondaryColor truncate">Total Unused Licenses</dt>
+								<dd class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalUnusedLicenses ?></dd>
 							</div>
 							<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
-								<dt class="text-sm font-medium secondaryColor truncate">Server Version</dt>
-								<dd class="mt-1 text-3xl font-semibold tertiaryColor"><?= Settings::getVersion() ?></dd>
+								<dt class="text-sm font-medium secondaryColor truncate">Total Used Licenses</dt>
+								<dd class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalLicenses - $totalUnusedLicenses ?></dd>
 							</div>
 						</dl>
 					</div>
-					<table id="table-accounts" class="min-w-full divide-y divide-gray-200">
+					<table id="table-licenses" class="min-w-full divide-y divide-gray-200">
 						<tbody id="table-data" class="secondaryBackgroundColor divide-y divide-gray-200">
 							<?php
 								if($stmt->rowCount() > 0){
-									foreach($data as $row){
-										$maxPasswords = $row['max_passwords'];
-										if($maxPasswords < 0) $maxPasswords = "∞";
-										?>
+									foreach($data as $row){ ?>
 										<tr class="passwordsBorderColor">
 											<td class="px-6 py-4 whitespace-nowrap">
 												<div class="flex">
@@ -97,8 +94,8 @@ displayHeader(2);
 														</svg>
 													</div>
 													<div class="ml-4">
-														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['username'] ?></div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['email'] ?></div>
+														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['linked'] != null) ? $row['linked'] : "Unused" ?></div>
+														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['key'] ?></div>
 													</div>
 												</div>
 											</td>
@@ -107,15 +104,17 @@ displayHeader(2);
 													<div class="flex-shrink-0 h-10 w-10">
 														<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 															<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-															<circle cx="8" cy="15" r="4"></circle>
-															<line x1="10.85" y1="12.15" x2="19" y2="4"></line>
-															<line x1="18" y1="5" x2="20" y2="7"></line>
-															<line x1="15" y1="8" x2="17" y2="10"></line>
+															<rect x="4" y="5" width="16" height="16" rx="2"></rect>
+															<line x1="16" y1="3" x2="16" y2="7"></line>
+															<line x1="8" y1="3" x2="8" y2="7"></line>
+															<line x1="4" y1="11" x2="20" y2="11"></line>
+															<line x1="11" y1="15" x2="12" y2="15"></line>
+															<line x1="12" y1="15" x2="12" y2="18"></line>
 														</svg>
 													</div>
 													<div class="ml-4">
-														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Passwords</div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['passwords'] . " / " . $maxPasswords ?></div>
+														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Duration</div>
+														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['days'] . " days" ?></div>
 													</div>
 												</div>
 											</td>
@@ -130,13 +129,13 @@ displayHeader(2);
 													</div>
 													<div class="ml-4">
 														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['created'] ?></div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['accessed'] ?></div>
+														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['used'] != null) ? $row['used'] : "Unused" ?></div>
 													</div>
 												</div>
 											</td>
 											<td class="w-full"></td>
 											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="show-info-<?= $row['username'] ?>" href="#">
+												<a id="show-info-<?= $row['key'] ?>" href="#">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
 														<circle cx="12" cy="12" r="9" />
@@ -146,7 +145,7 @@ displayHeader(2);
 												</a>
 											</td>
 											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="edit-account-<?= $row['username'] ?>" href="#">
+												<a id="edit-license-<?= $row['key'] ?>" href="#">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
 														<path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"></path>
@@ -156,7 +155,7 @@ displayHeader(2);
 												</a>
 											</td>
 											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="delete-account-<?= $row['username'] ?>" href="#">
+												<a id="delete-license-<?= $row['key'] ?>" href="#">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
 														<line x1="4" y1="7" x2="20" y2="7" />
@@ -168,16 +167,16 @@ displayHeader(2);
 												</a>
 											</td>
 											<script>
-												document.getElementById("show-info-<?= $row['username'] ?>").addEventListener("click", () => {
-													changeDialog(1, "<?= $row['username'] ?>");
+												document.getElementById("show-info-<?= $row['key'] ?>").addEventListener("click", () => {
+													changeDialog(1, "<?= $row['key'] ?>");
 													show('dialog');
 												});
-												document.getElementById("edit-account-<?= $row['username'] ?>").addEventListener("click", () => {
-													changeDialog(2, "<?= $row['username'] ?>");
+												document.getElementById("edit-license-<?= $row['key'] ?>").addEventListener("click", () => {
+													changeDialog(2, "<?= $row['key'] ?>");
 													show('dialog');
 												});
-												document.getElementById("delete-account-<?= $row['username'] ?>").addEventListener("click", () => {
-													changeDialog(3, "<?= $row['username'] ?>");
+												document.getElementById("delete-license-<?= $row['key'] ?>").addEventListener("click", () => {
+													changeDialog(3, "<?= $row['key'] ?>");
 													show('dialog')
 												});
 											</script>
@@ -195,10 +194,10 @@ displayHeader(2);
 										Showing
 										<span class="font-medium"><?= $startFrom + 1 ?></span>
 										to
-										<span class="font-medium"><?= ($startFrom + $_SESSION["limit"] > $totalAccounts) ? $totalAccounts : $startFrom + $_SESSION["limit"] ?></span>
+										<span class="font-medium"><?= ($startFrom + $_SESSION["limit"] > $totalLicenses) ? $totalLicenses : $startFrom + $_SESSION["limit"] ?></span>
 										of
-										<span class="font-medium"><?= $totalAccounts ?></span>
-										accounts
+										<span class="font-medium"><?= $totalLicenses ?></span>
+										licenses
 									</p>
 								</div>
 								<?php if($totalPages > 1){ ?>
@@ -240,4 +239,4 @@ displayHeader(2);
 	</div>
 </div>
 
-<?php displayFooter(array('accounts.js')); ?>
+<?php displayFooter(array('licenses.js')); ?>

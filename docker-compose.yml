@@ -60,6 +60,7 @@ services:
       # Account
       - ACCOUNT_MAX
       - ACCOUNT_MAX_PASSWORDS
+      - ACCOUNT_PREMIUM
       # YUBICO
       - YUBI_CLOUD
       - YUBI_ID

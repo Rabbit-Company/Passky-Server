@@ -107,6 +107,20 @@ do
 done
 echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
 
+echo -e "\n${blue}${bold}How many passwords can premium account hold/have?${blue}"
+echo -e "When this amount would be reached, users with premium accounts won't be able to save new passwords."
+echo -e "For Unlimited passwords use -1"
+echo -e "Example: -1"
+printf "\n${green}Maximum passwords per premium account: "
+read ACCOUNT_PREMIUM
+while [[ !( "$ACCOUNT_PREMIUM" =~ ^[-]?[0-9]+ && "$ACCOUNT_PREMIUM" -ge -1 && "$ACCOUNT_PREMIUM" -le 1000000000 ) ]];
+do
+	echo -e "\n${red}'$ACCOUNT_PREMIUM' is not a valid number. Make sure number is between -1 and 1000000000."
+	printf "\n${green}Maximum passwords per premium account: "
+	read ACCOUNT_PREMIUM
+done
+echo "ACCOUNT_PREMIUM=${ACCOUNT_PREMIUM}" >> .env
+
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${brown}       DATABASE SETTINGS"
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"

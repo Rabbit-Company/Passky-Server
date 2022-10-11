@@ -35,6 +35,7 @@ class User {
 				$this->yubico_otp = $result['yubico_otp'];
 				$this->backup_codes = $result['backup_codes'];
 				$this->max_passwords = $result['max_passwords'];
+				$this->premium_expires = $result['premium_expires'];
 				$this->created = $result['created'];
 				$this->accessed = $result['accessed'];
 				$this->response = 0;

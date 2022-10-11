@@ -41,6 +41,13 @@ do
 done
 echo "ACCOUNT_MAX_PASSWORDS=${ACCOUNT_MAX_PASSWORDS}" >> .env
 
+ACCOUNT_PREMIUM=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many passwords can premium account hold/have?\n\nWhen this amount would be reached, users with premium accounts won't be able to save new passwords.\n\nFor Unlimited passwords use -1" 14 78 1000 3>&1 1>&2 2>&3)
+while [[ !( "$ACCOUNT_PREMIUM" =~ ^[-]?[0-9]+ && "$ACCOUNT_PREMIUM" -ge -1 && "$ACCOUNT_PREMIUM" -le 1000000000 ) ]];
+do
+	ACCOUNT_PREMIUM=$(whiptail --title "Passky Installer - Server Settings" --inputbox "How many passwords can premium account hold/have?\n\nWhen this amount would be reached, users with premium accounts won't be able to save new passwords.\n\nFor Unlimited passwords use -1\n\n'$ACCOUNT_PREMIUM' is not a valid number. Make sure number is between -1 and 1000000000." 16 78 1000 3>&1 1>&2 2>&3)
+done
+echo "ACCOUNT_PREMIUM=${ACCOUNT_PREMIUM}" >> .env
+
 MYSQL_HOST=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide IP or host for your database.\n\nIf you are using docker, use container name" 12 78 passky-database 3>&1 1>&2 2>&3)
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
 

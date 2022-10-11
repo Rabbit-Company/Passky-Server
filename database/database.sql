@@ -1,6 +1,6 @@
 /*
 Created: 30/03/2021
-Modified: 02/07/2021
+Modified: 10/10/2022
 Author: Rabbit Company
 Database: MySQL 8.0
 */
@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
   `yubico_otp` Char(64),
   `backup_codes` Char(69),
   `max_passwords` Int NOT NULL DEFAULT 1000,
+  `premium_expires` Date,
   `created` Date NOT NULL DEFAULT (CURRENT_DATE),
   `accessed` Date NOT NULL DEFAULT (CURRENT_DATE),
   PRIMARY KEY (`user_id`),
@@ -40,6 +41,18 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`passwords`
   `password` Char(255) NOT NULL,
   `message` VarChar(10000) NOT NULL,
   PRIMARY KEY (`password_id`)
+);
+
+-- Table passky.licenses
+
+CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`licenses`
+(
+  `key` Char(30) NOT NULL,
+  `days` Int NOT NULL DEFAULT 365,
+  `created` Date NOT NULL DEFAULT (CURRENT_DATE),
+  `used` Date,
+  `linked` Char(30) DEFAULT NULL,
+  PRIMARY KEY (`key`)
 );
 
 CREATE INDEX `owner_idx` ON `MYSQL_DATABASE`.`passwords` (`owner`);
