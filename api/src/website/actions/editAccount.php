@@ -26,20 +26,20 @@ try{
   $conn = Settings::createConnection();
 
   if(filter_var($sub_email, FILTER_VALIDATE_EMAIL)){
-    $stmt = $conn->prepare("UPDATE users SET email = :email, max_passwords = :maxPasswords WHERE username = :username;");
+    $stmt = $conn->prepare("UPDATE users SET email = :email, max_passwords = :maxPasswords WHERE username = :username");
     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
     $stmt->execute();
   }else{
-    $stmt = $conn->prepare("UPDATE users SET max_passwords = :maxPasswords WHERE username = :username;");
+    $stmt = $conn->prepare("UPDATE users SET max_passwords = :maxPasswords WHERE username = :username");
     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
     $stmt->execute();
   }
 
   if($disable2fa){
-    $stmt = $conn->prepare("UPDATE users SET 2fa_secret = null, yubico_otp = null, backup_codes = null WHERE username = :username;");
+    $stmt = $conn->prepare("UPDATE users SET 2fa_secret = null, yubico_otp = null, backup_codes = null WHERE username = :username");
     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
   }

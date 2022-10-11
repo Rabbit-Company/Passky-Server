@@ -31,5 +31,5 @@ try{
 $conn = null;
 
 $_SESSION['page'] = "licenses";
-header("Location: ../..");
+header("Location: ../..?license=" . $licenseKey . "&days=" . $days);
 ?>

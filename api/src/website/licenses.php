@@ -78,6 +78,16 @@ displayHeader(5);
 							</div>
 						</dl>
 					</div>
+					<div class="flex items-center justify-between shadow passwordsBorderColor border-b secondaryBackgroundColor px-4 py-3 sm:px-6">
+						<div class="flex flex-1 items-center">
+							<div>
+								<input id='duration' name='duration' type='number' class='appearance-none rounded-none relative w-full px-3 py-2 border border-gray-300 placeholder-gray-500 secondaryColor rounded-l-md focus:outline-none focus:z-10 sm:text-sm' placeholder='Days'>
+							</div>
+							<div>
+								<button id="create-license" class="primaryButton px-3 py-2 rounded-r-md text-sm font-medium">Create</button>
+							</div>
+						</div>
+					</div>
 					<table id="table-licenses" class="min-w-full divide-y divide-gray-200">
 						<tbody id="table-data" class="secondaryBackgroundColor divide-y divide-gray-200">
 							<?php
@@ -145,12 +155,13 @@ displayHeader(5);
 												</a>
 											</td>
 											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="edit-license-<?= $row['license'] ?>" href="#">
+												<a id="copy-license-<?= $row['license'] ?>" href="#">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-														<path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"></path>
-														<path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"></path>
-														<line x1="16" y1="5" x2="19" y2="8"></line>
+														<circle cx="8" cy="15" r="4"></circle>
+														<line x1="10.85" y1="12.15" x2="19" y2="4"></line>
+														<line x1="18" y1="5" x2="20" y2="7"></line>
+														<line x1="15" y1="8" x2="17" y2="10"></line>
 													</svg>
 												</a>
 											</td>
@@ -171,8 +182,9 @@ displayHeader(5);
 													changeDialog(1, "<?= $row['license'] ?>");
 													show('dialog');
 												});
-												document.getElementById("edit-license-<?= $row['license'] ?>").addEventListener("click", () => {
-													changeDialog(2, "<?= $row['license'] ?>");
+												document.getElementById("copy-license-<?= $row['license'] ?>").addEventListener("click", () => {
+													copyToClipboard("<?= $row['license'] ?>");
+													changeDialog(2);
 													show('dialog');
 												});
 												document.getElementById("delete-license-<?= $row['license'] ?>").addEventListener("click", () => {

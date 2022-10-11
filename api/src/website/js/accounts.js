@@ -5,18 +5,20 @@ document.getElementById("main-menu-toggle-btn").addEventListener("click", () => 
 document.getElementById("search").addEventListener("keypress", (event) => {
 	if (event.key !== "Enter") return;
 	event.preventDefault();
-	window.location = "?search=" + document.getElementById("search").value;
+	window.location.assign("?search=" + document.getElementById("search").value);
 });
 
 document.getElementById("dialog-button-cancel").addEventListener("click", () => {
 	hide('dialog');
 });
 
-document.getElementById("page").addEventListener("keypress", (event) => {
-	if (event.key !== "Enter") return;
-	event.preventDefault();
-	window.location = "?page=" + document.getElementById("page").value;
-});
+try{
+	document.getElementById("page").addEventListener("keypress", (event) => {
+		if (event.key !== "Enter") return;
+		event.preventDefault();
+		window.location.assign("?page=" + document.getElementById("page").value);
+	});
+}catch{}
 
 function changeDialog(style, text) {
 	switch (style) {

@@ -11,25 +11,17 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $to
   return;
 }
 
-$username = $_GET['username'];
+$license = $_GET['license'];
 
 try{
   $conn = Settings::createConnection();
 
-  $stmt = $conn->prepare("DELETE FROM passwords WHERE owner = :owner");
-  $stmt->bindParam(':owner', $username, PDO::PARAM_STR);
-  if(!($stmt->execute())){
-    $_SESSION['page'] = "accounts";
-    header("Location: ../..");
-    return;
-  }
-
-  $stmt = $conn->prepare("DELETE FROM users WHERE username = :username");
-  $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+  $stmt = $conn->prepare("DELETE FROM licenses WHERE license = :license");
+  $stmt->bindParam(':license', $license, PDO::PARAM_STR);
   $stmt->execute();
 }catch(PDOException $e) {}
 $conn = null;
 
-$_SESSION['page'] = "accounts";
+$_SESSION['page'] = "licenses";
 header("Location: ../..");
 ?>
