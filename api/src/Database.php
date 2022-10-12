@@ -839,7 +839,10 @@ class Database{
 			$stmt->execute();
 
 			$conn->commit();
-			return Display::json(0);
+
+			$JSON_OBJ = new StdClass;
+			$JSON_OBJ->premium_expires = $expires;
+			return Display::json(0, $JSON_OBJ);
 		}catch(PDOException $e) {
 			$conn->rollBack();
 			return Display::json(505);
