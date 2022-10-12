@@ -41,6 +41,9 @@ function changeDialog(style, text) {
 					data += "<b>Passwords:</b> " + account.passwords + " / " + maxPasswords + "</br>";
 					data += "<b>Created:</b> " + account.created + "</br>";
 					data += "<b>Accessed:</b> " + account.accessed + "</br></br>";
+
+					if(account.premium_expires != null) data += "<b>Premium:</b> " + account.premium_expires + "</br></br>";
+
 					if(account.backup_codes == null){
 						data += "<b>Backup Codes</b>: Inactive";
 					}else{
