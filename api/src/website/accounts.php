@@ -16,11 +16,11 @@ if (!isset($_SESSION["limit"]) || !is_numeric($_SESSION["limit"]) || $_SESSION["
 	$_SESSION["limit"] = 25;
 }
 
-$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT :startFrom,:limit;";
+$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords, u.premium_expires as premium_expires from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT :startFrom,:limit;";
 
 if (isset($_GET["search"]) && strlen($_GET["search"]) >= 1) {
 	$search = $_GET["search"] . "%";
-	$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords from users u LEFT JOIN passwords p ON u.username = p.owner WHERE u.username LIKE :search OR u.email LIKE :search GROUP BY u.username;";
+	$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords, u.premium_expires as premium_expires from users u LEFT JOIN passwords p ON u.username = p.owner WHERE u.username LIKE :search OR u.email LIKE :search GROUP BY u.username;";
 }
 
 $startFrom = ($page - 1) * $_SESSION["limit"];
@@ -38,6 +38,10 @@ try{
 	$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM passwords;");
 	$stmt3->execute();
 	$totalPasswords = $stmt3->fetch()['amount'];
+
+	$stmt4 = $conn->prepare("SELECT COUNT(*) as amount FROM users WHERE premium_expires IS NOT NULL;");
+	$stmt4->execute();
+	$totalPremium = $stmt4->fetch()['amount'];
 
 	$stmt = $conn->prepare($query);
 	if(isset($search)){
@@ -73,8 +77,8 @@ displayHeader(2);
 								<dd id="stats-passwords" class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalPasswords ?></dd>
 							</div>
 							<div class="px-4 py-5 secondaryBackgroundColor shadow overflow-hidden sm:p-6">
-								<dt class="text-sm font-medium secondaryColor truncate">Server Version</dt>
-								<dd class="mt-1 text-3xl font-semibold tertiaryColor"><?= Settings::getVersion() ?></dd>
+								<dt class="text-sm font-medium secondaryColor truncate">Total Premium Accounts</dt>
+								<dd class="mt-1 text-3xl font-semibold tertiaryColor"><?= $totalPremium ?></dd>
 							</div>
 						</dl>
 					</div>
@@ -97,7 +101,7 @@ displayHeader(2);
 														</svg>
 													</div>
 													<div class="ml-4">
-														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['username'] ?></div>
+														<div class="<?= ($row['premium_expires'] == null) ? "tertiaryColor" : "primaryColor font-bold" ?> text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['username'] ?></div>
 														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['email'] ?></div>
 													</div>
 												</div>

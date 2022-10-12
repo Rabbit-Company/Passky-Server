@@ -841,6 +841,7 @@ class Database{
 			$conn->commit();
 
 			$JSON_OBJ = new StdClass;
+			$JSON_OBJ->max_passwords = $premium;
 			$JSON_OBJ->premium_expires = $expires;
 			return Display::json(0, $JSON_OBJ);
 		}catch(PDOException $e) {
@@ -854,7 +855,7 @@ class Database{
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare("UPDATE users SET max_passwords=:max_passwords,premium_expires=null WHERE CURDATE() > premium_expires");
+			$stmt = $conn->prepare("UPDATE users SET max_passwords = :max_passwords, premium_expires = null WHERE CURDATE() > premium_expires");
 			$stmt->bindParam(':max_passwords', Settings::getMaxPasswords(), PDO::PARAM_INT);
 			$stmt->execute();
 		}catch(PDOException) {}

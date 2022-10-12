@@ -14,13 +14,16 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $to
 $username = $_GET['username'];
 $email = $_GET['email'];
 $maxPasswords = $_GET['max_passwords'];
-$disable2fa = $_GET['disable2fa'];
+$disable2fa = ($_GET['disable2fa'] == 'true') ? true : false;
+$disablePremium = ($_GET['disablePremium'] == 'true') ? true : false;
 
 $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
 if(!is_numeric($maxPasswords)) $maxPasswords = Settings::getMaxPasswords();
 if($maxPasswords < 0) $maxPasswords = -1;
 if($maxPasswords > 1000000000) $maxPasswords = 1000000000;
+
+if($disablePremium) $maxPasswords = Settings::getMaxPasswords();
 
 try{
   $conn = Settings::createConnection();
@@ -43,6 +46,13 @@ try{
     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
   }
+
+	if($disablePremium){
+    $stmt = $conn->prepare("UPDATE users SET premium_expires = null, max_passwords = :maxPasswords WHERE username = :username");
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+		$stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
+    $stmt->execute();
+	}
 }catch(PDOException $e) {}
 $conn = null;
 
