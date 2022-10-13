@@ -100,29 +100,40 @@ function changeDialog(style, text) {
 
 			document.getElementById('dialog-title').innerText = "SUCCESS";
 
-			document.getElementById('dialog-text').innerHTML = "License key has been successfully created.<br/><br/>License Key: " + parms.get("license") + "<br/>Duration: " + parms.get("days") + " days";
+			let licenseKeysArray = JSON.parse(sessionStorage.getItem("licenseKeys"));
+			let licenseKeys = "";
+			let licenseKeysCopy = "";
+			licenseKeysArray.forEach(key => {
+				licenseKeys += "<li>" + key + "</li>";
+				licenseKeysCopy += key + "\n";
+			});
+			licenseKeysCopy = licenseKeysCopy.slice(0, -1);
+			sessionStorage.removeItem("licenseKeys");
+
+			document.getElementById('dialog-text').innerHTML = "License keys has been successfully created.<br/><br/>Duration: " + parms.get("days") + " days<br/><br/>License Keys:<ul>" + licenseKeys + "</ul>";
 
 			document.getElementById('dialog-button-cancel').style.display = 'initial';
 
 			document.getElementById('dialog-button').className = "primaryButton inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium focus:outline-none sm:w-auto sm:text-sm";
 			document.getElementById('dialog-button').innerText = "Copy";
 			document.getElementById('dialog-button').onclick = () => {
-				copyToClipboard(parms.get("license"));
+				copyToClipboard(licenseKeysCopy);
 				hide('dialog');
 			}
 		break;
 	}
 }
 
-if(parms.get("license") != null && parms.get("days") != null && IsNumeric(parms.get("days"))){
+if(parms.get("days") != null && IsNumeric(parms.get("days")) && sessionStorage.getItem("licenseKeys") != null){
 	changeDialog(4);
 	show('dialog');
 }
 
 function createLicense(){
 	let days = document.getElementById("duration").value;
+	let amount = document.getElementById("amount").value;
 	let token = document.getElementById("token").value;
-	window.location.assign("./website/actions/createLicense.php?days=" + days + "&token=" + token);
+	window.location.assign("./website/actions/createLicense.php?days=" + days + "&amount=" + amount + "&token=" + token);
 }
 
 function deleteLicense(license){

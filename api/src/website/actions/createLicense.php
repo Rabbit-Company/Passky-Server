@@ -12,24 +12,40 @@ if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $to
 }
 
 $days = $_GET['days'];
+$amount = $_GET['amount'];
 
 if(!is_numeric($days)) $days = 365;
 if($days < 0) $days = 1;
 if($days > 365000) $days = 365000;
 
-$licenseKey = implode('-', str_split(substr(strtoupper(hash('sha256', 'passky' . random_int(100000, 999999) . time() . random_int(100000, 999999))), 0, 25), 5));
+if(!is_numeric($amount)) $amount = 1;
+if($amount < 0) $amount = 1;
+if($amount > 100) $amount = 100;
+
+$licenseKeys = array();
+
+for($i = 0; $i < $amount; $i++){
+	$licenseKeys[] = implode('-', str_split(substr(strtoupper(hash('sha256', 'passky' . random_int(100000, 999999) . time() . random_int(100000, 999999))), 0, 25), 5));
+}
+
+$query = "INSERT INTO licenses(license, duration) VALUES";
+
+foreach($licenseKeys as $key){
+	$query .= "('" . $key . "', " . $days . "),";
+}
+
+$query = substr($query, 0, -1);
 
 try{
   $conn = Settings::createConnection();
 
-  $stmt = $conn->prepare("INSERT INTO licenses(license, duration) VALUES(:license, :duration)");
-  $stmt->bindParam(':license', $licenseKey, PDO::PARAM_STR);
-  $stmt->bindParam(':duration', $days, PDO::PARAM_INT);
+  $stmt = $conn->prepare($query);
 	$stmt->execute();
 
 }catch(PDOException $e) {}
 $conn = null;
 
 $_SESSION['page'] = "licenses";
-header("Location: ../..?license=" . $licenseKey . "&days=" . $days);
+$_SESSION['licenses'] = $licenseKeys;
+header("Location: ../..?days=" . $days);
 ?>

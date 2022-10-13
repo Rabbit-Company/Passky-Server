@@ -61,6 +61,11 @@ displayHeader(5);
 				<div class="max-w-7xl mx-auto lg:px-8">
 					<script>
 						sessionStorage.setItem("licenses", JSON.stringify(<?= json_encode($data) ?>));
+						<?php if(isset($_SESSION['licenses'])){ ?>
+							sessionStorage.setItem("licenseKeys", JSON.stringify(<?= json_encode($_SESSION['licenses']) ?>));
+						<?php
+							unset($_SESSION['licenses']);
+						} ?>
 					</script>
 					<div class="hidden mb-8 md:block">
 						<dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -81,7 +86,10 @@ displayHeader(5);
 					<div class="flex items-center justify-between shadow passwordsBorderColor border-b secondaryBackgroundColor px-4 py-3 sm:px-6">
 						<div class="flex flex-1 items-center">
 							<div>
-								<input id='duration' name='duration' type='number' class='appearance-none rounded-none relative w-full px-3 py-2 border border-gray-300 placeholder-gray-500 secondaryColor rounded-l-md focus:outline-none focus:z-10 sm:text-sm' placeholder='Days'>
+								<input id='duration' name='duration' type='number' class='appearance-none rounded-none relative w-20 px-3 py-2 border border-gray-300 placeholder-gray-500 secondaryColor rounded-l-md focus:outline-none focus:z-10 sm:text-sm' placeholder='Days'>
+							</div>
+							<div>
+								<input id='amount' name='amount' type='number' class='appearance-none rounded-none relative w-20 px-3 py-2 border border-gray-300 placeholder-gray-500 secondaryColor focus:outline-none focus:z-10 sm:text-sm' placeholder='Amount'>
 							</div>
 							<div>
 								<button id="create-license" class="primaryButton px-3 py-2 rounded-r-md text-sm font-medium">Create</button>
