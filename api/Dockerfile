@@ -24,9 +24,10 @@ RUN composer update -d /var/www
 # Copy php.ini to the docker container
 COPY php.ini $PHP_INI_DIR
 
-# Create json file for API Call Limiter and Tokens in /var/www folder which can't be accessed by public
-RUN echo "{}" > ../api-limiter.json
-RUN echo "{}" > ../tokens.json
+# Create json file for API Call Limiter, Tokens and Cron in /var/www folder which can't be accessed by public
+RUN echo '{}' > ../api-limiter.json
+RUN echo '{}' > ../tokens.json
+RUN echo '{"executed":null}' > ../cron.json
 
 # Give files permissions
 RUN chmod -R 777 /var/www

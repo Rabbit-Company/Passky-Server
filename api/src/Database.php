@@ -127,11 +127,13 @@ class Database{
 		return 0;
 	}
 
-	public static function getUserCount() : int{
+	public static function getUserCount($estimate) : int{
+		$query = "SELECT COUNT(*) AS 'amount' FROM users";
+		if($estimate) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
+			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
 			return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
@@ -141,11 +143,13 @@ class Database{
 		$conn = null;
 	}
 
-	public static function getPasswordCount() : int{
+	public static function getPasswordCount($estimate) : int{
+		$query = "SELECT COUNT(*) AS 'amount' FROM passwords";
+		if($estimate) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'passwords'");
+			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
 			return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
@@ -173,9 +177,9 @@ class Database{
 	public static function getInfo() : string{
 		$JSON_OBJ = new StdClass;
 		$JSON_OBJ->version = Settings::getVersion();
-		$JSON_OBJ->users = self::getUserCount();
+		$JSON_OBJ->users = self::getUserCount(true);
 		$JSON_OBJ->maxUsers = Settings::getMaxAccounts();
-		$JSON_OBJ->passwords = self::getPasswordCount();
+		$JSON_OBJ->passwords = self::getPasswordCount(true);
 		$JSON_OBJ->maxPasswords = Settings::getMaxPasswords();
 		$JSON_OBJ->location = Settings::getLocation();
 		return Display::json(0, $JSON_OBJ);
@@ -205,7 +209,7 @@ class Database{
 	public static function createAccount(string $username, string $password, string $email) : string{
 
 		if(Settings::getMaxAccounts() > 0){
-			$amount_of_accounts = self::getUserCount();
+			$amount_of_accounts = self::getUserCount(false);
 			if($amount_of_accounts == -1) return Display::json(505);
 			if($amount_of_accounts >= Settings::getMaxAccounts()) return Display::json(15);
 		}
@@ -867,15 +871,5 @@ class Database{
 		$conn = null;
 	}
 
-	public static function checkPremiumAccounts(){
-		try{
-			$conn = Settings::createConnection();
-
-			$stmt = $conn->prepare("UPDATE users SET max_passwords = :max_passwords, premium_expires = null WHERE CURDATE() > premium_expires");
-			$stmt->bindParam(':max_passwords', Settings::getMaxPasswords(), PDO::PARAM_INT);
-			$stmt->execute();
-		}catch(PDOException) {}
-		$conn = null;
-	}
 }
 ?>

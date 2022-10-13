@@ -35,7 +35,7 @@ try{
 	$totalPages = ceil($totalAccounts / $_SESSION["limit"]);
 	if($totalPages != 0 && $page > $totalPages) header("Location: ../..?page=" . $totalPages);
 
-	$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM passwords;");
+	$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
 	$stmt3->execute();
 	$totalPasswords = $stmt3->fetch()['amount'];
 

@@ -1,4 +1,3 @@
 #!/bin/bash
 
-echo "{}" > /var/www/api-limiter.json
-echo "{}" > /var/www/tokens.json
+curl http://localhost/cron.php
