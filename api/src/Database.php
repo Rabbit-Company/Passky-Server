@@ -420,11 +420,15 @@ class Database{
 		if($user->max_passwords >= 0){
 			$password_count = self::getUserPasswordCount($username);
 			if($password_count == -1) return Display::json(505);
-			if($password_count + count($password_obj) >= $user->max_passwords) return Display::json(16);
+			if($password_count + count($password_obj) > $user->max_passwords) return Display::json(16);
 		}
 
 		$num_success = 0;
 		$num_error = 0;
+
+		$index = 0;
+		$query = "INSERT INTO passwords(owner, website, username, password, message) VALUES";
+		$passwordArray = array();
 
 		foreach($password_obj as &$password_data){
 			if(!(strlen($password_data["website"]) >= 36 && strlen($password_data["website"]) <= 255) || str_contains($password_data["website"], ' ')){ $num_error++; continue; }
@@ -432,22 +436,34 @@ class Database{
 			if(!(strlen($password_data["password"]) >= 36 && strlen($password_data["password"]) <= 255) || str_contains($password_data["password"], ' ')){ $num_error++; continue; }
 			if(!(strlen($password_data["message"]) >= 36 && strlen($password_data["message"]) <= 10000) || str_contains($password_data["message"], ' ')){ $num_error++; continue; }
 
-			try{
-				$conn = Settings::createConnection();
-
-				$stmt = $conn->prepare("INSERT INTO passwords(owner, website, username, password, message) VALUES(:owner, :website, :username, :password, :message)");
-				$stmt->bindParam(':owner', $username, PDO::PARAM_STR);
-				$stmt->bindParam(':website', $password_data["website"], PDO::PARAM_STR);
-				$stmt->bindParam(':username', $password_data["username"], PDO::PARAM_STR);
-				$stmt->bindParam(':password', $password_data["password"], PDO::PARAM_STR);
-				$stmt->bindParam(':message', $password_data["message"], PDO::PARAM_STR);
-
-				($stmt->execute()) ? $num_success++ : $num_error++;
-			}catch(PDOException $e) {
-				$num_error++;
-			}
-			$conn = null;
+			$passwordArray[] = $password_data;
+			$query .= "(:owner" . $index .", :website" . $index .", :username" . $index .", :password" . $index .", :message" . $index ."),";
+			$index++;
 		}
+		$query = substr($query, 0, -1);
+
+		try{
+			$conn = Settings::createConnection();
+
+			$stmt = $conn->prepare($query);
+			for($i = 0; $i < $index; $i++){
+				$stmt->bindParam(':owner'.$i, $username, PDO::PARAM_STR);
+				$stmt->bindParam(':website'.$i, $passwordArray[$i]["website"], PDO::PARAM_STR);
+				$stmt->bindParam(':username'.$i, $passwordArray[$i]["username"], PDO::PARAM_STR);
+				$stmt->bindParam(':password'.$i, $passwordArray[$i]["password"], PDO::PARAM_STR);
+				$stmt->bindParam(':message'.$i, $passwordArray[$i]["message"], PDO::PARAM_STR);
+			}
+
+			if($stmt->execute()){
+				$num_success = count($passwordArray);
+				$num_error = count($password_obj) - count($passwordArray);
+			}else{
+				$num_error = count($password_obj);
+			}
+		}catch(PDOException $e) {
+			$num_error = count($password_obj);
+		}
+		$conn = null;
 
 		$JSON_OBJ = new StdClass;
 		$JSON_OBJ->import_success = $num_success;
