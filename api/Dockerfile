@@ -6,11 +6,13 @@ COPY src/ /var/www/html/
 # Switch workdir
 WORKDIR /var/www/html/
 
-# Install Mysql extension for PHP
+# Install Mysql and Redis extensions for PHP
+RUN pecl install redis-5.3.7
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-enable redis
 
 # Install dependencies
-RUN apt-get update && apt-get install -y zip unzip git cron
+RUN apt-get update && apt-get install -y zip unzip git cron redis-server
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -24,10 +26,8 @@ RUN composer update -d /var/www
 # Copy php.ini to the docker container
 COPY php.ini $PHP_INI_DIR
 
-# Create json file for API Call Limiter, Tokens and Cron in /var/www folder which can't be accessed by public
-RUN echo '{}' > ../api-limiter.json
-RUN echo '{}' > ../tokens.json
-RUN echo '{"executed":null}' > ../cron.json
+# Create json file for Temp data in /var/www folder which can't be accessed by public
+RUN echo '{}' > ../data.json
 
 # Give files permissions
 RUN chmod -R 777 /var/www
@@ -41,4 +41,4 @@ RUN chmod +x /etc/cron.daily/passky-daily-crontab
 RUN rm /etc/cron.daily/apt-compat /etc/cron.daily/dpkg /etc/cron.daily/exim4-base
 
 # Start cron
-RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+RUN sed -i 's/^exec /service cron start\n\nredis-server --daemonize yes\n\nexec /' /usr/local/bin/apache2-foreground

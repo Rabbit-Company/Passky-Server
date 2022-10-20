@@ -14,17 +14,16 @@ header("Access-Control-Max-Age: 86400");
 require_once "Settings.php";
 
 $today = date('Y-m-d');
-$jsonArray = json_decode(file_get_contents('../cron.json'), true);
 
-if($today == $jsonArray['executed']){
+$executed = Settings::readLocalData('cron_executed');
+
+if($today == $executed){
 	echo '{"status":"success"}';
 	return;
 }
 
-$jsonArray['executed'] = $today;
-file_put_contents('../cron.json', json_encode($jsonArray));
-file_put_contents('../api-limiter.json', "{}");
-file_put_contents('../tokens.json', "{}");
+Settings::purgeLocalData();
+Settings::writeLocalData('cron_executed', $today, 86400);
 
 $maxPasswords = Settings::getMaxPasswords();
 

@@ -31,7 +31,12 @@ class Database{
 
 	public static function encryptPassword(string $password) : string{
 		$algo = (defined('PASSWORD_ARGON2ID')) ? PASSWORD_ARGON2ID : PASSWORD_DEFAULT;
-		return password_hash($password, $algo);
+		$options = [
+			'threads' => Settings::getCores(),
+			'time_cost' => Settings::getArgon2IDIterations(),
+			'memory_cost' => 1<<16
+		];
+		return password_hash($password, $algo, $options);
 	}
 
 	public static function generateNonce() : string{
@@ -80,15 +85,13 @@ class Database{
 		$timer = $timerOptions[$action];
 		if($timer < 1) return false;
 
-		$ips_array = json_decode(file_get_contents('../api-limiter.json'), true);
-
 		$ip = self::getUserIpAddress();
-		if(!empty($ips_array[$action][$ip])){
-			if((time() - $ips_array[$action][$ip]) < $timer) return true;
+		$data = Settings::readLocalData($action . '_' . $ip);
+		if($data != null){
+			if((time() - $data) < $timer) return true;
 		}
 
-		$ips_array[$action][$ip] = time();
-		file_put_contents('../api-limiter.json', json_encode($ips_array));
+		Settings::writeLocalData($action . '_' . $ip, time(), $timer);
 		return false;
 	}
 
@@ -121,10 +124,10 @@ class Database{
 	public static function isTokenValid(string $username, string $token) : int{
 		$username = strtolower($username);
 		if($token == null || strlen($token) != 64) return 0;
-		$token_array = json_decode(file_get_contents('../tokens.json'), true);
-		$userID = $username . "-" . self::getUserIpAddress();
-		if(!empty($token_array[$userID]))
-			if($token_array[$userID] == $token) return 1;
+		$userID = $username . '-' . self::getUserIpAddress();
+		$data = Settings::readLocalData('token_' . $userID);
+		if($data != null)
+			if($data == $token) return 1;
 		return 0;
 	}
 
@@ -236,12 +239,13 @@ class Database{
 
 		try{
 			$conn = Settings::createConnection();
+			$maxPasswords = Settings::getMaxPasswords();
 
 			$stmt = $conn->prepare("INSERT INTO users(username, email, password, max_passwords) VALUES(:username, :email, :password, :max_passwords);");
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->bindParam(':email', $email, PDO::PARAM_STR);
 			$stmt->bindParam(':password', $encrypted_password, PDO::PARAM_STR);
-			$stmt->bindParam(':max_passwords', Settings::getMaxPasswords(), PDO::PARAM_INT);
+			$stmt->bindParam(':max_passwords', $maxPasswords, PDO::PARAM_INT);
 
 			return ($stmt->execute()) ? Display::json(0) : Display::json(3);
 		}catch(PDOException $e) {
@@ -270,14 +274,11 @@ class Database{
 		if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 		if(!password_verify($password, $user->password)) return Display::json(2);
 
-		$token_array = json_decode(file_get_contents('../tokens.json'), true);
-		$userID = $username . "-" . self::getUserIpAddress();
-		if(empty($token_array[$userID])){
+		$userID = $username . '-' . self::getUserIpAddress();
+		$token = Settings::readLocalData('token_' . $userID);
+		if($token == null){
 			$token = hash("sha256", self::generateCodes());
-			$token_array[$userID] = $token;
-			file_put_contents('../tokens.json', json_encode($token_array));
-		}else{
-			$token = $token_array[$userID];
+			Settings::writeLocalData('token_' . $userID, $token, 3600);
 		}
 
 		$today = date('Y-m-d');

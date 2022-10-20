@@ -214,5 +214,56 @@ class Settings{
 		return getenv("LIMITER_UPGRADE_ACCOUNT", true) ?: getenv("LIMITER_UPGRADE_ACCOUNT") ?: 10;
 	}
 
+/*
+
+	LocalStorage
+
+*/
+
+	public static function createRedisConnection(){
+		$redis = null;
+		try{
+			$redis = new Redis();
+			$redis->connect('127.0.0.1', 6379);
+		}catch(Exception){}
+		return $redis;
+	}
+
+	public static function writeLocalData($key, $value, $expiration) : bool{
+		$redis = self::createRedisConnection();
+
+		if($redis != null){
+			$redis->set($key, $value);
+			$redis->expire($key, $expiration);
+			return true;
+		}
+
+		$data = json_decode(file_get_contents('../data.json'), true);
+		$data[$key] = $value;
+		file_put_contents('../data.json', json_encode($data));
+		return true;
+	}
+
+	public static function readLocalData($key){
+		$redis = self::createRedisConnection();
+
+		if($redis != null){
+			return ($redis->exists($key)) ? $redis->get($key) : null;
+		}
+
+		$data = json_decode(file_get_contents('../data.json'), true);
+		return (!empty($data[$key])) ? $data[$key] : null;
+	}
+
+	public static function purgeLocalData(){
+		$redis = self::createRedisConnection();
+
+		if($redis != null){
+			return $redis->flushDb();
+		}
+
+		file_put_contents('../data.json', '{}');
+		return true;
+	}
 }
 ?>
