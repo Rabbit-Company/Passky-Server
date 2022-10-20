@@ -131,33 +131,49 @@ class Database{
 		return 0;
 	}
 
-	public static function getUserCount($estimate) : int{
+	public static function getUserCount() : int{
+		$amount = Settings::readLocalData('user_count');
+		if($amount != null) return $amount;
+
 		$query = "SELECT COUNT(*) AS 'amount' FROM users";
-		if($estimate) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
+		if(Settings::getEstimates()) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
+
 		try{
 			$conn = Settings::createConnection();
 
 			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
-			return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+			$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+			$expiration = ($amount*15 >= 86400) ? 86400 : $amount*15;
+			Settings::writeLocalData('user_count', $amount, $expiration);
+			return $amount;
 		}catch(PDOException $e) {
+			Settings::writeLocalData('user_count', -1, 5);
 			return -1;
 		}
 		$conn = null;
 	}
 
-	public static function getPasswordCount($estimate) : int{
+	public static function getPasswordCount() : int{
+		$amount = Settings::readLocalData('passwords_count');
+		if($amount != null) return $amount;
+
 		$query = "SELECT COUNT(*) AS 'amount' FROM passwords";
-		if($estimate) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
+		if(Settings::getEstimates()) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
+
 		try{
 			$conn = Settings::createConnection();
 
 			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
-			return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+			$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+			$expiration = ($amount*15 >= 86400) ? 86400 : $amount*15;
+			Settings::writeLocalData('passwords_count', $amount, $expiration);
+			return $amount;
 		}catch(PDOException $e) {
+			Settings::writeLocalData('passwords_count', -1, 5);
 			return -1;
 		}
 		$conn = null;
@@ -181,9 +197,9 @@ class Database{
 	public static function getInfo() : string{
 		$JSON_OBJ = new StdClass;
 		$JSON_OBJ->version = Settings::getVersion();
-		$JSON_OBJ->users = self::getUserCount(true);
+		$JSON_OBJ->users = self::getUserCount();
 		$JSON_OBJ->maxUsers = Settings::getMaxAccounts();
-		$JSON_OBJ->passwords = self::getPasswordCount(true);
+		$JSON_OBJ->passwords = self::getPasswordCount();
 		$JSON_OBJ->maxPasswords = Settings::getMaxPasswords();
 		$JSON_OBJ->location = Settings::getLocation();
 		return Display::json(0, $JSON_OBJ);
@@ -213,7 +229,7 @@ class Database{
 	public static function createAccount(string $username, string $password, string $email) : string{
 
 		if(Settings::getMaxAccounts() > 0){
-			$amount_of_accounts = self::getUserCount(false);
+			$amount_of_accounts = self::getUserCount();
 			if($amount_of_accounts == -1) return Display::json(505);
 			if($amount_of_accounts >= Settings::getMaxAccounts()) return Display::json(15);
 		}

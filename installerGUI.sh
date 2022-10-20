@@ -74,6 +74,8 @@ do
 done
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
 
+echo "MYSQL_ESTIMATES=false" >> .env
+
 if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want to enable SMTP mail?\n\nSetting up SMTP is not required." 12 78);
 then
 	echo "MAIL_ENABLED=true" >> .env
@@ -145,7 +147,7 @@ else
 	echo "LIMITER_ENABLED=false" >> .env
 fi
 
-echo "LIMITER_GET_INFO=1" >> .env
+echo "LIMITER_GET_INFO=-1" >> .env
 echo "LIMITER_GET_STATS=1" >> .env
 echo "LIMITER_GET_TOKEN=3" >> .env
 echo "LIMITER_GET_PASSWORDS=2" >> .env

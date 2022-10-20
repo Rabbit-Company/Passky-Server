@@ -179,6 +179,8 @@ do
 done
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
 
+echo "MYSQL_ESTIMATES=false" >> .env
+
 echo -e "\n\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${brown}       MAIL SETTINGS"
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
@@ -338,7 +340,7 @@ do
 done
 echo "LIMITER_ENABLED=${LIMITER_ENABLED}" >> .env
 
-echo "LIMITER_GET_INFO=1" >> .env
+echo "LIMITER_GET_INFO=-1" >> .env
 echo "LIMITER_GET_STATS=1" >> .env
 echo "LIMITER_GET_TOKEN=3" >> .env
 echo "LIMITER_GET_PASSWORDS=2" >> .env

@@ -24,6 +24,7 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_SSL
       - MYSQL_SSL_CA
+      - MYSQL_ESTIMATES
       # Mail
       - MAIL_ENABLED
       - MAIL_HOST

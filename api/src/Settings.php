@@ -68,6 +68,10 @@ class Settings{
 		return getenv("MYSQL_SSL_CA", true) ?: getenv("MYSQL_SSL_CA") ?: "/etc/ssl/certs/ca-certificates.crt";
 	}
 
+	public static function getEstimates() : bool{
+		return getenv("MYSQL_ESTIMATES", true) === "true";
+	}
+
 	public static function createConnection(){
 		$options = array();
 		if(self::getDBSSL()) $options = array(PDO::MYSQL_ATTR_SSL_CA => self::getDBSSLCA());
@@ -256,12 +260,6 @@ class Settings{
 	}
 
 	public static function purgeLocalData(){
-		$redis = self::createRedisConnection();
-
-		if($redis != null){
-			return $redis->flushDb();
-		}
-
 		file_put_contents('../data.json', '{}');
 		return true;
 	}
