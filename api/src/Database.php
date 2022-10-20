@@ -30,7 +30,11 @@ class Database{
 	}
 
 	public static function encryptPassword(string $password) : string{
-		return password_hash($password, PASSWORD_DEFAULT);
+		if(defined('PASSWORD_ARGON2ID')){
+			return password_hash($password, PASSWORD_ARGON2ID);
+		}else{
+			return password_hash($password, PASSWORD_DEFAULT);
+		}
 	}
 
 	public static function generateNonce() : string{
