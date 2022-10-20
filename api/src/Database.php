@@ -33,7 +33,7 @@ class Database{
 		$algo = (defined('PASSWORD_ARGON2ID')) ? PASSWORD_ARGON2ID : PASSWORD_DEFAULT;
 		$options = [
 			'threads' => Settings::getCores(),
-			'time_cost' => Settings::getArgon2IDIterations(),
+			'time_cost' => 4,
 			'memory_cost' => 1<<16
 		];
 		return password_hash($password, $algo, $options);

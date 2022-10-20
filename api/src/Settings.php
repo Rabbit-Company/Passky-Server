@@ -216,7 +216,7 @@ class Settings{
 
 /*
 
-	LocalStorage
+	LOCAL STORAGE
 
 */
 
