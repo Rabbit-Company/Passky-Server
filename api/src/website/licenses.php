@@ -121,110 +121,108 @@ displayHeader(5);
 					<table id="table-licenses" class="min-w-full divide-y divide-gray-200">
 						<tbody id="table-data" class="secondaryBackgroundColor divide-y divide-gray-200">
 							<?php
-									foreach($data as $row){ ?>
-										<tr class="passwordsBorderColor">
-											<td class="px-6 py-4 whitespace-nowrap">
-												<div class="flex">
-													<div class="flex-shrink-0 h-10 w-10">
-														<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-															<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-															<circle cx="12" cy="7" r="4"></circle>
-															<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
-														</svg>
-													</div>
-													<div class="ml-4">
-														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['linked'] != null) ? $row['linked'] : "Unused" ?></div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['license'] ?></div>
-													</div>
-												</div>
-											</td>
-											<td class="passwordsBorderColor border-l border-r hidden md:table-cell px-6 py-4 whitespace-nowrap">
-												<div class="flex">
-													<div class="flex-shrink-0 h-10 w-10">
-														<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-															<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-															<rect x="4" y="5" width="16" height="16" rx="2"></rect>
-															<line x1="16" y1="3" x2="16" y2="7"></line>
-															<line x1="8" y1="3" x2="8" y2="7"></line>
-															<line x1="4" y1="11" x2="20" y2="11"></line>
-															<line x1="11" y1="15" x2="12" y2="15"></line>
-															<line x1="12" y1="15" x2="12" y2="18"></line>
-														</svg>
-													</div>
-													<div class="ml-4">
-														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Duration</div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['duration'] . " days" ?></div>
-													</div>
-												</div>
-											</td>
-											<td class="passwordsBorderColor border-l border-r hidden lg:table-cell px-6 py-4 whitespace-nowrap">
-												<div class="flex">
-													<div class="flex-shrink-0 h-10 w-10">
-														<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-															<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-															<path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-															<path d="M20 12h-13l3 -3m0 6l-3 -3" />
-														</svg>
-													</div>
-													<div class="ml-4">
-														<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['created'] ?></div>
-														<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['used'] != null) ? $row['used'] : "Unused" ?></div>
-													</div>
-												</div>
-											</td>
-											<td class="w-full"></td>
-											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="show-info-<?= $row['license'] ?>" href="#">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-														<circle cx="12" cy="12" r="9" />
-														<line x1="12" y1="8" x2="12.01" y2="8" />
-														<polyline points="11 12 12 12 12 16 13 16" />
-													</svg>
-												</a>
-											</td>
-											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="copy-license-<?= $row['license'] ?>" href="#">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								foreach($data as $row){ ?>
+									<tr class="passwordsBorderColor">
+										<td class="px-6 py-4 whitespace-nowrap">
+											<div class="flex">
+												<div class="flex-shrink-0 h-10 w-10">
+													<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-														<circle cx="8" cy="15" r="4"></circle>
-														<line x1="10.85" y1="12.15" x2="19" y2="4"></line>
-														<line x1="18" y1="5" x2="20" y2="7"></line>
-														<line x1="15" y1="8" x2="17" y2="10"></line>
+														<circle cx="12" cy="7" r="4"></circle>
+														<path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
 													</svg>
-												</a>
-											</td>
-											<td class="px-2 md:px-4 py-4 whitespace-nowrap">
-												<a id="delete-license-<?= $row['license'] ?>" href="#">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+												</div>
+												<div class="ml-4">
+													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['linked'] != null) ? $row['linked'] : "Unused" ?></div>
+													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['license'] ?></div>
+												</div>
+											</div>
+										</td>
+										<td class="passwordsBorderColor border-l border-r hidden md:table-cell px-6 py-4 whitespace-nowrap">
+											<div class="flex">
+												<div class="flex-shrink-0 h-10 w-10">
+													<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+														<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+														<rect x="4" y="5" width="16" height="16" rx="2"></rect>
+														<line x1="16" y1="3" x2="16" y2="7"></line>
+														<line x1="8" y1="3" x2="8" y2="7"></line>
+														<line x1="4" y1="11" x2="20" y2="11"></line>
+														<line x1="11" y1="15" x2="12" y2="15"></line>
+														<line x1="12" y1="15" x2="12" y2="18"></line>
+													</svg>
+												</div>
+												<div class="ml-4">
+													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Duration</div>
+													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['duration'] . " days" ?></div>
+												</div>
+											</div>
+										</td>
+										<td class="passwordsBorderColor border-l border-r hidden lg:table-cell px-6 py-4 whitespace-nowrap">
+											<div class="flex">
+												<div class="flex-shrink-0 h-10 w-10">
+													<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
 														<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-														<line x1="4" y1="7" x2="20" y2="7" />
-														<line x1="10" y1="11" x2="10" y2="17" />
-														<line x1="14" y1="11" x2="14" y2="17" />
-														<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-														<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+														<path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+														<path d="M20 12h-13l3 -3m0 6l-3 -3" />
 													</svg>
-												</a>
-											</td>
-											<script>
-												document.getElementById("show-info-<?= $row['license'] ?>").addEventListener("click", () => {
-													changeDialog(1, "<?= $row['license'] ?>");
-													show('dialog');
-												});
-												document.getElementById("copy-license-<?= $row['license'] ?>").addEventListener("click", () => {
-													copyToClipboard("<?= $row['license'] ?>");
-													changeDialog(2);
-													show('dialog');
-												});
-												document.getElementById("delete-license-<?= $row['license'] ?>").addEventListener("click", () => {
-													changeDialog(3, "<?= $row['license'] ?>");
-													show('dialog')
-												});
-											</script>
-										</tr>
-									<?php }
-
-								?>
+												</div>
+												<div class="ml-4">
+													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['created'] ?></div>
+													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['used'] != null) ? $row['used'] : "Unused" ?></div>
+												</div>
+											</div>
+										</td>
+										<td class="w-full"></td>
+										<td class="px-2 md:px-4 py-4 whitespace-nowrap">
+											<a id="show-info-<?= $row['license'] ?>" href="#">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+													<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+													<circle cx="12" cy="12" r="9" />
+													<line x1="12" y1="8" x2="12.01" y2="8" />
+													<polyline points="11 12 12 12 12 16 13 16" />
+												</svg>
+											</a>
+										</td>
+										<td class="px-2 md:px-4 py-4 whitespace-nowrap">
+											<a id="copy-license-<?= $row['license'] ?>" href="#">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+													<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+													<circle cx="8" cy="15" r="4"></circle>
+													<line x1="10.85" y1="12.15" x2="19" y2="4"></line>
+													<line x1="18" y1="5" x2="20" y2="7"></line>
+													<line x1="15" y1="8" x2="17" y2="10"></line>
+												</svg>
+											</a>
+										</td>
+										<td class="px-2 md:px-4 py-4 whitespace-nowrap">
+											<a id="delete-license-<?= $row['license'] ?>" href="#">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+													<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+													<line x1="4" y1="7" x2="20" y2="7" />
+													<line x1="10" y1="11" x2="10" y2="17" />
+													<line x1="14" y1="11" x2="14" y2="17" />
+													<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+													<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+												</svg>
+											</a>
+										</td>
+										<script>
+											document.getElementById("show-info-<?= $row['license'] ?>").addEventListener("click", () => {
+												changeDialog(1, "<?= $row['license'] ?>");
+												show('dialog');
+											});
+											document.getElementById("copy-license-<?= $row['license'] ?>").addEventListener("click", () => {
+												copyToClipboard("<?= $row['license'] ?>");
+												changeDialog(2);
+												show('dialog');
+											});
+											document.getElementById("delete-license-<?= $row['license'] ?>").addEventListener("click", () => {
+												changeDialog(3, "<?= $row['license'] ?>");
+												show('dialog')
+											});
+										</script>
+									</tr>
+							<?php } ?>
 						</tbody>
 					</table>
 					<?php if(!isset($search) && $totalPages > 1){ ?>
