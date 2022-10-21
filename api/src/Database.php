@@ -206,22 +206,46 @@ class Database{
 	}
 
 	public static function getStats() : string{
+
+		$cpu = Settings::readLocalData('server_cpu');
+		if($cpu == null){
+			$cpu = sys_getloadavg()[0];
+			Settings::writeLocalData('server_cpu', $cpu, 5);
+		}
+
+		$memoryUsed = Settings::readLocalData('server_memoryUsed');
+		$memoryTotal = Settings::readLocalData('server_memoryTotal');
+		if($memoryUsed == null || $memoryTotal == null){
+			$free = shell_exec('free');
+			$free = (string)trim($free);
+			$free_arr = explode("\n", $free);
+			$mem = explode(" ", $free_arr[1]);
+			$mem = array_filter($mem, function($value) { return ($value !== null && $value !== false && $value !== ''); });
+			$mem = array_merge($mem);
+
+			$memoryUsed = $mem[2];
+			$memoryTotal = $mem[1];
+
+			Settings::writeLocalData('server_memoryUsed', $memoryUsed, 5);
+			Settings::writeLocalData('server_memoryTotal', $memoryTotal, 5);
+		}
+
+		$diskUsed = Settings::readLocalData('server_diskUsed');
+		$diskTotal = Settings::readLocalData('server_diskTotal');
+		if($diskUsed == null || $diskTotal == null){
+			$diskTotal = disk_total_space(".");
+			$diskUsed = ($diskTotal - disk_free_space("."));
+
+			Settings::writeLocalData('server_diskUsed', $diskUsed, 5);
+			Settings::writeLocalData('server_diskTotal', $diskTotal, 5);
+		}
+
 		$JSON_OBJ = new StdClass;
-		$JSON_OBJ->cpu = sys_getloadavg()[0];
+		$JSON_OBJ->cpu = $cpu;
 		$JSON_OBJ->cores = Settings::getCores();
-
-		$free = shell_exec('free');
-		$free = (string)trim($free);
-		$free_arr = explode("\n", $free);
-		$mem = explode(" ", $free_arr[1]);
-		$mem = array_filter($mem, function($value) { return ($value !== null && $value !== false && $value !== ''); });
-		$mem = array_merge($mem);
-
-		$JSON_OBJ->memoryUsed = $mem[2];
-		$JSON_OBJ->memoryTotal = $mem[1];
-
-		$diskTotal = disk_total_space(".");
-		$JSON_OBJ->diskUsed = ($diskTotal - disk_free_space("."));
+		$JSON_OBJ->memoryUsed = $memoryUsed;
+		$JSON_OBJ->memoryTotal = $memoryTotal;
+		$JSON_OBJ->diskUsed = $diskUsed;
 		$JSON_OBJ->diskTotal = $diskTotal;
 		return Display::json(0, $JSON_OBJ);
 	}
@@ -614,12 +638,8 @@ class Database{
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare("UPDATE users SET 2fa_secret = :secret WHERE username = :username");
+			$stmt = $conn->prepare("UPDATE users SET 2fa_secret = :secret, backup_codes = :codes WHERE username = :username");
 			$stmt->bindParam(':secret', $secret, PDO::PARAM_STR);
-			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
-			$stmt->execute();
-
-			$stmt = $conn->prepare("UPDATE users SET backup_codes = :codes WHERE username = :username");
 			$stmt->bindParam(':codes', $codes, PDO::PARAM_STR);
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
