@@ -145,7 +145,7 @@ class Database{
 			$stmt->execute();
 
 			$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
-			$expiration = ($amount*15 >= 86400) ? 86400 : $amount*15;
+			$expiration = ($amount*5 >= 86400) ? 86400 : $amount*5+5;
 			Settings::writeLocalData('user_count', $amount, $expiration);
 			return $amount;
 		}catch(PDOException $e) {
@@ -169,7 +169,7 @@ class Database{
 			$stmt->execute();
 
 			$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
-			$expiration = ($amount*15 >= 86400) ? 86400 : $amount*15;
+			$expiration = ($amount*5 >= 86400) ? 86400 : $amount*5+5;
 			Settings::writeLocalData('passwords_count', $amount, $expiration);
 			return $amount;
 		}catch(PDOException $e) {

@@ -8,7 +8,7 @@ $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
 if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $token !== $_SESSION['token']){
   $_SESSION['page'] = "home";
   header("Location: ../..");
-  return;
+  exit();
 }
 
 $days = $_GET['days'];
@@ -44,6 +44,9 @@ try{
 
 }catch(PDOException $e) {}
 $conn = null;
+
+for($i = 1; $i <= 10; $i++) Settings::removeLocalData('admin_licenses_page_' . $i);
+Settings::removeLocalData('admin_licenses_count');
 
 $_SESSION['page'] = "licenses";
 $_SESSION['licenses'] = $licenseKeys;

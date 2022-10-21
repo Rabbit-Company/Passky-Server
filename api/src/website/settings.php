@@ -2,6 +2,7 @@
 if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
   $_SESSION['page'] = "home";
 	header("Location: ../..");
+	exit();
 }
 
 displayHeader(4);

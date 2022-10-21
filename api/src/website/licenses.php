@@ -2,6 +2,7 @@
 if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
   $_SESSION['page'] = "home";
 	header("Location: ../..");
+	exit();
 }
 
 require_once "Settings.php";
@@ -28,26 +29,47 @@ $startFrom = ($page - 1) * $_SESSION["limit"];
 try{
 	$conn = Settings::createConnection();
 
-	$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses;");
-	$stmt2->execute();
-	$totalLicenses = $stmt2->fetch()['amount'];
+	$totalLicenses = Settings::readLocalData('admin_licenses_count');
+	if($totalLicenses == null){
+		$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses;");
+		$stmt2->execute();
+		$totalLicenses = $stmt2->fetch()['amount'];
+		Settings::writeLocalData('admin_licenses_count', $totalLicenses, 300);
+	}
 
 	$totalPages = ceil($totalLicenses / $_SESSION["limit"]);
-	if($totalPages != 0 && $page > $totalPages) header("Location: ../..?page=" . $totalPages);
+	if($totalPages != 0 && $page > $totalPages){
+		header("Location: ../..?page=" . $totalPages);
+		exit();
+	}
 
-	$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses WHERE linked IS NULL;");
-	$stmt3->execute();
-	$totalUnusedLicenses = $stmt3->fetch()['amount'];
+	$totalUnusedLicenses = Settings::readLocalData('admin_licenses_unused_count');
+	if($totalUnusedLicenses == null){
+		$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses WHERE linked IS NULL;");
+		$stmt3->execute();
+		$totalUnusedLicenses = $stmt3->fetch()['amount'];
+		Settings::writeLocalData('admin_licenses_unused_count', $totalUnusedLicenses, 300);
+	}
 
 	$stmt = $conn->prepare($query);
 	if(isset($search)){
 		$stmt->bindParam(':search', $search, PDO::PARAM_STR);
+		$stmt->execute();
+
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}else{
-		$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
-		$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
+		$data = Settings::readLocalData('admin_licenses_page_' . $page);
+		if($data == null){
+			$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
+			$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
+			$stmt->execute();
+
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			Settings::writeLocalData('admin_licenses_page_' . $page, serialize($data), 300);
+		}else{
+			$data = unserialize($data);
+		}
 	}
-	$stmt->execute();
-	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }catch(PDOException) {}
 $conn = null;
 
@@ -99,7 +121,6 @@ displayHeader(5);
 					<table id="table-licenses" class="min-w-full divide-y divide-gray-200">
 						<tbody id="table-data" class="secondaryBackgroundColor divide-y divide-gray-200">
 							<?php
-								if($stmt->rowCount() > 0){
 									foreach($data as $row){ ?>
 										<tr class="passwordsBorderColor">
 											<td class="px-6 py-4 whitespace-nowrap">
@@ -202,7 +223,7 @@ displayHeader(5);
 											</script>
 										</tr>
 									<?php }
-								}
+
 								?>
 						</tbody>
 					</table>

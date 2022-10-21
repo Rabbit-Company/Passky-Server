@@ -2,6 +2,7 @@
 if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
 	$_SESSION['page'] = "home";
 	header("Location: ../..");
+	exit();
 }
 
 require_once "Settings.php";
@@ -28,30 +29,55 @@ $startFrom = ($page - 1) * $_SESSION["limit"];
 try{
 	$conn = Settings::createConnection();
 
-	$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM users;");
-	$stmt2->execute();
-	$totalAccounts = $stmt2->fetch()['amount'];
+	$totalAccounts = Settings::readLocalData('admin_accounts_users_count');
+	if($totalAccounts == null){
+		$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM users;");
+		$stmt2->execute();
+		$totalAccounts = $stmt2->fetch()['amount'];
+		Settings::writeLocalData('admin_accounts_users_count', $totalAccounts, 300);
+	}
 
 	$totalPages = ceil($totalAccounts / $_SESSION["limit"]);
-	if($totalPages != 0 && $page > $totalPages) header("Location: ../..?page=" . $totalPages);
+	if($totalPages != 0 && $page > $totalPages){
+		header("Location: ../..?page=" . $totalPages);
+		exit();
+	}
 
-	$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
-	$stmt3->execute();
-	$totalPasswords = $stmt3->fetch()['amount'];
+	$totalPasswords = Settings::readLocalData('admin_accounts_passwords_count');
+	if($totalPasswords == null){
+		$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
+		$stmt3->execute();
+		$totalPasswords = $stmt3->fetch()['amount'];
+		Settings::writeLocalData('admin_accounts_passwords_count', $totalPasswords, 300);
+	}
 
-	$stmt4 = $conn->prepare("SELECT COUNT(*) as amount FROM users WHERE premium_expires IS NOT NULL;");
-	$stmt4->execute();
-	$totalPremium = $stmt4->fetch()['amount'];
+	$totalPremium = Settings::readLocalData('admin_accounts_premium_count');
+	if($totalPremium == null){
+		$stmt4 = $conn->prepare("SELECT COUNT(*) as amount FROM users WHERE premium_expires IS NOT NULL;");
+		$stmt4->execute();
+		$totalPremium = $stmt4->fetch()['amount'];
+		Settings::writeLocalData('admin_accounts_premium_count', $totalPremium, 300);
+	}
 
 	$stmt = $conn->prepare($query);
 	if(isset($search)){
 		$stmt->bindParam(':search', $search, PDO::PARAM_STR);
+		$stmt->execute();
+
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}else{
-		$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
-		$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
+		$data = Settings::readLocalData('admin_accounts_page_' . $page);
+		if($data == null){
+			$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
+			$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
+			$stmt->execute();
+
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			Settings::writeLocalData('admin_accounts_page_' . $page, serialize($data), 300);
+		}else{
+			$data = unserialize($data);
+		}
 	}
-	$stmt->execute();
-	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }catch(PDOException) {}
 $conn = null;
 
@@ -85,7 +111,6 @@ displayHeader(2);
 					<table id="table-accounts" class="min-w-full divide-y divide-gray-200">
 						<tbody id="table-data" class="secondaryBackgroundColor divide-y divide-gray-200">
 							<?php
-								if($stmt->rowCount() > 0){
 									foreach($data as $row){
 										$maxPasswords = $row['max_passwords'];
 										if($maxPasswords < 0) $maxPasswords = "∞";
@@ -187,7 +212,6 @@ displayHeader(2);
 											</script>
 										</tr>
 									<?php }
-								}
 								?>
 						</tbody>
 					</table>
