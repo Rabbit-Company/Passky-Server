@@ -898,6 +898,9 @@ class Database{
 
 			$conn->commit();
 
+			for($i = 1; $i <= 10; $i++) Settings::removeLocalData('admin_licenses_page_' . $i);
+			Settings::removeLocalData('admin_licenses_count');
+
 			$JSON_OBJ = new StdClass;
 			$JSON_OBJ->max_passwords = $premium;
 			$JSON_OBJ->premium_expires = $expires;
