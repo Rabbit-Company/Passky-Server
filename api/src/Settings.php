@@ -155,11 +155,11 @@ class Settings{
 	}
 
 	public static function getLimiterGetInfo() : int{
-		return getenv("LIMITER_GET_INFO", true) ?: getenv("LIMITER_GET_INFO") ?: 1;
+		return getenv("LIMITER_GET_INFO", true) ?: getenv("LIMITER_GET_INFO") ?: -1;
 	}
 
 	public static function getLimiterGetStats() : int{
-		return getenv("LIMITER_GET_STATS", true) ?: getenv("LIMITER_GET_STATS") ?: 1;
+		return getenv("LIMITER_GET_STATS", true) ?: getenv("LIMITER_GET_STATS") ?: -1;
 	}
 
 	public static function getLimiterGetToken() : int{
@@ -180,6 +180,10 @@ class Settings{
 
 	public static function getLimiterDeletePassword() : int{
 		return getenv("LIMITER_DELETE_PASSWORD", true) ?: getenv("LIMITER_DELETE_PASSWORD") ?: 2;
+	}
+
+	public static function getLimiterDeletePasswords() : int{
+		return getenv("LIMITER_DELETE_PASSWORDS", true) ?: getenv("LIMITER_DELETE_PASSWORDS") ?: 10;
 	}
 
 	public static function getLimiterCreateAccount() : int{

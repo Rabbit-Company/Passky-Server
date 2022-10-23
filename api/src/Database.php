@@ -73,6 +73,7 @@ class Database{
 			'importPasswords' => Settings::getLimiterImportPasswords(),
 			'editPassword' => Settings::getLimiterEditPassword(),
 			'deletePassword' => Settings::getLimiterDeletePassword(),
+			'deletePasswords' => Settings::getLimiterDeletePasswords(),
 			'deleteAccount' => Settings::getLimiterDeleteAccount(),
 			'forgotUsername' => Settings::getLimiterForgotUsername(),
 			'enable2fa' => Settings::getLimiterEnable2fa(),
@@ -374,6 +375,25 @@ class Database{
 				return Display::json(0, $JSON_OBJ);
 			}
 			return Display::json(8, $JSON_OBJ);
+		}catch(PDOException $e) {
+			return Display::json(505);
+		}
+		$conn = null;
+	}
+
+	public static function deletePasswords(string $username, string $token) : string{
+		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
+		if(!self::isTokenValid($username, $token)) return Display::json(25);
+		$username = strtolower($username);
+
+		try{
+			$conn = Settings::createConnection();
+			Settings::removeLocalData($username . "_passwords");
+			Settings::removeLocalData($username . '_password_count');
+
+			$stmt = $conn->prepare("DELETE FROM passwords WHERE owner = :owner;");
+			$stmt->bindParam(':owner', $username, PDO::PARAM_STR);
+			return ($stmt->execute()) ? Display::json(0) : Display::json(11);
 		}catch(PDOException $e) {
 			return Display::json(505);
 		}

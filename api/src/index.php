@@ -38,6 +38,7 @@ $argumentNames = [
 	'importPasswords'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'php://input'],
 	'editPassword'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'password_id', 'website', 'username', 'password', 'message'],
 	'deletePassword'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'password_id'],
+	'deletePasswords'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
 	'deleteAccount'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
 	'forgotUsername'	=> ['email'],
 	'enable2fa'				=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
