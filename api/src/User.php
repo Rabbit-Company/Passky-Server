@@ -18,6 +18,26 @@ class User {
 	public int $response = 505;
 
 	public function fromUsername($username){
+
+		$data = Settings::readLocalData("username_" . $username);
+		if($data != null){
+			$data = unserialize($data);
+
+			$this->user_id = $data['user_id'];
+			$this->username = $data['username'];
+			$this->email = $data['email'];
+			$this->password = $data['password'];
+			$this->secret = $data['2fa_secret'];
+			$this->yubico_otp = $data['yubico_otp'];
+			$this->backup_codes = $data['backup_codes'];
+			$this->max_passwords = $data['max_passwords'];
+			$this->premium_expires = $data['premium_expires'];
+			$this->created = $data['created'];
+			$this->accessed = $data['accessed'];
+			$this->response = 0;
+			return;
+		}
+
 		try{
 			$conn = Settings::createConnection();
 
@@ -27,6 +47,7 @@ class User {
 
 			if($stmt->rowCount() == 1){
 				$result = $stmt->fetch();
+				Settings::writeLocalData("username_" . $username, serialize($result), 60);
 
 				$this->user_id = $result['user_id'];
 				$this->username = $result['username'];
