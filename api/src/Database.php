@@ -156,7 +156,7 @@ class Database{
 	}
 
 	public static function getPasswordCount() : int{
-		$amount = Settings::readLocalData('passwords_count');
+		$amount = Settings::readLocalData('password_count');
 		if($amount != null) return $amount;
 
 		$query = "SELECT COUNT(*) AS 'amount' FROM passwords";
@@ -170,16 +170,20 @@ class Database{
 
 			$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
 			$expiration = ($amount*5 >= 86400) ? 86400 : $amount*5+5;
-			Settings::writeLocalData('passwords_count', $amount, $expiration);
+			Settings::writeLocalData('password_count', $amount, $expiration);
 			return $amount;
 		}catch(PDOException $e) {
-			Settings::writeLocalData('passwords_count', -1, 5);
+			Settings::writeLocalData('password_count', -1, 5);
 			return -1;
 		}
 		$conn = null;
 	}
 
 	public static function getUserPasswordCount($username) : int{
+
+		$amount = Settings::readLocalData($username . '_password_count');
+		if($amount != null) return $amount;
+
 		try{
 			$conn = Settings::createConnection();
 
@@ -187,8 +191,12 @@ class Database{
 			$stmt->bindParam(':owner', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			return ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+			$amount = $stmt->fetch()['amount'];
+			Settings::writeLocalData($username . '_password_count', $amount, 300);
+
+			return ($stmt->rowCount() == 1) ? $amount : -1;
 		}catch(PDOException $e) {
+			Settings::writeLocalData($username . '_password_count', -1, 5);
 			return -1;
 		}
 		$conn = null;
@@ -341,7 +349,7 @@ class Database{
 		$JSON_OBJ->max_passwords = $user->max_passwords;
 		$JSON_OBJ->premium_expires = $user->premium_expires;
 
-		$passwords = Settings::readLocalData('passwords_' . $username);
+		$passwords = Settings::readLocalData($username . '_passwords');
 		if($passwords != null){
 			$passwords = unserialize($passwords);
 			if(count($passwords) > 0){
@@ -359,7 +367,7 @@ class Database{
 			$stmt->execute();
 
 			$passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			Settings::writeLocalData("passwords_" . $username, serialize($passwords), 60);
+			Settings::writeLocalData($username . "_passwords", serialize($passwords), 60);
 
 			if($stmt->rowCount() > 0){
 				$JSON_OBJ->passwords = $passwords;
@@ -379,7 +387,7 @@ class Database{
 
 		try{
 			$conn = Settings::createConnection();
-			Settings::removeLocalData('username_' . $username);
+			Settings::removeLocalData($username . '_data');
 
 			$stmt = $conn->prepare("DELETE FROM passwords WHERE owner = :owner;");
 			$stmt->bindParam(':owner', $username, PDO::PARAM_STR);
@@ -450,7 +458,8 @@ class Database{
 			$stmt->bindParam(':password', $password2, PDO::PARAM_STR);
 			$stmt->bindParam(':message', $message, PDO::PARAM_STR);
 
-			Settings::removeLocalData('passwords_' . $username);
+			Settings::removeLocalData($username . "_passwords");
+			Settings::increaseLocalData($username . '_password_count', 1);
 
 			return ($stmt->execute()) ? Display::json(0) : Display::json(3);
 		}catch(PDOException $e) {
@@ -516,11 +525,12 @@ class Database{
 				$stmt->bindParam(':message'.$i, $passwordArray[$i]["message"], PDO::PARAM_STR);
 			}
 
-			Settings::removeLocalData('passwords_' . $username);
+			Settings::removeLocalData($username . "_passwords");
 
 			if($stmt->execute()){
 				$num_success = count($passwordArray);
 				$num_error = count($password_obj) - count($passwordArray);
+				Settings::increaseLocalData($username . '_password_count', $num_success);
 			}else{
 				$num_error = count($password_obj);
 			}
@@ -568,7 +578,7 @@ class Database{
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
 			$stmt->execute();
 
-			Settings::removeLocalData('passwords_' . $username);
+			Settings::removeLocalData($username . "_passwords");
 
 			return ($stmt->rowCount() == 1) ? Display::json(0) : Display::json(13);
 		}catch(PDOException $e) {
@@ -601,7 +611,8 @@ class Database{
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
 			$stmt->execute();
 
-			Settings::removeLocalData('passwords_' . $username);
+			Settings::removeLocalData($username . "_passwords");
+			Settings::decreaseLocalData($username . '_password_count', 1);
 
 			return ($stmt->rowCount() == 1) ? Display::json(0) : Display::json(11);
 		}catch(PDOException $e) {
@@ -617,7 +628,7 @@ class Database{
 
 		$JSON_OBJ = new StdClass;
 
-		$passwords = Settings::readLocalData('passwords_' . $username);
+		$passwords = Settings::readLocalData($username . "_passwords");
 		if($passwords != null){
 			$passwords = unserialize($passwords);
 			if(count($passwords) > 0){
@@ -635,7 +646,7 @@ class Database{
 			$stmt->execute();
 
 			$passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			Settings::writeLocalData("passwords_" . $username, serialize($passwords), 60);
+			Settings::writeLocalData($username . "_passwords", serialize($passwords), 60);
 
 			if($stmt->rowCount() > 0){
 				$JSON_OBJ->passwords = $passwords;
@@ -680,7 +691,7 @@ class Database{
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			Settings::removeLocalData('username_' . $username);
+			Settings::removeLocalData($username . '_data');
 
 			$JSON_OBJ = new StdClass;
 			$JSON_OBJ->secret = $secret;
@@ -719,7 +730,7 @@ class Database{
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			Settings::removeLocalData('username_' . $username);
+			Settings::removeLocalData($username . '_data');
 
 			return Display::json(0);
 		}catch(PDOException $e) {
@@ -769,7 +780,7 @@ class Database{
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			Settings::removeLocalData('username_' . $username);
+			Settings::removeLocalData($username . '_data');
 
 			$JSON_OBJ = new StdClass;
 			$JSON_OBJ->yubico = $yubico_otp;
@@ -818,7 +829,7 @@ class Database{
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			Settings::removeLocalData('username_' . $username);
+			Settings::removeLocalData($username . '_data');
 
 			$JSON_OBJ = new StdClass;
 			$JSON_OBJ->yubico = $yubico_otp;
@@ -944,7 +955,7 @@ class Database{
 
 			for($i = 1; $i <= 10; $i++) Settings::removeLocalData('admin_licenses_page_' . $i);
 			Settings::removeLocalData('admin_licenses_count');
-			Settings::removeLocalData('username_' . $username);
+			Settings::removeLocalData($username . '_data');
 
 			$JSON_OBJ = new StdClass;
 			$JSON_OBJ->max_passwords = $premium;

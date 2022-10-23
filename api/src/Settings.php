@@ -259,6 +259,38 @@ class Settings{
 		return (!empty($data[$key])) ? $data[$key] : null;
 	}
 
+	public static function increaseLocalData($key, $amount){
+		$redis = self::createRedisConnection();
+
+		if($redis != null){
+			if($redis->exists($key)) $redis->incrBy($key, $amount);
+			return true;
+		}
+
+		$data = json_decode(file_get_contents('../data.json'), true);
+		if($data[$key] != null && is_numeric($data[$key])){
+			$data[$key] = $data[$key] + $amount;
+			file_put_contents('../data.json', json_encode($data));
+		}
+		return true;
+	}
+
+	public static function decreaseLocalData($key, $amount){
+		$redis = self::createRedisConnection();
+
+		if($redis != null){
+			if($redis->exists($key)) $redis->decrBy($key, $amount);
+			return true;
+		}
+
+		$data = json_decode(file_get_contents('../data.json'), true);
+		if($data[$key] != null && is_numeric($data[$key])){
+			$data[$key] = $data[$key] - $amount;
+			file_put_contents('../data.json', json_encode($data));
+		}
+		return true;
+	}
+
 	public static function removeLocalData($key){
 		$redis = self::createRedisConnection();
 
