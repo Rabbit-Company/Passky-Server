@@ -30,13 +30,12 @@ class Database{
 	}
 
 	public static function encryptPassword(string $password) : string{
-		$algo = (defined('PASSWORD_ARGON2ID')) ? PASSWORD_ARGON2ID : PASSWORD_DEFAULT;
-		$options = [
-			'threads' => Settings::getCores(),
-			'time_cost' => 4,
-			'memory_cost' => 1<<16
-		];
-		return password_hash($password, $algo, $options);
+		$cost = Settings::readLocalData('server_hashing_cost');
+		if($cost == null){
+			$cost = Settings::calculateHashingCost();
+			Settings::writeLocalData('server_hashing_cost', $cost, 432000);
+		}
+		return password_hash($password, PASSWORD_BCRYPT, [ 'cost' => $cost ]);
 	}
 
 	public static function generateNonce() : string{
@@ -322,6 +321,23 @@ class Database{
 
 		if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 		if(!password_verify($password, $user->password)) return Display::json(2);
+
+		$cost = Settings::readLocalData('server_hashing_cost');
+		if($cost != null && password_needs_rehash($user->password, PASSWORD_BCRYPT, [ 'cost' => $cost ])) {
+			$newPassword = self::encryptPassword($password);
+
+			try{
+				$conn = Settings::createConnection();
+
+				Settings::removeLocalData($username . '_data');
+
+				$stmt = $conn->prepare("UPDATE users SET password = :password WHERE username = :username");
+				$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+				$stmt->bindParam(':password', $newPassword, PDO::PARAM_STR);
+				$stmt->execute();
+			}catch(PDOException $e) {}
+			$conn = null;
+		}
 
 		$userID = $username . '-' . self::getUserIpAddress();
 		$token = Settings::readLocalData('token_' . $userID);

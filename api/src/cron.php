@@ -36,5 +36,11 @@ try{
 }catch(PDOException) {}
 $conn = null;
 
+$hashingCost = Settings::readLocalData('server_hashing_cost');
+if($hashingCost == null){
+	$cost = Settings::calculateHashingCost();
+	Settings::writeLocalData('server_hashing_cost', $cost, 432000);
+}
+
 echo '{"status":"success"}';
 ?>

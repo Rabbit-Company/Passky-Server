@@ -224,6 +224,24 @@ class Settings{
 
 /*
 
+	SECURITY
+
+*/
+
+	public static function calculateHashingCost() : int{
+		$timeTarget = 0.1; // 100 milliseconds
+		$cost = 8;
+		do {
+			$cost++;
+			$start = microtime(true);
+			password_hash('random_string_for_hashing', PASSWORD_BCRYPT, [ 'cost' => $cost ]);
+			$end = microtime(true);
+		}while(($end - $start) < $timeTarget);
+		return $cost-1;
+	}
+
+/*
+
 	LOCAL STORAGE
 
 */
