@@ -1,0 +1,14 @@
+#!/command/with-contenv bash
+
+ln -sf /etc/nginx/sites-available/ssl-off /etc/nginx/sites-enabled/ssl-off
+
+echo "
+--------------------------------------------
+                Information
+--------------------------------------------
+
+  SSL mode is disabled, use proxy manager.
+    🔥 https://nginxproxymanager.com 🔥
+
+--------------------------------------------
+"

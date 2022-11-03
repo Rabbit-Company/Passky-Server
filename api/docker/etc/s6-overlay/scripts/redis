@@ -1,0 +1,18 @@
+#!/command/with-contenv bash
+
+redis-server --daemonize yes
+
+RESPONSE=$(redis-cli ping)
+
+echo "
+--------------------------------------------
+                  Services
+--------------------------------------------
+"
+
+if [[ $RESPONSE == PONG ]]
+then
+  echo " 💾 Redis Server has started successfully."
+else
+  echo " ❌ Error connecting to Redis Server."
+fi
