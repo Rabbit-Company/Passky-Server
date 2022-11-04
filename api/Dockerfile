@@ -29,6 +29,8 @@ RUN chmod +x /etc/cron.hourly/passky-daily-crontab
 COPY docker/etc/s6-overlay /etc/s6-overlay/
 RUN chmod 755 -R /etc/s6-overlay && chmod +x /etc/s6-overlay/scripts/*
 
+COPY docker/etc/nginx /etc/nginx
+
 # Configure PHP
 COPY php.ini /etc/php/current_version/fpm/
 

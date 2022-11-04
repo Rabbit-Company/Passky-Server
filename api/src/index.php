@@ -13,7 +13,7 @@ if(empty($_GET['action'])){
 	return;
 }
 
-header('Content-Type: application/json; charset=utf-8');
+header("Content-Type: application/json; charset=utf-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Max-Age: 86400");
