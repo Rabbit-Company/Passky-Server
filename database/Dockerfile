@@ -1,4 +1,4 @@
-FROM mariadb:latest
+FROM mariadb:10.9
 
 # Copy database.sql file to /docker-entrypoint-initdb.d/ folder
 COPY database.sql /docker-entrypoint-initdb.d/
