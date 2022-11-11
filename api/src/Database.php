@@ -53,6 +53,7 @@ class Database{
 	}
 
 	public static function getUserIpAddress() : string {
+		if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) return hash("sha256", $_SERVER['HTTP_CF_CONNECTING_IP'] . "passky2020" . date("Ymd"));
 		if(!empty($_SERVER['HTTP_CLIENT_IP'])) return hash("sha256", $_SERVER['HTTP_CLIENT_IP'] . "passky2020" . date("Ymd"));
 		if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return hash("sha256", $_SERVER['HTTP_X_FORWARDED_FOR'] . "passky2020" . date("Ymd"));
 		return hash("sha256", $_SERVER['REMOTE_ADDR'] . "passky2020" . date("Ymd"));
