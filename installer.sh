@@ -361,6 +361,10 @@ echo "LIMITER_UPGRADE_ACCOUNT=10" >> .env
 echo "YUBI_CLOUD=https://api.yubico.com/wsapi/2.0/verify" >> .env
 echo "YUBI_ID=67857" >> .env
 
+echo "REDIS_HOST=127.0.0.1" >> .env
+echo "REDIS_PORT=6379" >> .env
+echo "REDIS_PASSWORD=" >> .env
+
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${green}            ENV FILE HAS BEEN SUCCESSFULLY GENEREATED"
 echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose up -d"

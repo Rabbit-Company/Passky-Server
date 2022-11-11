@@ -1,4 +1,4 @@
-FROM serversideup/php:8.1-fpm-nginx
+FROM serversideup/php:8.1-fpm-nginx-v2.0.2
 
 LABEL maintainer="Rabbit Company (info@rabbit-company.com)"
 

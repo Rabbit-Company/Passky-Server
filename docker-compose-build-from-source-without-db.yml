@@ -24,6 +24,10 @@ services:
       - MYSQL_SSL
       - MYSQL_SSL_CA
       - MYSQL_ESTIMATES
+      # Redis
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_PASSWORD
       # Mail
       - MAIL_ENABLED
       - MAIL_HOST

@@ -84,6 +84,24 @@ class Settings{
 
 /*
 
+	REDIS SETTINGS
+
+*/
+
+	public static function getRedisHost() : string{
+		return getenv("REDIS_HOST", true) ?: getenv("REDIS_HOST") ?: "127.0.0.1";
+	}
+
+	public static function getRedisPort() : int{
+		return getenv("REDIS_PORT", true) ?: getenv("REDIS_PORT") ?: 6379;
+	}
+
+	public static function getRedisPassword() : string{
+		return getenv("REDIS_PASSWORD", true) ?: getenv("REDIS_PASSWORD") ?: "";
+	}
+
+/*
+
 	EMAIL SETTINGS
 
 */
@@ -250,7 +268,8 @@ class Settings{
 		$redis = null;
 		try{
 			$redis = new Redis();
-			$redis->connect('127.0.0.1', 6379);
+			$redis->connect(self::getRedisHost(), self::getRedisPort());
+			$redis->auth(self::getRedisPassword());
 		}catch(Exception){}
 		return $redis;
 	}
