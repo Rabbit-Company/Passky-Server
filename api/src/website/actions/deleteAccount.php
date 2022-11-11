@@ -30,8 +30,8 @@ try{
 }catch(PDOException $e) {}
 $conn = null;
 
-for($i = 1; $i <= 10; $i++) Settings::removeLocalData('admin_accounts_page_' . $i);
-Settings::removeLocalData('admin_accounts_users_count');
+for($i = 1; $i <= 10; $i++) Settings::removeLocalData('admin_accounts_page_' . $i, true);
+Settings::removeLocalData('admin_accounts_users_count', true);
 
 $_SESSION['page'] = "accounts";
 header("Location: ../..");

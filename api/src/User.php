@@ -19,7 +19,7 @@ class User {
 
 	public function fromUsername($username){
 
-		$data = Settings::readLocalData($username . '_data');
+		$data = Settings::readLocalData($username . '_data', true);
 		if($data != null){
 			$data = unserialize($data);
 
@@ -47,7 +47,7 @@ class User {
 
 			if($stmt->rowCount() == 1){
 				$result = $stmt->fetch();
-				Settings::writeLocalData($username . '_data', serialize($result), 60);
+				Settings::writeLocalData($username . '_data', serialize($result), 60, true);
 
 				$this->user_id = $result['user_id'];
 				$this->username = $result['username'];

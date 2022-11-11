@@ -172,4 +172,8 @@ echo "REDIS_HOST=127.0.0.1" >> .env
 echo "REDIS_PORT=6379" >> .env
 echo "REDIS_PASSWORD=" >> .env
 
+echo "REDIS_LOCAL_HOST=127.0.0.1" >> .env
+echo "REDIS_LOCAL_PORT=6379" >> .env
+echo "REDIS_LOCAL_PASSWORD=" >> .env
+
 whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78

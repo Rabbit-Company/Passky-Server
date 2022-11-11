@@ -365,6 +365,10 @@ echo "REDIS_HOST=127.0.0.1" >> .env
 echo "REDIS_PORT=6379" >> .env
 echo "REDIS_PASSWORD=" >> .env
 
+echo "REDIS_LOCAL_HOST=127.0.0.1" >> .env
+echo "REDIS_LOCAL_PORT=6379" >> .env
+echo "REDIS_LOCAL_PASSWORD=" >> .env
+
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${green}            ENV FILE HAS BEEN SUCCESSFULLY GENEREATED"
 echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose up -d"

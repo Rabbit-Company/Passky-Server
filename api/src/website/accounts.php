@@ -29,12 +29,12 @@ $startFrom = ($page - 1) * $_SESSION["limit"];
 try{
 	$conn = Settings::createConnection();
 
-	$totalAccounts = Settings::readLocalData('admin_accounts_users_count');
+	$totalAccounts = Settings::readLocalData('admin_accounts_users_count', true);
 	if($totalAccounts == null){
 		$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM users;");
 		$stmt2->execute();
 		$totalAccounts = $stmt2->fetch()['amount'];
-		Settings::writeLocalData('admin_accounts_users_count', $totalAccounts, 300);
+		Settings::writeLocalData('admin_accounts_users_count', $totalAccounts, 300, true);
 	}
 
 	$totalPages = ceil($totalAccounts / $_SESSION["limit"]);
@@ -43,20 +43,20 @@ try{
 		exit();
 	}
 
-	$totalPasswords = Settings::readLocalData('admin_accounts_passwords_count');
+	$totalPasswords = Settings::readLocalData('admin_accounts_passwords_count', true);
 	if($totalPasswords == null){
 		$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
 		$stmt3->execute();
 		$totalPasswords = $stmt3->fetch()['amount'];
-		Settings::writeLocalData('admin_accounts_passwords_count', $totalPasswords, 300);
+		Settings::writeLocalData('admin_accounts_passwords_count', $totalPasswords, 300, true);
 	}
 
-	$totalPremium = Settings::readLocalData('admin_accounts_premium_count');
+	$totalPremium = Settings::readLocalData('admin_accounts_premium_count', true);
 	if($totalPremium == null){
 		$stmt4 = $conn->prepare("SELECT COUNT(*) as amount FROM users WHERE premium_expires IS NOT NULL;");
 		$stmt4->execute();
 		$totalPremium = $stmt4->fetch()['amount'];
-		Settings::writeLocalData('admin_accounts_premium_count', $totalPremium, 300);
+		Settings::writeLocalData('admin_accounts_premium_count', $totalPremium, 300, true);
 	}
 
 	$stmt = $conn->prepare($query);
@@ -66,14 +66,14 @@ try{
 
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}else{
-		$data = Settings::readLocalData('admin_accounts_page_' . $page);
+		$data = Settings::readLocalData('admin_accounts_page_' . $page, true);
 		if($data == null){
 			$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
 			$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
 			$stmt->execute();
 
 			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			Settings::writeLocalData('admin_accounts_page_' . $page, serialize($data), 300);
+			Settings::writeLocalData('admin_accounts_page_' . $page, serialize($data), 300, true);
 		}else{
 			$data = unserialize($data);
 		}

@@ -29,12 +29,12 @@ $startFrom = ($page - 1) * $_SESSION["limit"];
 try{
 	$conn = Settings::createConnection();
 
-	$totalLicenses = Settings::readLocalData('admin_licenses_count');
+	$totalLicenses = Settings::readLocalData('admin_licenses_count', true);
 	if($totalLicenses == null){
 		$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses;");
 		$stmt2->execute();
 		$totalLicenses = $stmt2->fetch()['amount'];
-		Settings::writeLocalData('admin_licenses_count', $totalLicenses, 300);
+		Settings::writeLocalData('admin_licenses_count', $totalLicenses, 300, true);
 	}
 
 	$totalPages = ceil($totalLicenses / $_SESSION["limit"]);
@@ -43,12 +43,12 @@ try{
 		exit();
 	}
 
-	$totalUnusedLicenses = Settings::readLocalData('admin_licenses_unused_count');
+	$totalUnusedLicenses = Settings::readLocalData('admin_licenses_unused_count', true);
 	if($totalUnusedLicenses == null){
 		$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses WHERE linked IS NULL;");
 		$stmt3->execute();
 		$totalUnusedLicenses = $stmt3->fetch()['amount'];
-		Settings::writeLocalData('admin_licenses_unused_count', $totalUnusedLicenses, 300);
+		Settings::writeLocalData('admin_licenses_unused_count', $totalUnusedLicenses, 300, true);
 	}
 
 	$stmt = $conn->prepare($query);
@@ -58,14 +58,14 @@ try{
 
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}else{
-		$data = Settings::readLocalData('admin_licenses_page_' . $page);
+		$data = Settings::readLocalData('admin_licenses_page_' . $page, true);
 		if($data == null){
 			$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
 			$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
 			$stmt->execute();
 
 			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			Settings::writeLocalData('admin_licenses_page_' . $page, serialize($data), 300);
+			Settings::writeLocalData('admin_licenses_page_' . $page, serialize($data), 300, true);
 		}else{
 			$data = unserialize($data);
 		}

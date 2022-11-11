@@ -22,8 +22,8 @@ try{
 }catch(PDOException $e) {}
 $conn = null;
 
-for($i = 1; $i <= 10; $i++) Settings::removeLocalData('admin_licenses_page_' . $i);
-Settings::removeLocalData('admin_licenses_count');
+for($i = 1; $i <= 10; $i++) Settings::removeLocalData('admin_licenses_page_' . $i, true);
+Settings::removeLocalData('admin_licenses_count', true);
 
 $_SESSION['page'] = "licenses";
 header("Location: ../..");

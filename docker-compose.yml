@@ -55,6 +55,9 @@ services:
       - REDIS_HOST
       - REDIS_PORT
       - REDIS_PASSWORD
+      - REDIS_LOCAL_HOST
+      - REDIS_LOCAL_PORT
+      - REDIS_LOCAL_PASSWORD
       # Mail
       - MAIL_ENABLED
       - MAIL_HOST

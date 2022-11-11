@@ -15,7 +15,7 @@ require_once "Settings.php";
 
 $today = date('Y-m-d');
 
-$executed = Settings::readLocalData('cron_executed');
+$executed = Settings::readLocalData('cron_executed', true);
 
 if($today == $executed){
 	echo '{"status":"success"}';
@@ -23,7 +23,7 @@ if($today == $executed){
 }
 
 Settings::purgeLocalData();
-Settings::writeLocalData('cron_executed', $today, 86400);
+Settings::writeLocalData('cron_executed', $today, 86400, true);
 
 $maxPasswords = Settings::getMaxPasswords();
 
@@ -36,10 +36,10 @@ try{
 }catch(PDOException) {}
 $conn = null;
 
-$hashingCost = Settings::readLocalData('server_hashing_cost');
+$hashingCost = Settings::readLocalData('server_hashing_cost', false);
 if($hashingCost == null){
 	$cost = Settings::calculateHashingCost();
-	Settings::writeLocalData('server_hashing_cost', $cost, 432000);
+	Settings::writeLocalData('server_hashing_cost', $cost, 432000, false);
 }
 
 echo '{"status":"success"}';

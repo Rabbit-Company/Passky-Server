@@ -100,6 +100,18 @@ class Settings{
 		return getenv("REDIS_PASSWORD", true) ?: getenv("REDIS_PASSWORD") ?: "";
 	}
 
+	public static function getRedisLocalHost() : string{
+		return getenv("REDIS_LOCAL_HOST", true) ?: getenv("REDIS_LOCAL_HOST") ?: "127.0.0.1";
+	}
+
+	public static function getRedisLocalPort() : int{
+		return getenv("REDIS_LOCAL_PORT", true) ?: getenv("REDIS_LOCAL_PORT") ?: 6379;
+	}
+
+	public static function getRedisLocalPassword() : string{
+		return getenv("REDIS_LOCAL_PASSWORD", true) ?: getenv("REDIS_LOCAL_PASSWORD") ?: "";
+	}
+
 /*
 
 	EMAIL SETTINGS
@@ -264,18 +276,29 @@ class Settings{
 
 */
 
-	public static function createRedisConnection(){
+	public static function createRedisConnection($local){
 		$redis = null;
+
+		$host = self::getRedisHost();
+		$port = self::getRedisPort();
+		$pass = self::getRedisPassword();
+
+		if($local){
+			$host = self::getRedisLocalHost();
+			$port = self::getRedisLocalPort();
+			$pass = self::getRedisLocalPassword();
+		}
+
 		try{
 			$redis = new Redis();
-			$redis->connect(self::getRedisHost(), self::getRedisPort());
-			$redis->auth(self::getRedisPassword());
+			$redis->connect($host, $port);
+			$redis->auth($pass);
 		}catch(Exception){}
 		return $redis;
 	}
 
-	public static function writeLocalData($key, $value, $expiration) : bool{
-		$redis = self::createRedisConnection();
+	public static function writeLocalData($key, $value, $expiration, $local) : bool{
+		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
 			$redis->set($key, $value);
@@ -289,8 +312,8 @@ class Settings{
 		return true;
 	}
 
-	public static function readLocalData($key){
-		$redis = self::createRedisConnection();
+	public static function readLocalData($key, $local){
+		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
 			return ($redis->exists($key)) ? $redis->get($key) : null;
@@ -300,8 +323,8 @@ class Settings{
 		return (!empty($data[$key])) ? $data[$key] : null;
 	}
 
-	public static function increaseLocalData($key, $amount){
-		$redis = self::createRedisConnection();
+	public static function increaseLocalData($key, $amount, $local){
+		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
 			if($redis->exists($key)) $redis->incrBy($key, $amount);
@@ -316,8 +339,8 @@ class Settings{
 		return true;
 	}
 
-	public static function decreaseLocalData($key, $amount){
-		$redis = self::createRedisConnection();
+	public static function decreaseLocalData($key, $amount, $local){
+		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
 			if($redis->exists($key)) $redis->decrBy($key, $amount);
@@ -332,8 +355,8 @@ class Settings{
 		return true;
 	}
 
-	public static function removeLocalData($key){
-		$redis = self::createRedisConnection();
+	public static function removeLocalData($key, $local){
+		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
 			return $redis->del($key);
