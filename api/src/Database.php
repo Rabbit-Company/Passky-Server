@@ -29,12 +29,21 @@ class Database{
 		$conn = null;
 	}
 
-	public static function encryptPassword(string $password) : string{
-		$cost = Settings::readLocalData('server_hashing_cost', false);
+	public static function getHashingCost() : int{
+		$cost = Settings::readLocalData('server_hashing_cost', true);
+		if($cost == null){
+			$cost = Settings::readLocalData('server_hashing_cost', false);
+			if($cost != null) Settings::writeLocalData('server_hashing_cost', $cost, 3600, true);
+		}
 		if($cost == null){
 			$cost = Settings::calculateHashingCost();
 			Settings::writeLocalData('server_hashing_cost', $cost, 432000, false);
 		}
+		return $cost;
+	}
+
+	public static function encryptPassword(string $password) : string{
+		$cost = self::getHashingCost();
 		return password_hash($password, PASSWORD_BCRYPT, [ 'cost' => $cost ]);
 	}
 
@@ -126,6 +135,10 @@ class Database{
 		$username = strtolower($username);
 		if($token == null || strlen($token) != 64) return 0;
 		$userID = $username . '-' . self::getUserIpAddress();
+		$data = Settings::readLocalData('token_' . $userID, true);
+		if($data != null){
+			if($data == $token) return 1;
+		}
 		$data = Settings::readLocalData('token_' . $userID, false);
 		if($data != null)
 			if($data == $token) return 1;
@@ -323,8 +336,8 @@ class Database{
 		if(self::is2FaValid($user->username, $otp, $user->secret, $user->yubico_otp) == 0) return Display::json(19);
 		if(!password_verify($password, $user->password)) return Display::json(2);
 
-		$cost = Settings::readLocalData('server_hashing_cost', false);
-		if($cost != null && password_needs_rehash($user->password, PASSWORD_BCRYPT, [ 'cost' => $cost ])) {
+		$cost = self::getHashingCost();
+		if(password_needs_rehash($user->password, PASSWORD_BCRYPT, [ 'cost' => $cost ])) {
 			$newPassword = self::encryptPassword($password);
 
 			try{
@@ -341,9 +354,14 @@ class Database{
 		}
 
 		$userID = $username . '-' . self::getUserIpAddress();
-		$token = Settings::readLocalData('token_' . $userID, false);
+		$token = Settings::readLocalData('token_' . $userID, true);
+		if($token == null){
+			$token = Settings::readLocalData('token_' . $userID, false);
+			if($token != null) Settings::writeLocalData('token_' . $userID, $token, 60, true);
+		}
 		if($token == null){
 			$token = hash("sha256", self::generateCodes());
+			Settings::writeLocalData('token_' . $userID, $token, 60, true);
 			Settings::writeLocalData('token_' . $userID, $token, 3600, false);
 		}
 
