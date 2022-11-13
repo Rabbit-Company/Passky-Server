@@ -355,15 +355,10 @@ class Database{
 
 		$userID = $username . '-' . self::getUserIpAddress();
 		$token = Settings::readLocalData('token_' . $userID, true);
-		if($token == null){
-			$token = Settings::readLocalData('token_' . $userID, false);
-			if($token != null) Settings::writeLocalData('token_' . $userID, $token, 60, true);
-		}
-		if($token == null){
-			$token = hash("sha256", self::generateCodes());
-			Settings::writeLocalData('token_' . $userID, $token, 60, true);
-			Settings::writeLocalData('token_' . $userID, $token, 3600, false);
-		}
+		if($token == null) $token = Settings::readLocalData('token_' . $userID, false);
+		if($token == null) $token = hash("sha256", self::generateCodes());
+		Settings::writeLocalData('token_' . $userID, $token, 120, true);
+		Settings::writeLocalData('token_' . $userID, $token, 3600, false);
 
 		$today = date('Y-m-d');
 		if($user->accessed != $today){
