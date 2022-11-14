@@ -316,11 +316,22 @@ class Settings{
 		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
-			return ($redis->exists($key)) ? $redis->get($key) : null;
+			$value = $redis->get($key);
+			return ($value != false) ? $value : null;
 		}
 
 		$data = json_decode(file_get_contents('../data.json'), true);
 		return (!empty($data[$key])) ? $data[$key] : null;
+	}
+
+	public static function ttlLocalData($key, $local) : int{
+		$redis = self::createRedisConnection($local);
+
+		if($redis != null){
+			return $redis->ttl($key);
+		}
+
+		return -1;
 	}
 
 	public static function increaseLocalData($key, $amount, $local){

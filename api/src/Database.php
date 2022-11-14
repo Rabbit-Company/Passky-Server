@@ -33,10 +33,14 @@ class Database{
 		$cost = Settings::readLocalData('server_hashing_cost', true);
 		if($cost == null){
 			$cost = Settings::readLocalData('server_hashing_cost', false);
-			if($cost != null) Settings::writeLocalData('server_hashing_cost', $cost, 3600, true);
+			if($cost != null){
+				$ttl = Settings::ttlLocalData('server_hashing_cost', false);
+				if($ttl >= 5) Settings::writeLocalData('server_hashing_cost', $cost, $ttl, true);
+			}
 		}
 		if($cost == null){
 			$cost = Settings::calculateHashingCost();
+			Settings::writeLocalData('server_hashing_cost', $cost, 432000, true);
 			Settings::writeLocalData('server_hashing_cost', $cost, 432000, false);
 		}
 		return $cost;
@@ -140,8 +144,11 @@ class Database{
 			if($data == $token) return 1;
 		}
 		$data = Settings::readLocalData('token_' . $userID, false);
-		if($data != null)
+		if($data != null){
+			$ttl = Settings::ttlLocalData('token_' . $userID, false);
+			if($ttl >= 5) Settings::writeLocalData('token_' . $userID, $data, $ttl, true);
 			if($data == $token) return 1;
+		}
 		return 0;
 	}
 
@@ -224,6 +231,7 @@ class Database{
 		$JSON_OBJ->passwords = self::getPasswordCount();
 		$JSON_OBJ->maxPasswords = Settings::getMaxPasswords();
 		$JSON_OBJ->location = Settings::getLocation();
+		$JSON_OBJ->hashingCost = self::getHashingCost();
 		return Display::json(0, $JSON_OBJ);
 	}
 
@@ -357,7 +365,7 @@ class Database{
 		$token = Settings::readLocalData('token_' . $userID, true);
 		if($token == null) $token = Settings::readLocalData('token_' . $userID, false);
 		if($token == null) $token = hash("sha256", self::generateCodes());
-		Settings::writeLocalData('token_' . $userID, $token, 120, true);
+		Settings::writeLocalData('token_' . $userID, $token, 3600, true);
 		Settings::writeLocalData('token_' . $userID, $token, 3600, false);
 
 		$today = date('Y-m-d');

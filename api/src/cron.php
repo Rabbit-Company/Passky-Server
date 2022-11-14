@@ -18,7 +18,10 @@ $today = date('Y-m-d');
 $executed = Settings::readLocalData('cron_executed', true);
 if($executed == null){
 	$executed = Settings::readLocalData('cron_executed', false);
-	if($executed != null) Settings::writeLocalData('cron_executed', $executed, 3600, true);
+	if($executed != null){
+		$ttl = Settings::ttlLocalData('cron_executed', false);
+		if($ttl >= 5) Settings::writeLocalData('cron_executed', $executed, $ttl, true);
+	}
 }
 
 if($today == $executed){
@@ -27,7 +30,7 @@ if($today == $executed){
 }
 
 Settings::purgeLocalData();
-Settings::writeLocalData('cron_executed', $today, 3600, true);
+Settings::writeLocalData('cron_executed', $today, 86400, true);
 Settings::writeLocalData('cron_executed', $today, 86400, false);
 
 $maxPasswords = Settings::getMaxPasswords();
