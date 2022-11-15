@@ -44,5 +44,35 @@ try{
 }catch(PDOException) {}
 $conn = null;
 
+if(Settings::getDBCacheMode() == 2){
+	try{
+		$conn = Settings::createConnection();
+
+		$stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
+		$stmt->execute();
+
+		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+		Settings::writeLocalData('user_count', $amount, 864000, true);
+		Settings::writeLocalData('user_count', $amount, 864000, false);
+	}catch(PDOException $e) {
+		Settings::writeLocalData('user_count', -1, 864000, true);
+		Settings::writeLocalData('user_count', -1, 864000, false);
+	}
+
+	try{
+		$conn = Settings::createConnection();
+
+		$stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM passwords");
+		$stmt->execute();
+
+		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+		Settings::writeLocalData('password_count', $amount, 864000, true);
+		Settings::writeLocalData('password_count', $amount, 864000, false);
+	}catch(PDOException $e) {
+		Settings::writeLocalData('password_count', -1, 864000, true);
+		Settings::writeLocalData('password_count', -1, 864000, false);
+	}
+}
+
 echo '{"status":"success"}';
 ?>

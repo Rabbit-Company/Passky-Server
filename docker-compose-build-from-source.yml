@@ -48,7 +48,7 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_SSL
       - MYSQL_SSL_CA
-      - MYSQL_ESTIMATES
+      - MYSQL_CACHE_MODE
       # Redis
       - REDIS_HOST
       - REDIS_PORT

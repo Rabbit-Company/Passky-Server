@@ -156,8 +156,17 @@ class Database{
 		$amount = Settings::readLocalData('user_count', true);
 		if($amount != null) return $amount;
 
+		if(Settings::getDBCacheMode() == 2){
+			$amount = Settings::readLocalData('user_count', false);
+			if($amount != null){
+				Settings::writeLocalData('user_count', $amount, 3600, true);
+				return $amount;
+			}
+			return 0;
+		}
+
 		$query = "SELECT COUNT(*) AS 'amount' FROM users";
-		if(Settings::getEstimates()) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
+		if(Settings::getDBCacheMode() == 1) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
 
 		try{
 			$conn = Settings::createConnection();
@@ -180,8 +189,17 @@ class Database{
 		$amount = Settings::readLocalData('password_count', true);
 		if($amount != null) return $amount;
 
+		if(Settings::getDBCacheMode() == 2){
+			$amount = Settings::readLocalData('password_count', false);
+			if($amount != null){
+				Settings::writeLocalData('password_count', $amount, 3600, true);
+				return $amount;
+			}
+			return 0;
+		}
+
 		$query = "SELECT COUNT(*) AS 'amount' FROM passwords";
-		if(Settings::getEstimates()) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
+		if(Settings::getDBCacheMode() == 1) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
 
 		try{
 			$conn = Settings::createConnection();

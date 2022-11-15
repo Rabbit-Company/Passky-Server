@@ -68,8 +68,8 @@ class Settings{
 		return getenv("MYSQL_SSL_CA", true) ?: getenv("MYSQL_SSL_CA") ?: "/etc/ssl/certs/ca-certificates.crt";
 	}
 
-	public static function getEstimates() : bool{
-		return getenv("MYSQL_ESTIMATES", true) === "true";
+	public static function getDBCacheMode() : int{
+		return getenv("MYSQL_CACHE_MODE", true) ?: getenv("MYSQL_CACHE_MODE") ?: 0;
 	}
 
 	public static function createConnection(){

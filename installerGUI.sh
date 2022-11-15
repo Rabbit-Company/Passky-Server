@@ -74,7 +74,7 @@ do
 done
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
 
-echo "MYSQL_ESTIMATES=false" >> .env
+echo "MYSQL_CACHE_MODE=0" >> .env
 
 if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want to enable SMTP mail?\n\nSetting up SMTP is not required." 12 78);
 then

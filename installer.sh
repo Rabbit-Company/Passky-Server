@@ -179,7 +179,7 @@ do
 done
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
 
-echo "MYSQL_ESTIMATES=false" >> .env
+echo "MYSQL_CACHE_MODE=0" >> .env
 
 echo -e "\n\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${brown}       MAIL SETTINGS"
