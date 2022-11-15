@@ -156,7 +156,7 @@ class Database{
 		$amount = Settings::readLocalData('user_count', true);
 		if($amount != null) return $amount;
 
-		if(Settings::getDBCacheMode() == 2){
+		if(Settings::getDBCacheMode() >= 2){
 			$amount = Settings::readLocalData('user_count', false);
 			if($amount != null){
 				Settings::writeLocalData('user_count', $amount, 3600, true);
@@ -189,7 +189,7 @@ class Database{
 		$amount = Settings::readLocalData('password_count', true);
 		if($amount != null) return $amount;
 
-		if(Settings::getDBCacheMode() == 2){
+		if(Settings::getDBCacheMode() >= 2){
 			$amount = Settings::readLocalData('password_count', false);
 			if($amount != null){
 				Settings::writeLocalData('password_count', $amount, 3600, true);

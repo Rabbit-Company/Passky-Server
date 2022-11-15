@@ -44,11 +44,18 @@ try{
 }catch(PDOException) {}
 $conn = null;
 
-if(Settings::getDBCacheMode() == 2){
+if(Settings::getDBCacheMode() >= 2){
+	$queryUsers = "SELECT COUNT(*) AS 'amount' FROM users";
+	$queryPasswords = "SELECT COUNT(*) AS 'amount' FROM passwords";
+	if(Settings::getDBCacheMode() == 3){
+		$queryUsers = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
+		$queryPasswords = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
+	}
+
 	try{
 		$conn = Settings::createConnection();
 
-		$stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM users");
+		$stmt = $conn->prepare($queryUsers);
 		$stmt->execute();
 
 		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
@@ -62,7 +69,7 @@ if(Settings::getDBCacheMode() == 2){
 	try{
 		$conn = Settings::createConnection();
 
-		$stmt = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM passwords");
+		$stmt = $conn->prepare($queryPasswords);
 		$stmt->execute();
 
 		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
