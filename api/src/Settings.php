@@ -301,8 +301,7 @@ class Settings{
 		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
-			$redis->set($key, $value);
-			$redis->expire($key, $expiration);
+			$redis->setEx($key, $expiration, $value);
 			return true;
 		}
 
@@ -338,7 +337,7 @@ class Settings{
 		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
-			if($redis->exists($key)) $redis->incrBy($key, $amount);
+			$redis->incrBy($key, $amount);
 			return true;
 		}
 
@@ -354,7 +353,7 @@ class Settings{
 		$redis = self::createRedisConnection($local);
 
 		if($redis != null){
-			if($redis->exists($key)) $redis->decrBy($key, $amount);
+			$redis->decrBy($key, $amount);
 			return true;
 		}
 
