@@ -15,7 +15,7 @@ CREATE DATABASE IF NOT EXISTS `MYSQL_DATABASE`;
 
 CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
 (
-  `user_id` Int NOT NULL AUTO_INCREMENT,
+  `user_id` Int UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` Char(30) NOT NULL,
   `email` Char(255) NOT NULL,
   `password` Char(255) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`users`
 
 CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`passwords`
 (
-  `password_id` Int NOT NULL AUTO_INCREMENT,
+  `password_id` Int UNSIGNED NOT NULL AUTO_INCREMENT,
   `owner` Char(30) NOT NULL,
   `website` Char(255) NOT NULL,
   `username` Char(255) NOT NULL,
