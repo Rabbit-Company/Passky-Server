@@ -45,7 +45,8 @@ $argumentNames = [
 	'disable2fa'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW'],
 	'addYubiKey'			=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id'],
 	'removeYubiKey'		=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'id'],
-	'upgradeAccount'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'license']
+	'upgradeAccount'	=> ['PHP_AUTH_USER', 'PHP_AUTH_PW', 'license'],
+	'getReport'	=> []
 ];
 
 $action = $_GET['action'] ?? 'No action given';

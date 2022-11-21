@@ -252,6 +252,10 @@ class Settings{
 		return getenv("LIMITER_UPGRADE_ACCOUNT", true) ?: getenv("LIMITER_UPGRADE_ACCOUNT") ?: 10;
 	}
 
+	public static function getLimiterGetReport() : int{
+		return getenv("LIMITER_GET_REPORT", true) ?: getenv("LIMITER_GET_REPORT") ?: -1;
+	}
+
 /*
 
 	SECURITY

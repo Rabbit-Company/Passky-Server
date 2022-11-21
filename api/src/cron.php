@@ -33,8 +33,8 @@ Settings::purgeLocalData();
 Settings::writeLocalData('cron_executed', $today, 86400, true);
 Settings::writeLocalData('cron_executed', $today, 86400, false);
 
+// Deactivate expired premium accounts
 $maxPasswords = Settings::getMaxPasswords();
-
 try{
 	$conn = Settings::createConnection();
 
@@ -44,6 +44,7 @@ try{
 }catch(PDOException) {}
 $conn = null;
 
+// Cache amount of users and passwords
 if(Settings::getDBCacheMode() >= 2){
 	$queryUsers = "SELECT COUNT(*) AS 'amount' FROM users";
 	$queryPasswords = "SELECT COUNT(*) AS 'amount' FROM passwords";
@@ -59,10 +60,10 @@ if(Settings::getDBCacheMode() >= 2){
 		$stmt->execute();
 
 		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
-		Settings::writeLocalData('user_count', $amount, 864000, true);
+		Settings::writeLocalData('user_count', $amount, 43200, true);
 		Settings::writeLocalData('user_count', $amount, 864000, false);
 	}catch(PDOException $e) {
-		Settings::writeLocalData('user_count', -1, 864000, true);
+		Settings::writeLocalData('user_count', -1, 43200, true);
 		Settings::writeLocalData('user_count', -1, 864000, false);
 	}
 
@@ -73,13 +74,34 @@ if(Settings::getDBCacheMode() >= 2){
 		$stmt->execute();
 
 		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
-		Settings::writeLocalData('password_count', $amount, 864000, true);
+		Settings::writeLocalData('password_count', $amount, 43200, true);
 		Settings::writeLocalData('password_count', $amount, 864000, false);
 	}catch(PDOException $e) {
-		Settings::writeLocalData('password_count', -1, 864000, true);
+		Settings::writeLocalData('password_count', -1, 43200, true);
 		Settings::writeLocalData('password_count', -1, 864000, false);
 	}
 }
+
+// Generate report
+try{
+	$conn = Settings::createConnection();
+
+	$stmt = $conn->prepare("SELECT created AS date, count(created) AS newcomers from users GROUP BY created");
+	$stmt->execute();
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	Settings::writeLocalData('report', serialize($results), 43200, true);
+	Settings::writeLocalData('report', serialize($results), 864000, false);
+
+	$duration = date("Y-m-d", strtotime('-7 days'));
+
+	$stmt = $conn->prepare("SELECT count(accessed) as amount from users WHERE accessed >= '" . $duration . "'");
+	$stmt->execute();
+	$activeUsers = $stmt->fetch()['amount'];
+	Settings::writeLocalData('active_users', $activeUsers, 43200, true);
+	Settings::writeLocalData('active_users', $activeUsers, 864000, false);
+
+}catch(PDOException $e) {}
+$conn = null;
 
 echo '{"status":"success"}';
 ?>

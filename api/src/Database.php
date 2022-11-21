@@ -93,7 +93,8 @@ class Database{
 			'disable2fa' => Settings::getLimiterDisable2fa(),
 			'addYubiKey' => Settings::getLimiterAddYubiKey(),
 			'removeYubiKey' => Settings::getLimiterRemoveYubiKey(),
-			'upgradeAccount' => Settings::getLimiterUpgradeAccount()
+			'upgradeAccount' => Settings::getLimiterUpgradeAccount(),
+			'getReport' => Settings::getLimiterGetReport()
 		];
 
 		$timer = $timerOptions[$action];
@@ -1042,6 +1043,30 @@ class Database{
 			return Display::json(505);
 		}
 		$conn = null;
+	}
+
+	public static function getReport() : string{
+		$report = Settings::readLocalData('report', true);
+		$activeUsers = Settings::readLocalData('active_users', true);
+		if($report != null && $activeUsers != null){
+			$JSON_OBJ = new StdClass;
+			$JSON_OBJ->activeUsers = $activeUsers;
+			$JSON_OBJ->results = unserialize($report);
+			return Display::json(0, $JSON_OBJ);
+		}
+
+		$report = Settings::readLocalData('report', false);
+		$activeUsers = Settings::readLocalData('active_users', false);
+		if($report != null && $activeUsers != null){
+			Settings::writeLocalData('report', $report, 43200, true);
+			Settings::writeLocalData('active_users', $activeUsers, 43200, true);
+			$JSON_OBJ = new StdClass;
+			$JSON_OBJ->activeUsers = $activeUsers;
+			$JSON_OBJ->results = unserialize($report);
+			return Display::json(0, $JSON_OBJ);
+		}
+
+		return Display::json(31);
 	}
 
 }

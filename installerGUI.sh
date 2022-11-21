@@ -164,6 +164,7 @@ echo "LIMITER_DISABLE_2FA=10" >> .env
 echo "LIMITER_ADD_YUBIKEY=10" >> .env
 echo "LIMITER_REMOVE_YUBIKEY=10" >> .env
 echo "LIMITER_UPGRADE_ACCOUNT=10" >> .env
+echo "LIMITER_GET_REPORT=-1" >> .env
 
 echo "YUBI_CLOUD=https://api.yubico.com/wsapi/2.0/verify" >> .env
 echo "YUBI_ID=67857" >> .env

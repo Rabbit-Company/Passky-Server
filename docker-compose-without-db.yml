@@ -65,5 +65,6 @@ services:
       - LIMITER_ADD_YUBIKEY
       - LIMITER_REMOVE_YUBIKEY
       - LIMITER_UPGRADE_ACCOUNT
+      - LIMITER_GET_REPORT
     ports:
       - 8080:80
