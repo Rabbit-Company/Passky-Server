@@ -290,12 +290,12 @@ class Database{
 		}
 
 		$JSON_OBJ = new StdClass;
-		$JSON_OBJ->cpu = $cpu;
-		$JSON_OBJ->cores = Settings::getCores();
-		$JSON_OBJ->memoryUsed = $memoryUsed;
-		$JSON_OBJ->memoryTotal = $memoryTotal;
-		$JSON_OBJ->diskUsed = $diskUsed;
-		$JSON_OBJ->diskTotal = $diskTotal;
+		$JSON_OBJ->cpu = floatval($cpu);
+		$JSON_OBJ->cores = intval(Settings::getCores());
+		$JSON_OBJ->memoryUsed = intval($memoryUsed);
+		$JSON_OBJ->memoryTotal = intval($memoryTotal);
+		$JSON_OBJ->diskUsed = intval($diskUsed);
+		$JSON_OBJ->diskTotal = intval($diskTotal);
 		return Display::json(0, $JSON_OBJ);
 	}
 
@@ -1050,7 +1050,7 @@ class Database{
 		$activeUsers = Settings::readLocalData('active_users', true);
 		if($report != null && $activeUsers != null){
 			$JSON_OBJ = new StdClass;
-			$JSON_OBJ->activeUsers = $activeUsers;
+			$JSON_OBJ->activeUsers = intval($activeUsers);
 			$JSON_OBJ->results = unserialize($report);
 			return Display::json(0, $JSON_OBJ);
 		}
@@ -1061,7 +1061,7 @@ class Database{
 			Settings::writeLocalData('report', $report, 43200, true);
 			Settings::writeLocalData('active_users', $activeUsers, 43200, true);
 			$JSON_OBJ = new StdClass;
-			$JSON_OBJ->activeUsers = $activeUsers;
+			$JSON_OBJ->activeUsers = intval($activeUsers);
 			$JSON_OBJ->results = unserialize($report);
 			return Display::json(0, $JSON_OBJ);
 		}
