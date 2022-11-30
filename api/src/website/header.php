@@ -2,11 +2,11 @@
 
 function displayHeader($location){
 
-  $active = "mainMenuLinkSelected inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium";
-  $inactive = "mainMenuLink border-transparent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium";
+  $active = 'mainMenuLinkSelected inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium';
+  $inactive = 'mainMenuLink border-transparent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium';
 
-  $activeMobile = "mainMenuMobileLinkSelected block pl-3 pr-4 py-2 border-l-4 text-base font-medium";
-  $inactiveMobile = "mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium";
+  $activeMobile = 'mainMenuMobileLinkSelected block pl-3 pr-4 py-2 border-l-4 text-base font-medium';
+  $inactiveMobile = 'mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium';
 
   ?>
   <!DOCTYPE html>
@@ -36,17 +36,17 @@ function displayHeader($location){
                 <img class="hidden lg:block h-8 w-auto" src="./website/images/logo.png" alt="Passky">
               </div>
               <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
-                <a id="home-link" href="./website/actions/changePage.php?page=home" class="<?= ($location == 0) ? $active : $inactive ?>">Home</a>
-                <a id="server-link" href="./website/actions/changePage.php?page=server" class="<?= ($location == 1) ? $active : $inactive ?>">Server</a>
+                <a id="home-link" href="./website/actions/changePage.php?page=home" class="<?= ($location === 0) ? $active : $inactive ?>">Home</a>
+                <a id="server-link" href="./website/actions/changePage.php?page=server" class="<?= ($location === 1) ? $active : $inactive ?>">Server</a>
                 <?php if(isset($_SESSION['username']) && isset($_SESSION['token'])){ ?>
-                  <a id="accounts-link" href="./website/actions/changePage.php?page=accounts" class="<?= ($location == 2) ? $active : $inactive ?>">Accounts</a>
-									<a id="licenses-link" href="./website/actions/changePage.php?page=licenses" class="<?= ($location == 5) ? $active : $inactive ?>">Licenses</a>
-                  <a id="health-link" href="./website/actions/changePage.php?page=health" class="<?= ($location == 3) ? $active : $inactive ?>">Health</a>
-                  <a id="settings-link" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 4) ? $active : $inactive ?>">Settings</a>
+                  <a id="accounts-link" href="./website/actions/changePage.php?page=accounts" class="<?= ($location === 2) ? $active : $inactive ?>">Accounts</a>
+									<a id="licenses-link" href="./website/actions/changePage.php?page=licenses" class="<?= ($location === 5) ? $active : $inactive ?>">Licenses</a>
+                  <a id="health-link" href="./website/actions/changePage.php?page=health" class="<?= ($location === 3) ? $active : $inactive ?>">Health</a>
+                  <a id="settings-link" href="./website/actions/changePage.php?page=settings" class="<?= ($location === 4) ? $active : $inactive ?>">Settings</a>
                 <?php } ?>
               </div>
             </div>
-            <?php if($location == 2 || $location == 5){ ?>
+            <?php if($location === 2 || $location === 5){ ?>
               <div class="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-start">
                 <div class="flex-shrink-0">
                   <span class="relative z-0 inline-flex shadow-sm rounded-md">
@@ -77,13 +77,13 @@ function displayHeader($location){
         </div>
         <div class="lg:hidden">
           <div id="mobile-menu" class="hidden pt-2 pb-3 space-y-1">
-            <a id="home-link-mobile" href="./website/actions/changePage.php?page=home" class="<?= ($location == 0) ? $activeMobile : $inactiveMobile ?>">Home</a>
-            <a id="server-link-mobile" href="./website/actions/changePage.php?page=server" class="<?= ($location == 1) ? $activeMobile : $inactiveMobile ?>">Server</a>
+            <a id="home-link-mobile" href="./website/actions/changePage.php?page=home" class="<?= ($location === 0) ? $activeMobile : $inactiveMobile ?>">Home</a>
+            <a id="server-link-mobile" href="./website/actions/changePage.php?page=server" class="<?= ($location === 1) ? $activeMobile : $inactiveMobile ?>">Server</a>
             <?php if(isset($_SESSION['username']) && isset($_SESSION['token'])){ ?>
-              <a id="accounts-link-mobile" href="./website/actions/changePage.php?page=accounts" class="<?= ($location == 2) ? $activeMobile : $inactiveMobile ?>">Accounts</a>
-							<a id="licenses-link-mobile" href="./website/actions/changePage.php?page=licenses" class="<?= ($location == 5) ? $activeMobile : $inactiveMobile ?>">Licenses</a>
-              <a id="health-link-mobile" href="./website/actions/changePage.php?page=health" class="<?= ($location == 3) ? $activeMobile : $inactiveMobile ?>">Health</a>
-              <a id="settings-link-mobile" href="./website/actions/changePage.php?page=settings" class="<?= ($location == 4) ? $activeMobile : $inactiveMobile ?>">Settings</a>
+              <a id="accounts-link-mobile" href="./website/actions/changePage.php?page=accounts" class="<?= ($location === 2) ? $activeMobile : $inactiveMobile ?>">Accounts</a>
+							<a id="licenses-link-mobile" href="./website/actions/changePage.php?page=licenses" class="<?= ($location === 5) ? $activeMobile : $inactiveMobile ?>">Licenses</a>
+              <a id="health-link-mobile" href="./website/actions/changePage.php?page=health" class="<?= ($location === 3) ? $activeMobile : $inactiveMobile ?>">Health</a>
+              <a id="settings-link-mobile" href="./website/actions/changePage.php?page=settings" class="<?= ($location === 4) ? $activeMobile : $inactiveMobile ?>">Settings</a>
               <a id="signout-link-mobile" href="./website/actions/logout.php" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Sign out</a>
             <?php }else{ ?>
               <a id="login-link-mobile" href="./website/actions/changePage.php?page=login" class="mainMenuMobileLink border-transparent block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Log in</a>

@@ -1,30 +1,30 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; require-trusted-types-for 'script'; form-action 'none'");
-header("X-Content-Type-Options: nosniff");
-header("X-XSS-Protection: 1; mode=block");
-header("X-Frame-Options: DENY");
-header("Referrer-Policy: no-referrer");
-header("Permissions-Policy: interest-cohort=()");
+header('X-Content-Type-Options: nosniff');
+header('X-XSS-Protection: 1; mode=block');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: no-referrer');
+header('Permissions-Policy: interest-cohort=()');
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Max-Age: 86400");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Max-Age: 86400');
 
-require_once "Settings.php";
+require_once 'Settings.php';
 
 $today = date('Y-m-d');
 
 $executed = Settings::readLocalData('cron_executed', true);
-if($executed == null){
+if($executed === null){
 	$executed = Settings::readLocalData('cron_executed', false);
-	if($executed != null){
+	if($executed !== null){
 		$ttl = Settings::ttlLocalData('cron_executed', false);
 		if($ttl >= 5) Settings::writeLocalData('cron_executed', $executed, $ttl, true);
 	}
 }
 
-if($today == $executed){
+if($today === $executed){
 	echo '{"status":"success"}';
 	return;
 }
@@ -38,7 +38,7 @@ $maxPasswords = Settings::getMaxPasswords();
 try{
 	$conn = Settings::createConnection();
 
-	$stmt = $conn->prepare("UPDATE users SET max_passwords = :max_passwords, premium_expires = null WHERE CURDATE() > premium_expires");
+	$stmt = $conn->prepare('UPDATE users SET max_passwords = :max_passwords, premium_expires = null WHERE CURDATE() > premium_expires');
 	$stmt->bindParam(':max_passwords', $maxPasswords, PDO::PARAM_INT);
 	$stmt->execute();
 }catch(PDOException) {}
@@ -48,7 +48,7 @@ $conn = null;
 if(Settings::getDBCacheMode() >= 2){
 	$queryUsers = "SELECT COUNT(*) AS 'amount' FROM users";
 	$queryPasswords = "SELECT COUNT(*) AS 'amount' FROM passwords";
-	if(Settings::getDBCacheMode() == 3){
+	if(Settings::getDBCacheMode() === 3){
 		$queryUsers = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
 		$queryPasswords = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
 	}
@@ -59,7 +59,7 @@ if(Settings::getDBCacheMode() >= 2){
 		$stmt = $conn->prepare($queryUsers);
 		$stmt->execute();
 
-		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+		$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
 		Settings::writeLocalData('user_count', $amount, 43200, true);
 		Settings::writeLocalData('user_count', $amount, 864000, false);
 	}catch(PDOException $e) {
@@ -73,7 +73,7 @@ if(Settings::getDBCacheMode() >= 2){
 		$stmt = $conn->prepare($queryPasswords);
 		$stmt->execute();
 
-		$amount = ($stmt->rowCount() == 1) ? $stmt->fetch()['amount'] : -1;
+		$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
 		Settings::writeLocalData('password_count', $amount, 43200, true);
 		Settings::writeLocalData('password_count', $amount, 864000, false);
 	}catch(PDOException $e) {
@@ -86,13 +86,13 @@ if(Settings::getDBCacheMode() >= 2){
 try{
 	$conn = Settings::createConnection();
 
-	$stmt = $conn->prepare("SELECT created AS date, count(created) AS newcomers from users GROUP BY created");
+	$stmt = $conn->prepare('SELECT created AS date, count(created) AS newcomers from users GROUP BY created');
 	$stmt->execute();
 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	Settings::writeLocalData('report', serialize($results), 43200, true);
 	Settings::writeLocalData('report', serialize($results), 864000, false);
 
-	$duration = date("Y-m-d", strtotime('-7 days'));
+	$duration = date('Y-m-d', strtotime('-7 days'));
 
 	$stmt = $conn->prepare("SELECT count(accessed) as amount from users WHERE accessed >= '" . $duration . "'");
 	$stmt->execute();

@@ -1,51 +1,51 @@
 <?php
 if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
-  $_SESSION['page'] = "home";
-	header("Location: ../..");
+  $_SESSION['page'] = 'home';
+	header('Location: ../..');
 	exit();
 }
 
-require_once "Settings.php";
+require_once 'Settings.php';
 
-if (isset($_GET["page"]) && is_numeric($_GET["page"]) && $_GET["page"] >= 1) {
-	$page = $_GET["page"];
+if (isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] >= 1) {
+	$page = $_GET['page'];
 }else{
 	$page = 1;
 }
 
-if (!isset($_SESSION["limit"]) || !is_numeric($_SESSION["limit"]) || $_SESSION["limit"] < 1) {
-	$_SESSION["limit"] = 25;
+if (!isset($_SESSION['limit']) || !is_numeric($_SESSION['limit']) || $_SESSION['limit'] < 1) {
+	$_SESSION['limit'] = 25;
 }
 
-$query = "SELECT * FROM licenses LIMIT :startFrom,:limit";
+$query = 'SELECT * FROM licenses LIMIT :startFrom,:limit';
 
-if (isset($_GET["search"]) && strlen($_GET["search"]) >= 1) {
-	$search = $_GET["search"] . "%";
-	$query = "SELECT * FROM licenses WHERE license LIKE :search OR linked LIKE :search";
+if (isset($_GET['search']) && strlen($_GET['search']) >= 1) {
+	$search = $_GET['search'] . '%';
+	$query = 'SELECT * FROM licenses WHERE license LIKE :search OR linked LIKE :search';
 }
 
-$startFrom = ($page - 1) * $_SESSION["limit"];
+$startFrom = ($page - 1) * $_SESSION['limit'];
 
 try{
 	$conn = Settings::createConnection();
 
 	$totalLicenses = Settings::readLocalData('admin_licenses_count', true);
-	if($totalLicenses == null){
-		$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses;");
+	if($totalLicenses === null){
+		$stmt2 = $conn->prepare('SELECT COUNT(*) as amount FROM licenses;');
 		$stmt2->execute();
 		$totalLicenses = $stmt2->fetch()['amount'];
 		Settings::writeLocalData('admin_licenses_count', $totalLicenses, 300, true);
 	}
 
-	$totalPages = ceil($totalLicenses / $_SESSION["limit"]);
-	if($totalPages != 0 && $page > $totalPages){
-		header("Location: ../..?page=" . $totalPages);
+	$totalPages = ceil($totalLicenses / $_SESSION['limit']);
+	if($totalPages !== 0 && $page > $totalPages){
+		header('Location: ../..?page=' . $totalPages);
 		exit();
 	}
 
 	$totalUnusedLicenses = Settings::readLocalData('admin_licenses_unused_count', true);
-	if($totalUnusedLicenses == null){
-		$stmt3 = $conn->prepare("SELECT COUNT(*) as amount FROM licenses WHERE linked IS NULL;");
+	if($totalUnusedLicenses === null){
+		$stmt3 = $conn->prepare('SELECT COUNT(*) as amount FROM licenses WHERE linked IS NULL;');
 		$stmt3->execute();
 		$totalUnusedLicenses = $stmt3->fetch()['amount'];
 		Settings::writeLocalData('admin_licenses_unused_count', $totalUnusedLicenses, 300, true);
@@ -59,9 +59,9 @@ try{
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}else{
 		$data = Settings::readLocalData('admin_licenses_page_' . $page, true);
-		if($data == null){
+		if($data === null){
 			$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
-			$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
+			$stmt->bindParam(':limit', $_SESSION['limit'], PDO::PARAM_INT);
 			$stmt->execute();
 
 			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -133,7 +133,7 @@ displayHeader(5);
 													</svg>
 												</div>
 												<div class="ml-4">
-													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['linked'] != null) ? $row['linked'] : "Unused" ?></div>
+													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['linked'] !== null) ? $row['linked'] : 'Unused' ?></div>
 													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['license'] ?></div>
 												</div>
 											</div>
@@ -153,7 +153,7 @@ displayHeader(5);
 												</div>
 												<div class="ml-4">
 													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Duration</div>
-													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['duration'] . " days" ?></div>
+													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['duration'] . ' days' ?></div>
 												</div>
 											</div>
 										</td>
@@ -168,7 +168,7 @@ displayHeader(5);
 												</div>
 												<div class="ml-4">
 													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['created'] ?></div>
-													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['used'] != null) ? $row['used'] : "Unused" ?></div>
+													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= ($row['used'] !== null) ? $row['used'] : 'Unused' ?></div>
 												</div>
 											</div>
 										</td>
@@ -207,17 +207,17 @@ displayHeader(5);
 											</a>
 										</td>
 										<script>
-											document.getElementById("show-info-<?= $row['license'] ?>").addEventListener("click", () => {
-												changeDialog(1, "<?= $row['license'] ?>");
+											document.getElementById('show-info-<?= $row['license'] ?>').addEventListener('click', () => {
+												changeDialog(1, '<?= $row['license'] ?>');
 												show('dialog');
 											});
-											document.getElementById("copy-license-<?= $row['license'] ?>").addEventListener("click", () => {
-												copyToClipboard("<?= $row['license'] ?>");
+											document.getElementById('copy-license-<?= $row['license'] ?>').addEventListener('click', () => {
+												copyToClipboard('<?= $row['license'] ?>');
 												changeDialog(2);
 												show('dialog');
 											});
-											document.getElementById("delete-license-<?= $row['license'] ?>").addEventListener("click", () => {
-												changeDialog(3, "<?= $row['license'] ?>");
+											document.getElementById('delete-license-<?= $row['license'] ?>').addEventListener('click', () => {
+												changeDialog(3, '<?= $row['license'] ?>');
 												show('dialog')
 											});
 										</script>
@@ -233,7 +233,7 @@ displayHeader(5);
 										Showing
 										<span class="font-medium"><?= $startFrom + 1 ?></span>
 										to
-										<span class="font-medium"><?= ($startFrom + $_SESSION["limit"] > $totalLicenses) ? $totalLicenses : $startFrom + $_SESSION["limit"] ?></span>
+										<span class="font-medium"><?= ($startFrom + $_SESSION['limit'] > $totalLicenses) ? $totalLicenses : $startFrom + $_SESSION['limit'] ?></span>
 										of
 										<span class="font-medium"><?= $totalLicenses ?></span>
 										licenses
@@ -242,7 +242,7 @@ displayHeader(5);
 								<?php if($totalPages > 1){ ?>
 								<div>
 									<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-										<?php if($page != 1){ ?>
+										<?php if($page !== 1){ ?>
 											<a href="?page=<?= $page - 1 ?>" class="relative inline-flex items-center rounded-l-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
 												<span class="sr-only">Previous</span>
 												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -257,7 +257,7 @@ displayHeader(5);
 											<span class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor"><?= $page ?></span>
 										<?php } ?>
 
-										<?php if($page != $totalPages){ ?>
+										<?php if($page !== $totalPages){ ?>
 											<a href="?page=<?= $page + 1 ?>" class="relative inline-flex items-center rounded-r-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
 												<span class="sr-only">Next</span>
 												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

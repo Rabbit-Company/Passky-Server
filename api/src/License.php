@@ -1,6 +1,6 @@
 <?php
 
-require_once "Settings.php";
+require_once 'Settings.php';
 
 class License {
 
@@ -15,11 +15,11 @@ class License {
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare("SELECT * FROM licenses WHERE license = :license");
+			$stmt = $conn->prepare('SELECT * FROM licenses WHERE license = :license');
 			$stmt->bindParam(':license', $license, PDO::PARAM_STR);
 			$stmt->execute();
 
-			if($stmt->rowCount() == 1){
+			if($stmt->rowCount() === 1){
 				$result = $stmt->fetch();
 
 				$this->license = $result['license'];

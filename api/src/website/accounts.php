@@ -1,50 +1,50 @@
 <?php
 if(!isset($_SESSION['username']) || !isset($_SESSION['token'])){
-	$_SESSION['page'] = "home";
-	header("Location: ../..");
+	$_SESSION['page'] = 'home';
+	header('Location: ../..');
 	exit();
 }
 
-require_once "Settings.php";
+require_once 'Settings.php';
 
-if (isset($_GET["page"]) && is_numeric($_GET["page"]) && $_GET["page"] >= 1) {
-	$page = $_GET["page"];
+if (isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] >= 1) {
+	$page = $_GET['page'];
 }else{
 	$page = 1;
 }
 
-if (!isset($_SESSION["limit"]) || !is_numeric($_SESSION["limit"]) || $_SESSION["limit"] < 1) {
-	$_SESSION["limit"] = 25;
+if (!isset($_SESSION['limit']) || !is_numeric($_SESSION['limit']) || $_SESSION['limit'] < 1) {
+	$_SESSION['limit'] = 25;
 }
 
-$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords, u.premium_expires as premium_expires from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT :startFrom,:limit;";
+$query = 'SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords, u.premium_expires as premium_expires from users u LEFT JOIN passwords p ON u.username = p.owner GROUP BY u.username LIMIT :startFrom,:limit;';
 
-if (isset($_GET["search"]) && strlen($_GET["search"]) >= 1) {
-	$search = $_GET["search"] . "%";
-	$query = "SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords, u.premium_expires as premium_expires from users u LEFT JOIN passwords p ON u.username = p.owner WHERE u.username LIKE :search OR u.email LIKE :search GROUP BY u.username;";
+if (isset($_GET['search']) && strlen($_GET['search']) >= 1) {
+	$search = $_GET['search'] . '%';
+	$query = 'SELECT u.user_id as user_id, u.username as username, u.email as email, u.backup_codes as backup_codes, u.created as created, u.accessed as accessed, COUNT(p.password_id) as passwords, u.max_passwords as max_passwords, u.premium_expires as premium_expires from users u LEFT JOIN passwords p ON u.username = p.owner WHERE u.username LIKE :search OR u.email LIKE :search GROUP BY u.username;';
 }
 
-$startFrom = ($page - 1) * $_SESSION["limit"];
+$startFrom = ($page - 1) * $_SESSION['limit'];
 
 try{
 	$conn = Settings::createConnection();
 
 	$totalAccounts = Settings::readLocalData('admin_accounts_users_count', true);
-	if($totalAccounts == null){
-		$stmt2 = $conn->prepare("SELECT COUNT(*) as amount FROM users;");
+	if($totalAccounts === null){
+		$stmt2 = $conn->prepare('SELECT COUNT(*) as amount FROM users;');
 		$stmt2->execute();
 		$totalAccounts = $stmt2->fetch()['amount'];
 		Settings::writeLocalData('admin_accounts_users_count', $totalAccounts, 300, true);
 	}
 
-	$totalPages = ceil($totalAccounts / $_SESSION["limit"]);
-	if($totalPages != 0 && $page > $totalPages){
-		header("Location: ../..?page=" . $totalPages);
+	$totalPages = ceil($totalAccounts / $_SESSION['limit']);
+	if($totalPages !== 0 && $page > $totalPages){
+		header('Location: ../..?page=' . $totalPages);
 		exit();
 	}
 
 	$totalPasswords = Settings::readLocalData('admin_accounts_passwords_count', true);
-	if($totalPasswords == null){
+	if($totalPasswords === null){
 		$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
 		$stmt3->execute();
 		$totalPasswords = $stmt3->fetch()['amount'];
@@ -52,8 +52,8 @@ try{
 	}
 
 	$totalPremium = Settings::readLocalData('admin_accounts_premium_count', true);
-	if($totalPremium == null){
-		$stmt4 = $conn->prepare("SELECT COUNT(*) as amount FROM users WHERE premium_expires IS NOT NULL;");
+	if($totalPremium === null){
+		$stmt4 = $conn->prepare('SELECT COUNT(*) as amount FROM users WHERE premium_expires IS NOT NULL;');
 		$stmt4->execute();
 		$totalPremium = $stmt4->fetch()['amount'];
 		Settings::writeLocalData('admin_accounts_premium_count', $totalPremium, 300, true);
@@ -67,9 +67,9 @@ try{
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}else{
 		$data = Settings::readLocalData('admin_accounts_page_' . $page, true);
-		if($data == null){
+		if($data === null){
 			$stmt->bindParam(':startFrom', $startFrom, PDO::PARAM_INT);
-			$stmt->bindParam(':limit', $_SESSION["limit"], PDO::PARAM_INT);
+			$stmt->bindParam(':limit', $_SESSION['limit'], PDO::PARAM_INT);
 			$stmt->execute();
 
 			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -113,7 +113,7 @@ displayHeader(2);
 							<?php
 								foreach($data as $row){
 									$maxPasswords = $row['max_passwords'];
-									if($maxPasswords < 0) $maxPasswords = "∞";
+									if($maxPasswords < 0) $maxPasswords = '∞';
 									?>
 									<tr class="passwordsBorderColor">
 										<td class="px-6 py-4 whitespace-nowrap">
@@ -126,7 +126,7 @@ displayHeader(2);
 													</svg>
 												</div>
 												<div class="ml-4">
-													<div class="<?= ($row['premium_expires'] == null) ? "tertiaryColor" : "primaryColor font-bold" ?> text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['username'] ?></div>
+													<div class="<?= ($row['premium_expires'] === null) ? "tertiaryColor" : "primaryColor font-bold" ?> text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['username'] ?></div>
 													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['email'] ?></div>
 												</div>
 											</div>
@@ -144,7 +144,7 @@ displayHeader(2);
 												</div>
 												<div class="ml-4">
 													<div class="tertiaryColor text-sm font-medium max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis">Passwords</div>
-													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['passwords'] . " / " . $maxPasswords ?></div>
+													<div class="secondaryColor text-sm max-w-[16rem] sm:max-w-[21rem] md:max-w-[15rem] lg:max-w-[15rem] xl:max-w-[30rem] 2xl:max-w-[30rem] overflow-hidden text-ellipsis"><?= $row['passwords'] . ' / ' . $maxPasswords ?></div>
 												</div>
 											</div>
 										</td>
@@ -197,16 +197,16 @@ displayHeader(2);
 											</a>
 										</td>
 										<script>
-											document.getElementById("show-info-<?= $row['username'] ?>").addEventListener("click", () => {
-												changeDialog(1, "<?= $row['username'] ?>");
+											document.getElementById('show-info-<?= $row['username'] ?>').addEventListener('click', () => {
+												changeDialog(1, '<?= $row['username'] ?>');
 												show('dialog');
 											});
-											document.getElementById("edit-account-<?= $row['username'] ?>").addEventListener("click", () => {
-												changeDialog(2, "<?= $row['username'] ?>");
+											document.getElementById('edit-account-<?= $row['username'] ?>').addEventListener('click', () => {
+												changeDialog(2, '<?= $row['username'] ?>');
 												show('dialog');
 											});
-											document.getElementById("delete-account-<?= $row['username'] ?>").addEventListener("click", () => {
-												changeDialog(3, "<?= $row['username'] ?>");
+											document.getElementById('delete-account-<?= $row['username'] ?>').addEventListener('click', () => {
+												changeDialog(3, '<?= $row['username'] ?>');
 												show('dialog')
 											});
 										</script>
@@ -222,7 +222,7 @@ displayHeader(2);
 										Showing
 										<span class="font-medium"><?= $startFrom + 1 ?></span>
 										to
-										<span class="font-medium"><?= ($startFrom + $_SESSION["limit"] > $totalAccounts) ? $totalAccounts : $startFrom + $_SESSION["limit"] ?></span>
+										<span class="font-medium"><?= ($startFrom + $_SESSION['limit'] > $totalAccounts) ? $totalAccounts : $startFrom + $_SESSION['limit'] ?></span>
 										of
 										<span class="font-medium"><?= $totalAccounts ?></span>
 										accounts
@@ -231,7 +231,7 @@ displayHeader(2);
 								<?php if($totalPages > 1){ ?>
 								<div>
 									<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-										<?php if($page != 1){ ?>
+										<?php if($page !== 1){ ?>
 											<a href="?page=<?= $page - 1 ?>" class="relative inline-flex items-center rounded-l-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
 												<span class="sr-only">Previous</span>
 												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -246,7 +246,7 @@ displayHeader(2);
 											<span class="relative inline-flex items-center border primaryBorderColor tertiaryBackgroundColor px-4 py-2 text-sm font-medium secondaryColor"><?= $page ?></span>
 										<?php } ?>
 
-										<?php if($page != $totalPages){ ?>
+										<?php if($page !== $totalPages){ ?>
 											<a href="?page=<?= $page + 1 ?>" class="relative inline-flex items-center rounded-r-md border primaryBorderColor tertiaryBackgroundColor px-2 py-2 text-sm font-medium secondaryColor focus:z-20">
 												<span class="sr-only">Next</span>
 												<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

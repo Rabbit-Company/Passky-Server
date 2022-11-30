@@ -1,6 +1,6 @@
 <?php
 
-require_once "Settings.php";
+require_once 'Settings.php';
 
 class User {
 
@@ -20,7 +20,7 @@ class User {
 	public function fromUsername($username){
 
 		$data = Settings::readLocalData($username . '_data', true);
-		if($data != null){
+		if($data !== null){
 			$data = unserialize($data);
 
 			$this->user_id = $data['user_id'];
@@ -41,11 +41,11 @@ class User {
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
+			$stmt = $conn->prepare('SELECT * FROM users WHERE username = :username');
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			if($stmt->rowCount() == 1){
+			if($stmt->rowCount() === 1){
 				$result = $stmt->fetch();
 				Settings::writeLocalData($username . '_data', serialize($result), 60, true);
 
