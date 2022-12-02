@@ -121,7 +121,7 @@ class Database{
 	}
 
 	public static function is2FaValid(string $username, ?string $otp, ?string $secret, ?string $otps) : int {
-		if($secret === null && $otps === null) return 1;
+		if(($secret === null || $secret === '') && ($otps === null || $otps === '')) return 1;
 		if($otp === null) return 0;
 
 		if(strlen($otp) === 6){
