@@ -8,7 +8,7 @@ class Errors{
 		'2' => 'Password is incorrect!',
 		'3' => 'Something went wrong while inserting data to the database!',
 		'4' => 'Username is already registered!',
-		'5' => 'Password must be encrypted with sha512 algorithm!',
+		'5' => 'Password must be encrypted with a hashing function that output 128 character long string!',
 		'6' => 'Email is invalid!',
 		'8' => 'You do not have any saved password.',
 		'10' => 'User does not own this password!',
