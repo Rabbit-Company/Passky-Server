@@ -37,7 +37,7 @@ try{
 		Settings::writeLocalData('admin_accounts_users_count', $totalAccounts, 300, true);
 	}
 
-	$totalPages = ceil($totalAccounts / $_SESSION['limit']);
+	$totalPages = (int) ceil($totalAccounts / $_SESSION['limit']);
 	if($totalPages !== 0 && $page > $totalPages){
 		header('Location: ../..?page=' . $totalPages);
 		exit();

@@ -37,7 +37,7 @@ try{
 		Settings::writeLocalData('admin_licenses_count', $totalLicenses, 300, true);
 	}
 
-	$totalPages = ceil($totalLicenses / $_SESSION['limit']);
+	$totalPages = (int) ceil($totalLicenses / $_SESSION['limit']);
 	if($totalPages !== 0 && $page > $totalPages){
 		header('Location: ../..?page=' . $totalPages);
 		exit();
