@@ -1,0 +1,69 @@
+version: '3'
+services:
+  passky-api:
+    container_name: passky-api
+    build:
+      context: ./api
+    restart: always
+    environment:
+      #
+      # Change environment variables in .env file
+      #
+      # Server
+      - SERVER_LOCATION
+      - SERVER_CORES
+      # Admin Panel
+      - ADMIN_USERNAME
+      - ADMIN_PASSWORD
+      # Database
+      - MYSQL_HOST
+      - MYSQL_PORT
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_SSL
+      - MYSQL_SSL_CA
+      - MYSQL_CACHE_MODE
+      # Redis
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_PASSWORD
+      - REDIS_LOCAL_HOST
+      - REDIS_LOCAL_PORT
+      - REDIS_LOCAL_PASSWORD
+      # Mail
+      - MAIL_ENABLED
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
+      - MAIL_USE_TLS
+      # Account
+      - ACCOUNT_MAX
+      - ACCOUNT_MAX_PASSWORDS
+      - ACCOUNT_PREMIUM
+      # YUBICO
+      - YUBI_CLOUD
+      - YUBI_ID
+      # Limiter
+      - LIMITER_ENABLED
+      - LIMITER_GET_INFO
+      - LIMITER_GET_STATS
+      - LIMITER_GET_TOKEN
+      - LIMITER_GET_PASSWORDS
+      - LIMITER_SAVE_PASSWORD
+      - LIMITER_EDIT_PASSWORD
+      - LIMITER_DELETE_PASSWORD
+      - LIMITER_DELETE_PASSWORDS
+      - LIMITER_CREATE_ACCOUNT
+      - LIMITER_DELETE_ACCOUNT
+      - LIMITER_IMPORT_PASSWORDS
+      - LIMITER_FORGOT_USERNAME
+      - LIMITER_ENABLE_2FA
+      - LIMITER_DISABLE_2FA
+      - LIMITER_ADD_YUBIKEY
+      - LIMITER_REMOVE_YUBIKEY
+      - LIMITER_UPGRADE_ACCOUNT
+      - LIMITER_GET_REPORT
+    ports:
+      - 8080:80

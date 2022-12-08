@@ -1,0 +1,17 @@
+#!/command/with-contenv bash
+
+service cron start >> /dev/null 2>&1
+
+RESPONSE=$(service cron status)
+
+if [[ $RESPONSE == " * cron is running" ]]
+then
+  echo " ⏰ Job Scheduler has started successfully."
+else
+  echo " ❌ Error connecting to Job Scheduler."
+fi
+
+echo "
+--------------------------------------------
+
+"

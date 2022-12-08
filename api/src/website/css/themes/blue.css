@@ -1,217 +1,221 @@
 /*
 
-    Blue theme
+	Blue theme
 
 */
 
 /*
-    Text colors
+	Text colors
 */
 
-.primaryColor{
-    color: #4F46E5 !important;
+.primaryColor {
+	color: #4F46E5 !important;
 }
 
-.secondaryColor{
-    color: #6B7280 !important;
+.secondaryColor {
+	color: #6B7280 !important;
 }
 
-.tertiaryColor{
-    color: #DFE5EB !important;
+.tertiaryColor {
+	color: #DFE5EB !important;
 }
 
 /*
-    Background colors
+	Background colors
 */
 
-.primaryBackgroundColor{
-    background-color: #192741 !important;
+.primaryBackgroundColor {
+	background-color: #192741 !important;
 }
 
-.secondaryBackgroundColor{
-    background-color: #24375c !important;
+.secondaryBackgroundColor {
+	background-color: #24375c !important;
 }
 
-.tertiaryBackgroundColor{
-    background-color: #2c436d !important;
+.tertiaryBackgroundColor {
+	background-color: #2c436d !important;
 }
 
-.quaternaryBackgroundColor{
-    background-color: #4F46E5 !important;
+.quaternaryBackgroundColor {
+	background-color: #4F46E5 !important;
 }
 
 /*
-    Button colors
+	Button colors
 */
 
-.primaryButton{
-    background-color: #4F46E5 !important;
-    color: #DFE5EB !important;
+.primaryButton {
+	background-color: #4F46E5 !important;
+	color: #DFE5EB !important;
 }
 
-.primaryButton:hover{
-    background-color: #4338CA !important;
+.primaryButton:hover {
+	background-color: #4338CA !important;
 }
 
-.successButton{
-    background-color: #059669 !important;
-    color: #DFE5EB !important;
+.successButton {
+	background-color: #059669 !important;
+	color: #DFE5EB !important;
 }
 
-.successButton:hover{
-    background-color: #047857 !important;
+.successButton:hover {
+	background-color: #047857 !important;
 }
 
-.dangerButton{
-    background-color: #DC2626 !important;
-    color: #DFE5EB !important;
+.dangerButton {
+	background-color: #DC2626 !important;
+	color: #DFE5EB !important;
 }
 
-.dangerButton:hover{
-    background-color: #B91C1C !important;
+.dangerButton:hover {
+	background-color: #B91C1C !important;
 }
 
-.cancelButton{
-    background-color: #2c436d !important;
-    border-color: #24375c !important;
-    color: #DFE5EB !important;
+.cancelButton {
+	background-color: #2c436d !important;
+	border-color: #24375c !important;
+	color: #DFE5EB !important;
 }
 
-.cancelButton:hover{
-    background-color: #2c436d !important;
+.cancelButton:hover {
+	background-color: #2c436d !important;
 }
 
 /*
-    Elements
+	Elements
 */
 
-input{
-    background-color: #2c436d !important;
-    color: #DFE5EB !important;
-    border-color: #152137 !important;
+input {
+	background-color: #2c436d !important;
+	color: #DFE5EB !important;
+	border-color: #152137 !important;
 }
 
-textarea{
-    background-color: #2c436d !important;
-    color: #DFE5EB !important;
-    border-color: #152137 !important;
+textarea {
+	background-color: #2c436d !important;
+	color: #DFE5EB !important;
+	border-color: #152137 !important;
 }
 
-svg{
-    stroke: #4062a5 !important;
+svg {
+	stroke: #4062a5 !important;
+}
+
+input[type="checkbox"] {
+	accent-color: #4F46E5;
 }
 
 /*
-    Main menu
+	Main menu
 */
 
-.mainMenuLink{
-    background-color: #24375c !important;
-    color: #6B7280 !important;
+.mainMenuLink {
+	background-color: #24375c !important;
+	color: #6B7280 !important;
 }
 
-.mainMenuLink:hover{
-    color: #DFE5EB !important;
-    border-color: #D1D5DB !important;
+.mainMenuLink:hover {
+	color: #DFE5EB !important;
+	border-color: #D1D5DB !important;
 }
 
-.mainMenuLinkSelected{
-    color: #DFE5EB !important;
-    border-color: #6366F1 !important;
+.mainMenuLinkSelected {
+	color: #DFE5EB !important;
+	border-color: #6366F1 !important;
 }
 
-.mainMenuMobileLink{
-    background-color: #24375c !important;
-    color: #DFE5EB !important;
+.mainMenuMobileLink {
+	background-color: #24375c !important;
+	color: #DFE5EB !important;
 }
 
-.mainMenuMobileLink:hover{
-    background-color: #2c436d !important;
-    border-color: #6B7280 !important;
+.mainMenuMobileLink:hover {
+	background-color: #2c436d !important;
+	border-color: #6B7280 !important;
 }
 
-.mainMenuMobileLinkSelected{
-    background-color: #2c436d !important;
-    border-color: #6366F1 !important;
-    color: #6366F1 !important;
+.mainMenuMobileLinkSelected {
+	background-color: #2c436d !important;
+	border-color: #6366F1 !important;
+	color: #6366F1 !important;
 }
 
-#main-menu-toggle-btn{
-    color: #9CA3AF !important;
+#main-menu-toggle-btn {
+	color: #9CA3AF !important;
 }
 
-#main-menu-toggle-btn:hover{
-    color: #6B7280 !important;
-    background-color: #2c436d !important;
+#main-menu-toggle-btn:hover {
+	color: #6B7280 !important;
+	background-color: #2c436d !important;
 }
 
 /*
-    Border colors
+	Border colors
 */
 
-.primaryBorderColor{
-    border-color: #152137 !important;
+.primaryBorderColor {
+	border-color: #152137 !important;
 }
 
 /*
-    Placeholder colors
+	Placeholder colors
 */
 
-.primaryBorderColor::placeholder{
-    color: #6B7280;
-    opacity: 1;
+.primaryBorderColor::placeholder {
+	color: #6B7280;
+	opacity: 1;
 }
 
-.primaryBorderColor::-ms-input-placeholder { /* Microsoft Edge */
-    color: #6B7280;
-    opacity: 1;
+.primaryBorderColor::-ms-input-placeholder {
+	color: #6B7280;
+	opacity: 1;
 }
 
 /*
-    Stroke colors
+	Stroke colors
 */
 
-.primaryStrokeColor{
-    stroke: #DFE5EB !important;
+.primaryStrokeColor {
+	stroke: #DFE5EB !important;
 }
 
 /*
-    Passwords
+	Passwords
 */
 
-.passwordsBackgroundColor{
-    background-color: #192741 !important;
+.passwordsBackgroundColor {
+	background-color: #192741 !important;
 }
 
-.passwordsBorderColor{
-    border-color: #111827 !important;
+.passwordsBorderColor {
+	border-color: #111827 !important;
 }
 
 /*
-    Import and Export buttons
+	Import and Export buttons
 */
 
-.importExportButtons{
-    color: #b1bfce !important;
-    border-color: #192741 !important;
+.importExportButtons {
+	color: #b1bfce !important;
+	border-color: #192741 !important;
 }
 
-.importExportButtons:hover{
-    color: #91a6ba !important;
+.importExportButtons:hover {
+	color: #91a6ba !important;
 }
 
 /*
-    Scroll bar
+	Scroll bar
 */
 
 ::-webkit-scrollbar-track {
-    background: #24375c;
+	background: #24375c;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #395793;
+	background: #395793;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #4062a5;
+	background: #4062a5;
 }

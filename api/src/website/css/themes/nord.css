@@ -1,0 +1,221 @@
+/*
+
+	Nord theme
+
+*/
+
+/*
+	Text colors
+*/
+
+.primaryColor {
+	color: #88c0d0 !important;
+}
+
+.secondaryColor {
+	color: #6B7280 !important;
+}
+
+.tertiaryColor {
+	color: #FFFFFF !important;
+}
+
+/*
+	Background colors
+*/
+
+.primaryBackgroundColor {
+	background-color: #2e3440 !important;
+}
+
+.secondaryBackgroundColor {
+	background-color: #3b4252 !important;
+}
+
+.tertiaryBackgroundColor {
+	background-color: #434c5e !important;
+}
+
+.quaternaryBackgroundColor {
+	background-color: #88c0d0 !important;
+}
+
+/*
+	Button colors
+*/
+
+.primaryButton {
+	background-color: #88c0d0 !important;
+	color: #FFFFFF !important;
+}
+
+.primaryButton:hover {
+	background-color: #7fbbcc !important;
+}
+
+.successButton {
+	background-color: #a2bd8b !important;
+	color: #FFFFFF !important;
+}
+
+.successButton:hover {
+	background-color: #97b57d !important;
+}
+
+.dangerButton {
+	background-color: #75647a !important;
+	color: #FFFFFF !important;
+}
+
+.dangerButton:hover {
+	background-color: #6b5c70 !important;
+}
+
+.cancelButton {
+	background-color: #434c5e !important;
+	border-color: #3b4252 !important;
+	color: #FFFFFF !important;
+}
+
+.cancelButton:hover {
+	background-color: #434c5e !important;
+}
+
+/*
+	Elements
+*/
+
+input {
+	background-color: #434c5e !important;
+	color: #FFFFFF !important;
+	border-color: #3b4252 !important;
+}
+
+textarea {
+	background-color: #434c5e !important;
+	color: #FFFFFF !important;
+	border-color: #3b4252 !important;
+}
+
+svg {
+	stroke: #88c0d0 !important;
+}
+
+input[type="checkbox"] {
+	accent-color: #88c0d0;
+}
+
+/*
+	Main menu
+*/
+
+.mainMenuLink {
+	background-color: #3b4252 !important;
+	color: #6B7280 !important;
+}
+
+.mainMenuLink:hover {
+	color: #FFFFFF !important;
+	border-color: #D1D5DB !important;
+}
+
+.mainMenuLinkSelected {
+	color: #FFFFFF !important;
+	border-color: #88c0d0 !important;
+}
+
+.mainMenuMobileLink {
+	background-color: #3b4252 !important;
+	color: #FFFFFF !important;
+}
+
+.mainMenuMobileLink:hover {
+	background-color: #434c5e !important;
+	border-color: #6B7280 !important;
+}
+
+.mainMenuMobileLinkSelected {
+	background-color: #434c5e !important;
+	border-color: #88c0d0 !important;
+	color: #88c0d0 !important;
+}
+
+#main-menu-toggle-btn {
+	color: #9CA3AF !important;
+}
+
+#main-menu-toggle-btn:hover {
+	color: #6B7280 !important;
+	background-color: #434c5e !important;
+}
+
+/*
+	Border colors
+*/
+
+.primaryBorderColor {
+	border-color: #3b4252 !important;
+}
+
+/*
+	Placeholder colors
+*/
+
+.primaryBorderColor::placeholder {
+	color: #6B7280;
+	opacity: 1;
+}
+
+.primaryBorderColor::-ms-input-placeholder {
+	color: #6B7280;
+	opacity: 1;
+}
+
+/*
+	Stroke colors
+*/
+
+.primaryStrokeColor {
+	stroke: #FFFFFF !important;
+}
+
+/*
+	Passwords
+*/
+
+.passwordsBackgroundColor {
+	background-color: #2e3440 !important;
+}
+
+.passwordsBorderColor {
+	border-color: #111827 !important;
+}
+
+/*
+	Import and Export buttons
+*/
+
+.importExportButtons {
+	color: #b1bfce !important;
+	border-color: #2e3440 !important;
+}
+
+.importExportButtons:hover {
+	color: #91a6ba !important;
+}
+
+/*
+	Scroll bar
+*/
+
+::-webkit-scrollbar-track {
+	background: #3b4252;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #88c0d0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #7fbbcc;
+}

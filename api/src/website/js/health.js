@@ -58,7 +58,9 @@ fetch(domain + "?action=getInfo")
 	}else{
     addHealth(0, "API can successfully connect with a database.");
   }
-	if(json.users >= json.maxUsers){
+	if(json.maxUsers < 0){
+		addHealth(0, json.users + " accounts has been created.");
+	}else if(json.users >= json.maxUsers){
 		addHealth(1, "Users won't be able to create new accounts, because account limit has been reached. You can increase account limit by rerunning the installer or changing settings in .env file manually. You would need to recreate docker containers for changes to apply.");
 	}else{
     addHealth(0, json.users + " accounts has been created out of " + json.maxUsers + ".");
@@ -76,8 +78,8 @@ function checkLatestVersion(version){
 		if(typeof(json) == 'undefined') return;
 		if(typeof(json.tag_name) == 'undefined') return;
     addHealth(0, "Connection with Github API has been successful.");
-		if(version != json.tag_name){
-			addHealth(1, "Your Passky Server is outdated. You are running version " + version + ", while version " + json.tag_name + " has already been released.");
+		if(version != json.tag_name.replace('v','')){
+			addHealth(1, "Your Passky Server is outdated. You are running version " + version + ", while version " + json.tag_name.replace('v','') + " has already been released.");
 		}else{
       addHealth(0, "You are using the latest Passky Server.");
     }

@@ -51,7 +51,7 @@ function getAllStorageData() {
 function setTheme(){
 	if(readData('theme') == null || typeof(readData('theme')) == 'undefined') writeData('theme', 'dark');
 
-	if(!(["dark", "tokyoNight", "monokai", "solarizedDark", "light", "blue", "dracula", "gray"].includes(readData('theme')))) writeData('theme', 'dark');
+	if(!(["dark", "tokyoNight", "monokai", "solarizedDark", "light", "blue", "nord", "dracula", "gray"].includes(readData('theme')))) writeData('theme', 'dark');
 	document.getElementById("css-theme").href = "./website/css/themes/" + readData('theme') + ".css";
 }
 

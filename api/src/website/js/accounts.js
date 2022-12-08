@@ -2,13 +2,23 @@ document.getElementById("main-menu-toggle-btn").addEventListener("click", () => 
 	toggleMenu();
 });
 
-document.getElementById("search").addEventListener("keyup", () => {
-	filterAccounts();
+document.getElementById("search").addEventListener("keypress", (event) => {
+	if (event.key !== "Enter") return;
+	event.preventDefault();
+	window.location.assign("?search=" + document.getElementById("search").value);
 });
 
 document.getElementById("dialog-button-cancel").addEventListener("click", () => {
 	hide('dialog');
 });
+
+try{
+	document.getElementById("page").addEventListener("keypress", (event) => {
+		if (event.key !== "Enter") return;
+		event.preventDefault();
+		window.location.assign("?page=" + document.getElementById("page").value);
+	});
+}catch{}
 
 function changeDialog(style, text) {
 	switch (style) {
@@ -23,12 +33,17 @@ function changeDialog(style, text) {
 			let accounts = JSON.parse(sessionStorage.getItem("accounts"));
 			accounts.forEach(account => {
 				if(account.username == text){
+					let maxPasswords = account.max_passwords;
+					if(account.max_passwords < 0) maxPasswords = "∞";
 					data += "<b>ID:</b> " + account.user_id + "</br>";
 					data += "<b>Username:</b> " + account.username + "</br>";
 					data += "<b>Email:</b> " + account.email + "</br>";
-					data += "<b>Passwords:</b> " + account.passwords + " / " + account.max_passwords + "</br>";
+					data += "<b>Passwords:</b> " + account.passwords + " / " + maxPasswords + "</br>";
 					data += "<b>Created:</b> " + account.created + "</br>";
 					data += "<b>Accessed:</b> " + account.accessed + "</br></br>";
+
+					if(account.premium_expires != null) data += "<b>Premium:</b> " + account.premium_expires + "</br></br>";
+
 					if(account.backup_codes == null){
 						data += "<b>Backup Codes</b>: Inactive";
 					}else{
@@ -60,16 +75,18 @@ function changeDialog(style, text) {
 			let email = "";
 			let max_passwords = 0;
 			let enabled2fa = "";
+			let enabledPremium = "";
 			let accountsArray = JSON.parse(sessionStorage.getItem("accounts"));
 			accountsArray.forEach(account => {
 				if(account.username == username){
 					email = account.email;
 					max_passwords = account.max_passwords;
 					if(account.backup_codes == null) enabled2fa = "hidden";
+					if(account.premium_expires == null) enabledPremium = "hidden";
 				}
 			});
 
-			document.getElementById('dialog-text').innerHTML = "<div class=rounded-md shadow-sm -space-y-px'><div><label for='username' class='sr-only'>Username</label><input id='username' name='username' type='text' value='" + username + "' readonly class='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 secondaryColor rounded-t-md focus:outline-none focus:z-10 sm:text-sm' placeholder='Username'></div><div><label for='email' class='sr-only'>Email</label><input id='email' name='email' type='email' value='" + email + "' required class='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 tertiaryColor focus:outline-none focus:z-10 sm:text-sm' placeholder='Email'></div><div><label for='max_passwords' class='sr-only'>Max Passwords</label><input id='max_passwords' name='max_passwords' type='number' value='" + max_passwords + "' min='0' max='50000' required class='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 tertiaryColor rounded-b-md focus:outline-none focus:z-10 sm:text-sm' placeholder='Max Passwords'></div></div><fieldset class='mt-5 sm:mt-4 " + enabled2fa + "'><legend class='sr-only'>Disable 2FA</legend><div class='relative flex items-start'><div class='flex items-center h-5'><input id='disable2fa' type='checkbox' class='tertiaryBackgroundColor primaryColor h-4 w-4 primaryBorderColor rounded'></div><div class='ml-3 text-sm'><span class='tertiaryColor'>Disable 2FA</span></div></div></fieldset>";
+			document.getElementById('dialog-text').innerHTML = "<div class=rounded-md shadow-sm -space-y-px'><div><label for='username' class='sr-only'>Username</label><input id='username' name='username' type='text' value='" + username + "' readonly class='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 secondaryColor rounded-t-md focus:outline-none focus:z-10 sm:text-sm' placeholder='Username'></div><div><label for='email' class='sr-only'>Email</label><input id='email' name='email' type='email' value='" + email + "' required class='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 tertiaryColor focus:outline-none focus:z-10 sm:text-sm' placeholder='Email'></div><div><label for='max_passwords' class='sr-only'>Max Passwords</label><input id='max_passwords' name='max_passwords' type='number' value='" + max_passwords + "' min='0' max='50000' required class='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 tertiaryColor rounded-b-md focus:outline-none focus:z-10 sm:text-sm' placeholder='Max Passwords'></div></div><fieldset class='mt-5 sm:mt-4 " + enabled2fa + "'><legend class='sr-only'>Disable 2FA</legend><div class='relative flex items-start'><div class='flex items-center h-5'><input id='disable2fa' type='checkbox' class='tertiaryBackgroundColor primaryColor h-4 w-4 primaryBorderColor rounded'></div><div class='ml-3 text-sm'><span class='tertiaryColor'>Disable 2FA</span></div></div></fieldset><fieldset class='mt-5 sm:mt-4 " + enabledPremium + "'><legend class='sr-only'>Disable Premium</legend><div class='relative flex items-start'><div class='flex items-center h-5'><input id='disablePremium' type='checkbox' class='tertiaryBackgroundColor primaryColor h-4 w-4 primaryBorderColor rounded'></div><div class='ml-3 text-sm'><span class='tertiaryColor'>Disable Premium</span></div></div></fieldset>";
 
 			document.getElementById('dialog-button-cancel').style.display = 'initial';
 
@@ -98,31 +115,12 @@ function editAccount(username){
 	let email = document.getElementById("email").value;
 	let max_passwords = document.getElementById("max_passwords").value;
 	let disable2fa = document.getElementById("disable2fa").checked;
+	let disablePremium = document.getElementById("disablePremium").checked;
 	let token = document.getElementById("token").value;
-	window.location.assign("./website/actions/editAccount.php?username=" + username + "&email=" + email + "&max_passwords=" + max_passwords + "&disable2fa=" + disable2fa + "&token=" + token);
+	window.location.assign("./website/actions/editAccount.php?username=" + username + "&email=" + email + "&max_passwords=" + max_passwords + "&disable2fa=" + disable2fa + "&disablePremium=" + disablePremium + "&token=" + token);
 }
 
 function deleteAccount(username){
 	let token = document.getElementById("token").value;
 	window.location.assign("./website/actions/deleteAccount.php?username=" + username + "&token=" + token);
-}
-
-function filterAccounts() {
-	let input, filter, table, tr, td, i, txtValue;
-	input = document.getElementById("search");
-	filter = input.value.toUpperCase();
-	table = document.getElementById("table-accounts");
-	tr = table.getElementsByTagName("tr");
-
-	for (i = 0; i < tr.length; i++) {
-		td = tr[i].getElementsByTagName("td")[0];
-		if (td) {
-			txtValue = td.textContent || td.innerText;
-			if (txtValue.toUpperCase().indexOf(filter) > -1) {
-				tr[i].style.display = "";
-			} else {
-				tr[i].style.display = "none";
-			}
-		}
-	}
 }

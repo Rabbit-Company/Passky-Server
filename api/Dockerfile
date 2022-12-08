@@ -1,43 +1,50 @@
-FROM php:8.1-apache
+FROM serversideup/php:8.1-fpm-nginx-v2.0.2
 
-# Copy all files in php folder to docker container
-COPY src/ /var/www/html/
+LABEL maintainer="Rabbit Company (info@rabbit-company.com)"
 
-# Switch workdir
-WORKDIR /var/www/html/
-
-# Install Mysql extension for PHP
-RUN docker-php-ext-install pdo_mysql
-
-# Install dependencies
-RUN apt-get update && apt-get install -y zip unzip git cron
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Copy composer.json to docker container
-COPY composer.json /var/www
+# Copy files to docker container
+COPY src/ /var/www/html/public/
+COPY composer.json /var/www/html/
 
 # Install dependiencies from composer
-RUN composer update -d /var/www
+RUN composer update -d /var/www/html/
 
-# Copy php.ini to the docker container
-COPY php.ini $PHP_INI_DIR
+# Create json file for Temp data
+RUN echo '{}' > /var/www/html/data.json
 
-# Create json file for API Call Limiter and Tokens in /var/www folder which can't be accessed by public
-RUN echo "{}" > ../api-limiter.json
-RUN echo "{}" > ../tokens.json
+# Install redis and cron
+RUN apt-get update && apt-get -y --no-install-recommends install \
+redis-server \
+cron
 
-# Give files permissions
-RUN chmod -R 777 /var/www
+# Clean the cache and temp files
+RUN apt-get clean \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-# Copy passky-daily-crontab script to cron.daily folder, so script will be executed every day
-COPY passky-daily-crontab /etc/cron.daily/passky-daily-crontab
-# Make script executable
-RUN chmod +x /etc/cron.daily/passky-daily-crontab
+# Configure Job Scheduler (Cron)
+COPY passky-daily-crontab /etc/cron.hourly/passky-daily-crontab
+RUN chmod +x /etc/cron.hourly/passky-daily-crontab
 
-# Remove daily cron jobs, that are not needed
-RUN rm /etc/cron.daily/apt-compat /etc/cron.daily/dpkg /etc/cron.daily/exim4-base
+# Configure S6-Overlay
+COPY docker/etc/s6-overlay /etc/s6-overlay/
+RUN chmod 755 -R /etc/s6-overlay && chmod +x /etc/s6-overlay/scripts/*
 
-# Start cron
-RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+COPY docker/etc/nginx /etc/nginx
+
+# Configure PHP
+COPY php.ini /etc/php/current_version/fpm/
+
+# Remove scripts
+RUN rm /etc/s6-overlay/scripts/laravel-automations \
+&& rm -rf /etc/s6-overlay/s6-rc.d/laravel-automations \
+&& rm -rf /etc/s6-overlay/s6-rc.d/user/contents.d/laravel-automations \
+&& rm /etc/s6-overlay/scripts/msmtp \
+&& rm -rf /etc/s6-overlay/s6-rc.d/msmtp \
+&& rm -rf /etc/s6-overlay/s6-rc.d/user/contents.d/msmtp
+
+# Remove default security headers
+RUN rm /etc/nginx/server-opts.d/security.conf
+
+# Set owner, group and permissions
+RUN chown -R 9999:9999 /var/www/html \
+&& chmod 755 -R /var/www/html
