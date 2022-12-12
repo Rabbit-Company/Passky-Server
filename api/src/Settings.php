@@ -9,7 +9,7 @@ class Settings{
 */
 
 	public static function getVersion() : string{
-		return '8.0.0';
+		return '8.0.1';
 	}
 
 	public static function getLocation() : string{
@@ -32,6 +32,14 @@ class Settings{
 
 	public static function getAdminPassword() : string{
 		return getenv('ADMIN_PASSWORD', true) ?: getenv('ADMIN_PASSWORD') ?: 'fehu2UPmpragklWoJcbr4BajxoaGns';
+	}
+
+	public static function getCFTSiteKey() : string{
+		return getenv('CF_TURNSTILE_SITE_KEY', true) ?: getenv('CF_TURNSTILE_SITE_KEY') ?: '1x00000000000000000000AA';
+	}
+
+	public static function getCFTSecretKey() : string{
+		return getenv('CF_TURNSTILE_SECRET_KEY', true) ?: getenv('CF_TURNSTILE_SECRET_KEY') ?: '1x0000000000000000000000000000000AA';
 	}
 
 /*
