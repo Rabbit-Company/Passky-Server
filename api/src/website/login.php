@@ -1,4 +1,7 @@
-<?php displayHeader(10); ?>
+<?php
+require_once 'Settings.php';
+displayHeader(10);
+?>
 
 <div class="primaryBackgroundColor mt-20 flex items-center justify-center py-6 px-4 sm:px-3 lg:px-8">
       <div class="max-w-md w-full space-y-6">
@@ -21,6 +24,8 @@
               <input id="otp" name="otp" type="text" autocomplete="off" class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none rounded-none relative block w-full px-3 py-2 border rounded-b-md focus:outline-none focus:z-10 sm:text-sm" placeholder="OTP">
             </div>
           </div>
+
+					<div class="cf-turnstile" data-theme="dark" data-sitekey="<?= Settings::getCFTSiteKey(); ?>"></div>
 
           <div class="text-center">
             <button id="btn_signin" type="submit" class="primaryButton group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none">

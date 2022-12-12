@@ -8,7 +8,7 @@ header('Referrer-Policy: no-referrer');
 header('Permissions-Policy: interest-cohort=()');
 
 if(empty($_GET['action'])){
-	header("Content-Security-Policy: default-src 'self'; style-src 'self'; script-src 'self' 'unsafe-inline'; form-action 'self'; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'none';");
+	header("Content-Security-Policy: default-src 'self'; style-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; form-action 'self'; connect-src 'self' https:; frame-ancestors 'none'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'none';");
 	require_once 'website/index.php';
 	return;
 }

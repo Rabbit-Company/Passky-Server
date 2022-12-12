@@ -34,6 +34,14 @@ class Settings{
 		return getenv('ADMIN_PASSWORD', true) ?: getenv('ADMIN_PASSWORD') ?: 'fehu2UPmpragklWoJcbr4BajxoaGns';
 	}
 
+	public static function getCFTSiteKey() : string{
+		return getenv('CF_TURNSTILE_SITE_KEY', true) ?: getenv('CF_TURNSTILE_SITE_KEY') ?: '1x00000000000000000000AA';
+	}
+
+	public static function getCFTSecretKey() : string{
+		return getenv('CF_TURNSTILE_SECRET_KEY', true) ?: getenv('CF_TURNSTILE_SECRET_KEY') ?: '1x0000000000000000000000000000000AA';
+	}
+
 /*
 
 	DATABASE SETTINGS

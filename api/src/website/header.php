@@ -24,6 +24,7 @@ function displayHeader($location){
       <link rel="stylesheet" href="./website/css/tailwind.min.css">
       <link rel="stylesheet" href="./website/css/index.css">
       <link id="css-theme" type="text/css" rel="stylesheet" href="./website/css/themes/dark.css">
+			<?php if($location === 10) echo "<script src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer></script>"; ?>
       <script src="./website/js/header.js"></script>
     </head>
     <body class="primaryBackgroundColor">

@@ -169,6 +169,9 @@ echo "LIMITER_GET_REPORT=-1" >> .env
 echo "YUBI_CLOUD=https://api.yubico.com/wsapi/2.0/verify" >> .env
 echo "YUBI_ID=67857" >> .env
 
+echo "CF_TURNSTILE_SITE_KEY=1x00000000000000000000AA" >> .env
+echo "CF_TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA" >> .env
+
 echo "REDIS_HOST=127.0.0.1" >> .env
 echo "REDIS_PORT=6379" >> .env
 echo "REDIS_PASSWORD=" >> .env
