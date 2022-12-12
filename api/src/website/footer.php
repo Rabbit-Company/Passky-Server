@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function displayFooter($scripts){ ?>
 	<div id="dialog" class="fixed z-10 inset-0 overflow-y-auto invisible" aria-labelledby="dialog-title" role="dialog" aria-modal="true">

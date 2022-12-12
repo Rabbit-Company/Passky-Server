@@ -20,9 +20,9 @@ if($result['success'] !== true || $result['action'] !== 'login'){
 session_start();
 
 if($_POST['username'] === Settings::getAdminUsername() && $_POST['password'] === Settings::getAdminPassword()){
-  $_SESSION['username'] = Settings::getAdminUsername();
+	$_SESSION['username'] = Settings::getAdminUsername();
 	$_SESSION['token'] = bin2hex(random_bytes(32));
-  $_SESSION['page'] = 'home';
+	$_SESSION['page'] = 'home';
 }
 
 header('Location: ../..');

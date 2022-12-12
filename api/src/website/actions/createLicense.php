@@ -6,9 +6,9 @@ session_start();
 $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
 
 if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $token !== $_SESSION['token']){
-  $_SESSION['page'] = 'home';
-  header('Location: ../..');
-  exit();
+	$_SESSION['page'] = 'home';
+	header('Location: ../..');
+	exit();
 }
 
 $days = $_GET['days'];
@@ -37,9 +37,9 @@ foreach($licenseKeys as $key){
 $query = substr($query, 0, -1);
 
 try{
-  $conn = Settings::createConnection();
+	$conn = Settings::createConnection();
 
-  $stmt = $conn->prepare($query);
+	$stmt = $conn->prepare($query);
 	$stmt->execute();
 
 }catch(PDOException $e) {}

@@ -6,9 +6,9 @@ session_start();
 $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
 
 if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $token !== $_SESSION['token']){
-  $_SESSION['page'] = 'home';
-  header('Location: ../..');
-  exit();
+	$_SESSION['page'] = 'home';
+	header('Location: ../..');
+	exit();
 }
 
 $username = $_GET['username'];
@@ -26,32 +26,32 @@ if($maxPasswords > 1000000000) $maxPasswords = 1000000000;
 if($disablePremium) $maxPasswords = Settings::getMaxPasswords();
 
 try{
-  $conn = Settings::createConnection();
+	$conn = Settings::createConnection();
 
-  if(filter_var($sub_email, FILTER_VALIDATE_EMAIL)){
-    $stmt = $conn->prepare('UPDATE users SET email = :email, max_passwords = :maxPasswords WHERE username = :username');
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
-    $stmt->execute();
-  }else{
-    $stmt = $conn->prepare('UPDATE users SET max_passwords = :maxPasswords WHERE username = :username');
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
-    $stmt->execute();
-  }
+	if(filter_var($sub_email, FILTER_VALIDATE_EMAIL)){
+		$stmt = $conn->prepare('UPDATE users SET email = :email, max_passwords = :maxPasswords WHERE username = :username');
+		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+		$stmt->bindParam(':email', $email, PDO::PARAM_STR);
+		$stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
+		$stmt->execute();
+	}else{
+		$stmt = $conn->prepare('UPDATE users SET max_passwords = :maxPasswords WHERE username = :username');
+		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+		$stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
+		$stmt->execute();
+	}
 
-  if($disable2fa){
-    $stmt = $conn->prepare('UPDATE users SET 2fa_secret = null, yubico_otp = null, backup_codes = null WHERE username = :username');
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->execute();
-  }
+	if($disable2fa){
+		$stmt = $conn->prepare('UPDATE users SET 2fa_secret = null, yubico_otp = null, backup_codes = null WHERE username = :username');
+		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+		$stmt->execute();
+	}
 
 	if($disablePremium){
-    $stmt = $conn->prepare('UPDATE users SET premium_expires = null, max_passwords = :maxPasswords WHERE username = :username');
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+		$stmt = $conn->prepare('UPDATE users SET premium_expires = null, max_passwords = :maxPasswords WHERE username = :username');
+		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 		$stmt->bindParam(':maxPasswords', $maxPasswords, PDO::PARAM_INT);
-    $stmt->execute();
+		$stmt->execute();
 	}
 }catch(PDOException $e) {}
 $conn = null;
