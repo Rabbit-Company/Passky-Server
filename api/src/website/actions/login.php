@@ -12,7 +12,7 @@ $context = stream_context_create($config);
 $result = file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $context);
 $result = json_decode($result, true);
 
-if($result['success'] === false){
+if($result['success'] !== true || $result['action'] !== 'login'){
 	header('Location: ../..');
 	exit();
 }

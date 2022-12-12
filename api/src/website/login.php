@@ -25,7 +25,7 @@ displayHeader(10);
             </div>
           </div>
 
-					<div class="cf-turnstile" data-theme="dark" data-sitekey="<?= Settings::getCFTSiteKey(); ?>"></div>
+					<div class="cf-turnstile" data-theme="dark" data-action="login" data-sitekey="<?= Settings::getCFTSiteKey(); ?>"></div>
 
           <div class="text-center">
             <button id="btn_signin" type="submit" class="primaryButton group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none">
