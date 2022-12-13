@@ -104,10 +104,10 @@ then
 else
 	echo "MAIL_ENABLED=false" >> .env
 	echo "MAIL_HOST=" >> .env
-	echo "MAIL_PORT=" >> .env
+	echo "MAIL_PORT=465" >> .env
 	echo "MAIL_USERNAME=" >> .env
 	echo "MAIL_PASSWORD=" >> .env
-	echo "MAIL_USE_TLS=" >> .env
+	echo "MAIL_USE_TLS=true" >> .env
 fi
 
 if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want backups to be enabled?\n\nBackup perform every day and will export database to external server thru SSH (Using SCP).\n\nIf you don't have any external server ready for backups, leave it disabled." 14 78);

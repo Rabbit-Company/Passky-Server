@@ -948,7 +948,7 @@ class Database{
 				$mail->SMTPAuth = true;
 				$mail->Username = Settings::getMailUsername();
 				$mail->Password = Settings::getMailPassword();
-				$mail->SMTPSecure = (Settings::getMailTLS()) ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+				$mail->SMTPSecure = (Settings::getMailTLS()) ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
 				$mail->Port = Settings::getMailPort();
 
 				$mail->setFrom(Settings::getMailUsername(), 'Passky');
