@@ -9,7 +9,7 @@ class Settings{
 */
 
 	public static function getVersion() : string{
-		return '8.0.1';
+		return '8.0.2';
 	}
 
 	public static function getLocation() : string{
@@ -135,7 +135,7 @@ class Settings{
 	}
 
 	public static function getMailPort() : int{
-		return getenv('MAIL_PORT', true) ?: getenv('MAIL_PORT') ?: 587;
+		return getenv('MAIL_PORT', true) ?: getenv('MAIL_PORT') ?: 465;
 	}
 
 	public static function getMailUsername() : string{

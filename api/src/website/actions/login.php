@@ -12,6 +12,7 @@ $context = stream_context_create($config);
 $result = file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $context);
 $result = json_decode($result, true);
 
+if(Settings::getCFTSiteKey() === '1x00000000000000000000AA') $result['action'] = 'login';
 if($result['success'] !== true || $result['action'] !== 'login'){
 	header('Location: ../..');
 	exit();

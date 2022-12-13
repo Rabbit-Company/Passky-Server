@@ -83,10 +83,10 @@ then
 	MAIL_HOST=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP host.\n\nSetting up SMTP is not required." 12 78 mail.passky.org 3>&1 1>&2 2>&3)
 	echo "MAIL_HOST=${MAIL_HOST}" >> .env
 
-	MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required." 12 78 587 3>&1 1>&2 2>&3)
+	MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required." 12 78 465 3>&1 1>&2 2>&3)
 	while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
 	do
-		MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required.\n\n'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 587 3>&1 1>&2 2>&3)
+		MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required.\n\n'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 465 3>&1 1>&2 2>&3)
 	done
 	echo "MAIL_PORT=${MAIL_PORT}" >> .env
 
@@ -104,10 +104,10 @@ then
 else
 	echo "MAIL_ENABLED=false" >> .env
 	echo "MAIL_HOST=" >> .env
-	echo "MAIL_PORT=" >> .env
+	echo "MAIL_PORT=465" >> .env
 	echo "MAIL_USERNAME=" >> .env
 	echo "MAIL_PASSWORD=" >> .env
-	echo "MAIL_USE_TLS=" >> .env
+	echo "MAIL_USE_TLS=true" >> .env
 fi
 
 if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want backups to be enabled?\n\nBackup perform every day and will export database to external server thru SSH (Using SCP).\n\nIf you don't have any external server ready for backups, leave it disabled." 14 78);

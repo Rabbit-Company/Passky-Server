@@ -209,7 +209,7 @@ then
 
 	echo -e "\n${blue}${bold}Provide SMTP port.${blue}"
 	echo -e "Setting up SMTP is not required."
-	echo -e "Example: 587"
+	echo -e "Example: 465"
 	printf "\n${green}SMTP port: "
 	read MAIL_PORT
 	while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
@@ -248,10 +248,10 @@ then
 	echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
 else
 	echo "MAIL_HOST=" >> .env
-	echo "MAIL_PORT=" >> .env
+	echo "MAIL_PORT=465" >> .env
 	echo "MAIL_USERNAME=" >> .env
 	echo "MAIL_PASSWORD=" >> .env
-	echo "MAIL_USE_TLS=" >> .env
+	echo "MAIL_USE_TLS=true" >> .env
 fi
 
 echo -e "\n\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
