@@ -135,7 +135,7 @@ class Settings{
 	}
 
 	public static function getMailPort() : int{
-		return getenv('MAIL_PORT', true) ?: getenv('MAIL_PORT') ?: 587;
+		return getenv('MAIL_PORT', true) ?: getenv('MAIL_PORT') ?: 465;
 	}
 
 	public static function getMailUsername() : string{

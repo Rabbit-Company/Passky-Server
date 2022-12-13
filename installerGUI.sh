@@ -83,10 +83,10 @@ then
 	MAIL_HOST=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP host.\n\nSetting up SMTP is not required." 12 78 mail.passky.org 3>&1 1>&2 2>&3)
 	echo "MAIL_HOST=${MAIL_HOST}" >> .env
 
-	MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required." 12 78 587 3>&1 1>&2 2>&3)
+	MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required." 12 78 465 3>&1 1>&2 2>&3)
 	while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
 	do
-		MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required.\n\n'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 587 3>&1 1>&2 2>&3)
+		MAIL_PORT=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP port.\n\nSetting up SMTP is not required.\n\n'${MAIL_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 465 3>&1 1>&2 2>&3)
 	done
 	echo "MAIL_PORT=${MAIL_PORT}" >> .env
 

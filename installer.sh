@@ -209,7 +209,7 @@ then
 
 	echo -e "\n${blue}${bold}Provide SMTP port.${blue}"
 	echo -e "Setting up SMTP is not required."
-	echo -e "Example: 587"
+	echo -e "Example: 465"
 	printf "\n${green}SMTP port: "
 	read MAIL_PORT
 	while [[ ! "$MAIL_PORT" =~ ^[0-9]{1,5}$ ]];
