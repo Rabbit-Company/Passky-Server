@@ -30,6 +30,12 @@ class Settings{
         return getenv("MYSQL_PASSWORD", true) ?: getenv("MYSQL_PASSWORD") ?: "uDWjSd8wB2HRBHei489o";
     }
 
+    public static function getDatabaseConnection() : PDO{
+        $conn = new PDO("mysql:host=" . Settings::getDBHost() . ";dbname=passky", Settings::getDBUsername(), Settings::getDBPassword());
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conn;
+    }
+
 /*
 
     EMAIL SETTINGS
