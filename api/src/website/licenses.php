@@ -70,7 +70,7 @@ try{
 			$data = unserialize($data);
 		}
 	}
-}catch(PDOException) {}
+}catch(PDOException $e) {}
 $conn = null;
 
 displayHeader(5);

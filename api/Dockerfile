@@ -5,6 +5,8 @@ LABEL maintainer="Rabbit Company (info@rabbit-company.com)"
 # Copy files to docker container
 COPY src/ /var/www/html/public/
 COPY composer.json /var/www/html/
+COPY .tmp/database.mysql.sql /var/www/html/
+COPY .tmp/database.sqlite.sql /var/www/html/
 
 # Install dependiencies from composer
 RUN composer update -d /var/www/html/

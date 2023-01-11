@@ -19,9 +19,17 @@ else
 fi
 
 ADMIN_USERNAME=$(whiptail --title "Passky Installer - Admin Settings" --inputbox "Provide username for your Admin Panel.\n\nOn Admin Panel you will be able to manage passky accounts." 12 78 admin 3>&1 1>&2 2>&3)
+while [[ -z "$ADMIN_USERNAME" ]];
+do
+	ADMIN_USERNAME=$(whiptail --title "Passky Installer - Admin Settings" --inputbox "Provide username for your Admin Panel.\n\nOn Admin Panel you will be able to manage passky accounts." 12 78 admin 3>&1 1>&2 2>&3)
+done
 echo "ADMIN_USERNAME=${ADMIN_USERNAME}" >> .env
 
 ADMIN_PASSWORD=$(whiptail --title "Passky Installer - Admin Settings" --passwordbox "Provide password for your Admin Panel.\n\nOn Admin Panel you will be able to manage passky accounts." 12 78 3>&1 1>&2 2>&3)
+while [[ -z "$ADMIN_USERNAME" ]];
+do
+	ADMIN_PASSWORD=$(whiptail --title "Passky Installer - Admin Settings" --passwordbox "Provide password for your Admin Panel.\n\nOn Admin Panel you will be able to manage passky accounts." 12 78 3>&1 1>&2 2>&3)
+done
 echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" >> .env
 
 SERVER_LOCATION=$(whiptail --title "Passky Installer - Server Settings" --menu "Choose server location:" 25 78 16 "AD" "Andorra" "AE" "United Arab Emirates" "AF" "Afghanistan" "AG" "Antigua and Barbuda" "AI" "Anguilla" "AL" "Albania" "AM" "Armenia" "AO" "Angola" "AQ" "Antarctica" "AR" "Argentina" "AS" "American Samoa" "AT" "Austria" "AU" "Australia" "AW" "Aruba" "AX" "Åland Islands" "AZ" "Azerbaijan" "BA" "Bosnia and Herzegovina" "BB" "Barbados" "BD" "Bangladesh" "BE" "Belgium" "BF" "Burkina Faso" "BG" "Bulgaria" "BH" "Bahrain" "BI" "Burundi" "BJ" "Benin" "BL" "Saint Barthélemy" "BM" "Bermuda" "BN" "Brunei Darussalam" "BO" "Bolivia (Plurinational State of)" "BQ" "Bonaire, Sint Eustatius and Saba" "BR" "Brazil" "BS" "Bahamas" "BT" "Bhutan" "BV" "Bouvet Island" "BW" "Botswana" "BY" "Belarus" "BZ" "Belize" "CA" "Canada" "CC" "Cocos (Keeling) Islands" "CD" "Congo, Democratic Republic of the" "CF" "Central African Republic" "CG" "Congo" "CH" "Switzerland" "CI" "Côte d'Ivoire" "CK" "Cook Islands" "CL" "Chile" "CM" "Cameroon" "CN" "China" "CO" "Colombia" "CR" "Costa Rica" "CU" "Cuba" "CV" "Cabo Verde" "CW" "Curaçao" "CX" "Christmas Island" "CY" "Cyprus" "CZ" "Czechia" "DE" "Germany" "DJ" "Djibouti" "DK" "Denmark" "DM" "Dominica" "DO" "Dominican Republic" "DZ" "Algeria" "EC" "Ecuador" "EE" "Estonia" "EG" "Egypt" "EH" "Western Sahara" "ER" "Eritrea" "ES" "Spain" "ET" "Ethiopia" "FI" "Finland" "FJ" "Fiji" "FK" "Falkland Islands (Malvinas)" "FM" "Micronesia (Federated States of)" "FO" "Faroe Islands" "FR" "France" "GA" "Gabon" "GB" "United Kingdom of Great Britain and Northern Ireland" "GD" "Grenada" "GE" "Georgia" "GF" "French Guiana" "GG" "Guernsey" "GH" "Ghana" "GI" "Gibraltar" "GL" "Greenland" "GM" "Gambia" "GN" "Guinea" "GP" "Guadeloupe" "GQ" "Equatorial Guinea" "GR" "Greece" "GS" "South Georgia and the South Sandwich Islands" "GT" "Guatemala" "GU" "Guam" "GW" "Guinea-Bissau" "GY" "Guyana" "HK" "Hong Kong" "HM" "Heard Island and McDonald Islands" "HN" "Honduras" "HR" "Croatia" "HT" "Haiti" "HU" "Hungary" "ID" "Indonesia" "IE" "Ireland" "IL" "Israel" "IM" "Isle of Man" "IN" "India" "IO" "British Indian Ocean Territory" "IQ" "Iraq" "IR" "Iran (Islamic Republic of)" "IS" "Iceland" "IT" "Italy" "JE" "Jersey" "JM" "Jamaica" "JO" "Jordan" "JP" "Japan" "KE" "Kenya" "KG" "Kyrgyzstan" "KH" "Cambodia" "KI" "Kiribati" "KM" "Comoros" "KN" "Saint Kitts and Nevis" "KP" "Korea (Democratic People's Republic of)" "KR" "Korea, Republic of" "KW" "Kuwait" "KY" "Cayman Islands" "KZ" "Kazakhstan" "LA" "Lao People's Democratic Republic" "LB" "Lebanon" "LC" "Saint Lucia" "LI" "Liechtenstein" "LK" "Sri Lanka" "LR" "Liberia" "LS" "Lesotho" "LT" "Lithuania" "LU" "Luxembourg" "LV" "Latvia" "LY" "Libya" "MA" "Morocco" "MC" "Monaco" "MD" "Moldova, Republic of" "ME" "Montenegro" "MF" "Saint Martin (French part)" "MG" "Madagascar" "MH" "Marshall Islands" "MK" "North Macedonia" "ML" "Mali" "MM" "Myanmar" "MN" "Mongolia" "MO" "Macao" "MP" "Northern Mariana Islands" "MQ" "Martinique" "MR" "Mauritania" "MS" "Montserrat" "MT" "Malta" "MU" "Mauritius" "MV" "Maldives" "MW" "Malawi" "MX" "Mexico" "MY" "Malaysia" "MZ" "Mozambique" "NA" "Namibia" "NC" "New Caledonia" "NE" "Niger" "NF" "Norfolk Island" "NG" "Nigeria" "NI" "Nicaragua" "NL" "Netherlands" "NO" "Norway" "NP" "Nepal" "NR" "Nauru" "NU" "Niue" "NZ" "New Zealand" "OM" "Oman" "PA" "Panama" "PE" "Peru" "PF" "French Polynesia" "PG" "Papua New Guinea" "PH" "Philippines" "PK" "Pakistan" "PL" "Poland" "PM" "Saint Pierre and Miquelon" "PN" "Pitcairn" "PR" "Puerto Rico" "PS" "Palestine, State of Consists of the West Bank and the Gaza Strip" "PT" "Portugal" "PW" "Palau" "PY" "Paraguay" "QA" "Qatar" "RE" "Réunion" "RO" "Romania" "RS" "Serbia" "RU" "Russian Federation" "RW" "Rwanda" "SA" "Saudi Arabia" "SB" "Solomon Islands" "SC" "Seychelles" "SD" "Sudan" "SE" "Sweden" "SG" "Singapore" "SH" "Saint Helena, Ascension and Tristan da Cunha" "SI" "Slovenia" "SJ" "Svalbard and Jan Mayen" "SK" "Slovakia" "SL" "Sierra Leone" "SM" "San Marino" "SN" "Senegal" "SO" "Somalia" "SR" "Suriname" "SS" "South Sudan" "ST" "Sao Tome and Principe" "SV" "El Salvador" "SX" "Sint Maarten (Dutch part)" "SY" "Syrian Arab Republic" "SZ" "Eswatini" "TC" "Turks and Caicos Islands" "TD" "Chad" "TF" "French Southern Territories" "TG" "Togo" "TH" "Thailand" "TJ" "Tajikistan" "TK" "Tokelau" "TL" "Timor-Leste" "TM" "Turkmenistan" "TN" "Tunisia" "TO" "Tonga" "TR" "Turkey" "TT" "Trinidad and Tobago" "TV" "Tuvalu" "TW" "Taiwan, Province of China" "TZ" "Tanzania" "UA" "Ukraine" "UG" "Uganda" "UM" "United States Minor Outlying Islands" "US" "United States of America" "UY" "Uruguay" "UZ" "Uzbekistan" "VA" "Holy See" "VC" "Saint Vincent and the Grenadines" "VE" "Venezuela" "VG" "Virgin Islands (British)" "VI" "Virgin Islands (U.S.)" "VN" "Viet Nam" "VU" "Vanuatu" "WF" "Wallis and Futuna" "WS" "Samoa" "YE" "Yemen" "YT" "Mayotte" "ZA" "South Africa" "ZM" "Zambia" "ZW" "Zimbabwe" 3>&1 1>&2 2>&3)
@@ -48,33 +56,75 @@ do
 done
 echo "ACCOUNT_PREMIUM=${ACCOUNT_PREMIUM}" >> .env
 
-MYSQL_HOST=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide IP or host for your database.\n\nIf you are using docker, use container name" 12 78 passky-database 3>&1 1>&2 2>&3)
+DATABASE_ENGINE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide Database Engine Type\n\nCurrently support: (sqlite, mysql)" 12 78 3>&1 1>&2 2>&3)
+while [[ ! "$DATABASE_ENGINE" =~ sqlite|mysql$ ]];
+do
+	DATABASE_ENGINE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide Database Engine Type\n\nCurrently support: (sqlite, mysql)" 12 78 3>&1 1>&2 2>&3)
+done
+echo "DATABASE_ENGINE=${DATABASE_ENGINE}" >> .env
+
+if [ $DATABASE_ENGINE == "sqlite" ]; then
+	DATABASE_FILE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide database file name" 12 78 3>&1 1>&2 2>&3)
+	while [[ -z "$DATABASE_FILE" ]];
+	do
+		DATABASE_FILE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide database file name" 12 78 3>&1 1>&2 2>&3)
+	done
+fi
+echo "DATABASE_FILE=${DATABASE_FILE}" >> .env
+
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	MYSQL_HOST=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide IP or host for your database.\n\nIf you are using docker, use container name" 12 78 passky-database 3>&1 1>&2 2>&3)
+	while [[ -z "$MYSQL_HOST" ]];
+	do
+		MYSQL_HOST=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide IP or host for your database.\n\nIf you are using docker, use container name" 12 78 passky-database 3>&1 1>&2 2>&3)
+	done
+fi
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
 
-MYSQL_PORT=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide port for your database.\n\nIf you are using docker, use port 3306" 12 78 3306 3>&1 1>&2 2>&3)
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	MYSQL_PORT=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide port for your database.\n\nIf you are using docker, use port 3306" 12 78 3306 3>&1 1>&2 2>&3)
+fi
 echo "MYSQL_PORT=${MYSQL_PORT}" >> .env
 
-MYSQL_DATABASE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide name for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	MYSQL_DATABASE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide name for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
+	while [[ -z "$MYSQL_DATABASE" ]];
+	do
+		MYSQL_DATABASE=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide name for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
+	done
+fi
 echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
 
-MYSQL_USER=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide user for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	MYSQL_USER=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide user for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
+	while [[ -z "$MYSQL_USER" ]];
+	do
+		MYSQL_USER=$(whiptail --title "Passky Installer - Database Settings" --inputbox "Provide user for your database.\n\nIf you are using docker, database with user will be created automatically" 12 78 passky 3>&1 1>&2 2>&3)
+	done
+fi
 echo "MYSQL_USER=${MYSQL_USER}" >> .env
 
-MYSQL_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user '${MYSQL_USER}'.\n\nIf you are using docker, database with user will be created automatically" 12 78 3>&1 1>&2 2>&3)
-while [[ ! "$MYSQL_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
-do
-	MYSQL_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user '${MYSQL_USER}'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
-done
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	MYSQL_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user '${MYSQL_USER}'.\n\nIf you are using docker, database with user will be created automatically" 12 78 3>&1 1>&2 2>&3)
+	while [[ ! "$MYSQL_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
+	do
+		MYSQL_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user '${MYSQL_USER}'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
+	done
+fi
 echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
 
-MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically" 12 78 3>&1 1>&2 2>&3)
-while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
-do
-	MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
-done
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically" 12 78 3>&1 1>&2 2>&3)
+	while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
+	do
+		MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
+	done
+fi
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
 
 echo "MYSQL_CACHE_MODE=0" >> .env
+echo "MYSQL_SSL=false" >> .env
+echo "MYSQL_SSL_CA=/etc/ssl/certs/ca-certificates.crt" >> .env
 
 if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want to enable SMTP mail?\n\nSetting up SMTP is not required." 12 78);
 then
@@ -97,6 +147,12 @@ then
 	fi
 
 	MAIL_USERNAME=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP username.\n\nSetting up SMTP is not required." 12 78 info@passky.org 3>&1 1>&2 2>&3)
+	# REF https://github.com/deajan/linuxscripts/blob/master/emailCheck.sh#L73
+	rfc822="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
+	while [[ ! "$MAIL_USERNAME" =~ $rfc822 ]];
+	do
+		MAIL_USERNAME=$(whiptail --title "Passky Installer - Mail Settings" --inputbox "Provide SMTP username.\n\nSetting up SMTP is not required." 12 78 info@passky.org 3>&1 1>&2 2>&3)
+	done
 	echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
 
 	MAIL_PASSWORD=$(whiptail --title "Passky Installer - Mail Settings" --passwordbox "Provide SMTP password.\n\nSetting up SMTP is not required." 12 78 3>&1 1>&2 2>&3)
@@ -180,4 +236,14 @@ echo "REDIS_LOCAL_HOST=127.0.0.1" >> .env
 echo "REDIS_LOCAL_PORT=6379" >> .env
 echo "REDIS_LOCAL_PASSWORD=" >> .env
 
-whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78
+
+if [ $DATABASE_ENGINE == "sqlite" ]; then
+	whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose -f docker-compose-build-from-source-without-db.yml up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78
+else
+	whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78
+fi
+
+cp .env api/.env
+mkdir -p api/.tmp
+rm api/.tmp/*.sql
+cp database/*.sql api/.tmp/

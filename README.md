@@ -93,6 +93,40 @@ sudo apt-get install -y python3 python3-pip
 sudo pip3 install docker-compose
 ```
 
+### Managed Hosting (Shared/Dedicated) for (Server+Website)
+
+### Requirments
+
+1- [PHP 8.2+](https://php.net).
+
+2- Database([SQLite](https://www.sqlite.org/index.html), [MySQL](https://www.mysql.com/), [MariaDB](https://mariadb.org/)).
+
+3- [composer](https://getcomposer.org/).
+
+4- [Redis](https://redis.io/). (optional)
+
+5- Mail Server. (optional)
+
+### Installation
+
+1- Go to the root of your hosting and download the following:
+- [Server Application](https://github.com/Rabbit-Company/Passky-Server) in `Passky-Server` folder.
+- [Website Application](https://github.com/Rabbit-Company/Passky-Website) in `Passky-Website` folder.
+
+2- Prepare the server:
+```yaml
+cd Passy-Server
+./installer.sh # In order to do the setup process
+# or just copy `.env.example` into `api/.env` and make the proper changes that suit you.
+./shared-hosting-finalization.sh # (required)
+```
+
+3- Create the following sub-domains:
+-  `passky.YourDomain.com` for [Website Application](https://github.com/Rabbit-Company/Passky-Website) which point to `Passky-Website/website` folder.
+-  `api.passky.YourDomain.com` for [Server Application](https://github.com/Rabbit-Company/Passky-Server) which point to `Passky-Server/api/src`.
+
+4- You can now access both `passky.YourDomain.com` which is the password manager itself, and `api.passky.YourDomain.com` which is the Server that clients connect by a [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop#installation), [Web Browser](https://vault.passky.org/), [Browsers Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension#installation), and [Android Application](https://github.com/Rabbit-Company/Passky-Android#installation).
+
 ### Passky containers
 ```yaml
 wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.xz

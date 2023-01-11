@@ -1,5 +1,20 @@
 <?php
 
+define('ROOT', realpath(__DIR__ . '/..'));
+define('PUBLIC', __DIR__);
+define('DATA_FILE', ROOT . '/data.json');
+define('TABLES_COUNT', 3);
+
+define('SQLITE', 'sqlite');
+define('MYSQL', 'mysql');
+
+require_once ROOT . '/vendor/autoload.php';
+
+// Try to load .env file and make it available for getenv to use.
+try{
+	(new DevCoder\DotEnv(ROOT . '/.env'))->load();
+}catch(Exception $ignored){}
+
 class Settings{
 
 /*
@@ -48,6 +63,14 @@ class Settings{
 
 */
 
+	public static function getDBEngine() : string{
+		return getenv("DATABASE_ENGINE", true) ?: getenv("DATABASE_ENGINE") ?: SQLITE;
+	}
+
+	public static function getDBFile() : string{
+		return getenv("DATABASE_FILE", true) ?: getenv("DATABASE_FILE") ?: "passky";
+	}
+
 	public static function getDBHost() : string{
 		return getenv('MYSQL_HOST', true) ?: getenv('MYSQL_HOST') ?: 'passky-database';
 	}
@@ -69,7 +92,7 @@ class Settings{
 	}
 
 	public static function getDBSSL() : bool{
-		return getenv('MYSQL_SSL', true) === 'true';
+		return in_array(getenv('MYSQL_SSL', true), ['true', '1'], true) && @filesize(self::getDBSSLCA());
 	}
 
 	public static function getDBSSLCA() : string{
@@ -80,14 +103,125 @@ class Settings{
 		return getenv('MYSQL_CACHE_MODE', true) ?: getenv('MYSQL_CACHE_MODE') ?: 0;
 	}
 
-	public static function createConnection(){
-		$options = array();
-		if(self::getDBSSL()) $options = array(PDO::MYSQL_ATTR_SSL_CA => self::getDBSSLCA());
+	public static function createConnection() : PDO{
 
-		$conn = new PDO('mysql:host=' . self::getDBHost() . ';port=' . self::getDBPort() . ';dbname=' . self::getDBName(), self::getDBUsername(), self::getDBPassword(), $options);
-		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$engine = strtolower(self::getDBEngine());
+		$sqlite = $engine === SQLITE;
+		$database_name = self::getDBName();
+		$database_file = self::getDBFile();
+		$migration = false;
+		$connection = null;
+		$tables = null;
+		$file = null;
 
-		return $conn;
+		if($sqlite){
+
+			$file = ROOT . "/$database_file.db";
+			$connection = new PDO("$engine:" . $file);
+			$migration = !filesize($file);
+
+		}else{
+
+			$host = self::getDBHost();
+			$port = self::getDBPort();
+			$username = self::getDBUsername();
+			$password = self::getDBPassword();
+			$options = [];
+
+			if(self::getDBSSL()) $options[PDO::MYSQL_ATTR_SSL_CA] = self::getDBSSLCA();
+
+			try{
+
+				$connection = new PDO("$engine:host=$host;port=$port;dbname=$database_name", $username, $password, $options);
+
+			}catch(Exception $e){
+
+				$error = $e->getMessage();
+
+				if(in_array($error, [
+					"SQLSTATE[HY000] [1049] Unknown database '$database_name'",
+				]) || str_contains(strtolower($error), 'unknown database')){
+
+					$connection = new PDO("$engine:host=$host;port=$port", $username, $password, $options);
+
+					$SQL = '';
+					switch($engine){
+
+						case 'mysql':
+							$SQL = "CREATE DATABASE IF NOT EXISTS `$database_name`;";
+							break;
+					}
+
+					if($SQL){
+						$connection->query($SQL);
+						$connection = new PDO("$engine:host=$host;port=$port;dbname=$database_name", $username, $password, $options);
+					}
+				}
+			}
+		}
+
+		/*
+			production (PDO::ERRMODE_EXCEPTION)
+			debug/test (PDO::ERRMODE_WARNING)
+		*/
+		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		/* // Auto-Migration // */
+
+		if(!$migration){
+
+			$SQL = '';
+
+			switch($engine){
+
+				case SQLITE:
+					$SQL = "SELECT    name
+									FROM      sqlite_schema
+									WHERE     type = 'table' AND
+														name NOT LIKE 'sqlite_%';";
+					break;
+
+				case MYSQL:
+					$SQL = "SHOW FULL TABLES;";
+					break;
+			}
+
+			if($SQL){
+				$stmt = $connection->query($SQL);
+				$tables = sizeof($stmt->fetchAll());
+				$migration = $tables != TABLES_COUNT;
+			}
+		}
+
+		if($migration){
+
+			$script = null;
+
+			$files = [
+				ROOT . "/database.$engine.sql",
+				ROOT . "/../database/database.$engine.sql",
+			];
+
+			foreach($files as $file){
+				$script = @file_get_contents($file);
+				if($script) break;
+			}
+
+			if($script){
+				foreach(explode(";", $script) as $SQL){
+					try{
+
+						if(!$sqlite && $database_name){
+							$SQL = str_replace('`MYSQL_DATABASE`', "`$database_name`", $SQL);
+						}
+						$connection->query($SQL . ";");
+
+					}catch(Exception $e){}
+				}
+			}
+		}
+
+		return $connection;
 	}
 
 /*
@@ -127,7 +261,7 @@ class Settings{
 */
 
 	public static function getMail() : bool{
-		return getenv('MAIL_ENABLED', true) === 'true';
+		return in_array(getenv('MAIL_ENABLED', true), ['true', '1'], true);
 	}
 
 	public static function getMailHost() : string{
@@ -147,7 +281,7 @@ class Settings{
 	}
 
 	public static function getMailTLS() : bool{
-		return getenv('MAIL_USE_TLS', true) === 'true';
+		return in_array(getenv('MAIL_USE_TLS', true), ['true', '1'], true);
 	}
 
 /*
@@ -161,7 +295,7 @@ class Settings{
 	}
 
 	public static function getMaxPasswords() : int{
-		return getenv('ACCOUNT_MAX_PASSWORDS', true) ?: getenv('ACCOUNT_MAX_PASSWORDS') ?: 1000;
+		return getenv('ACCOUNT_MAX_PASSWORDS', true) ?: getenv('ACCOUNT_MAX_PASSWORDS') ?: 1_000;
 	}
 
 	public static function getPremium() : int{
@@ -179,7 +313,7 @@ class Settings{
 	}
 
 	public static function getYubiId() : int{
-		return getenv('YUBI_ID', true) ?: getenv('YUBI_ID') ?: 67857;
+		return getenv('YUBI_ID', true) ?: getenv('YUBI_ID') ?: 67_857;
 	}
 
 /*
@@ -189,7 +323,7 @@ class Settings{
 */
 
 	public static function getLimiter() : bool{
-		return getenv('LIMITER_ENABLED', true) === 'true';
+		return in_array(getenv('LIMITER_ENABLED', true), ['true', '1'], true);
 	}
 
 	public static function getLimiterGetInfo() : int{
@@ -301,6 +435,8 @@ class Settings{
 			$pass = self::getRedisLocalPassword();
 		}
 
+		if(!extension_loaded('redis')) return $redis;
+
 		try{
 			$redis = new Redis();
 			$redis->connect($host, $port);
@@ -317,9 +453,9 @@ class Settings{
 			return true;
 		}
 
-		$data = json_decode(file_get_contents('../data.json'), true);
+		$data = json_decode(file_get_contents(DATA_FILE), true);
 		$data[$key] = $value;
-		file_put_contents('../data.json', json_encode($data));
+		file_put_contents(DATA_FILE, json_encode($data));
 		return true;
 	}
 
@@ -331,7 +467,7 @@ class Settings{
 			return ($value !== false) ? $value : null;
 		}
 
-		$data = json_decode(file_get_contents('../data.json'), true);
+		$data = json_decode(file_get_contents(DATA_FILE), true);
 		return (!empty($data[$key])) ? $data[$key] : null;
 	}
 
@@ -353,12 +489,15 @@ class Settings{
 			return true;
 		}
 
-		$data = json_decode(file_get_contents('../data.json'), true);
-		if($data[$key] !== null && is_numeric($data[$key])){
-			$data[$key] = $data[$key] + $amount;
-			file_put_contents('../data.json', json_encode($data));
+		$data = json_decode(file_get_contents(DATA_FILE), true);
+		if(isset($data[$key])){
+			if($data[$key] !== null && is_numeric($data[$key])){
+				$data[$key] = $data[$key] + $amount;
+				file_put_contents(DATA_FILE, json_encode($data));
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public static function decreaseLocalData($key, $amount, $local){
@@ -369,10 +508,10 @@ class Settings{
 			return true;
 		}
 
-		$data = json_decode(file_get_contents('../data.json'), true);
+		$data = json_decode(file_get_contents(DATA_FILE), true);
 		if($data[$key] !== null && is_numeric($data[$key])){
 			$data[$key] = $data[$key] - $amount;
-			file_put_contents('../data.json', json_encode($data));
+			file_put_contents(DATA_FILE, json_encode($data));
 		}
 		return true;
 	}
@@ -384,14 +523,14 @@ class Settings{
 			return $redis->del($key);
 		}
 
-		$data = json_decode(file_get_contents('../data.json'), true);
+		$data = json_decode(file_get_contents(DATA_FILE), true);
 		unset($data[$key]);
-		file_put_contents('../data.json', json_encode($data));
+		file_put_contents(DATA_FILE, json_encode($data));
 		return true;
 	}
 
 	public static function purgeLocalData(){
-		file_put_contents('../data.json', '{}');
+		file_put_contents(DATA_FILE, '{}');
 		return true;
 	}
 }

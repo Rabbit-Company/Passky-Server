@@ -21,7 +21,7 @@ $sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
 if(!is_numeric($maxPasswords)) $maxPasswords = Settings::getMaxPasswords();
 if($maxPasswords < 0) $maxPasswords = -1;
-if($maxPasswords > 1000000000) $maxPasswords = 1000000000;
+if($maxPasswords > 1_000_000_000) $maxPasswords = 1_000_000_000;
 
 if($disablePremium) $maxPasswords = Settings::getMaxPasswords();
 
@@ -42,7 +42,7 @@ try{
 	}
 
 	if($disable2fa){
-		$stmt = $conn->prepare('UPDATE users SET 2fa_secret = null, yubico_otp = null, backup_codes = null WHERE username = :username');
+		$stmt = $conn->prepare('UPDATE users SET "2fa_secret" = null, yubico_otp = null, backup_codes = null WHERE username = :username');
 		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 		$stmt->execute();
 	}

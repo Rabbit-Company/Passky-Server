@@ -11,7 +11,7 @@ require_once 'Settings.php';
 require_once 'User.php';
 require_once 'License.php';
 
-require '../vendor/autoload.php';
+require_once ROOT . '/vendor/autoload.php';
 
 class Database{
 
@@ -22,7 +22,7 @@ class Database{
 			$stmt = $conn->prepare('SELECT user_id FROM users WHERE username = :username');
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
-			return ($stmt->rowCount() === 0) ? 0 : 1;
+			return $stmt->fetchColumn() ? 1 : 0;
 		}catch(PDOException $e) {
 			return 505;
 		}
@@ -40,8 +40,8 @@ class Database{
 		}
 		if($cost === null){
 			$cost = Settings::calculateHashingCost();
-			Settings::writeLocalData('server_hashing_cost', $cost, 432000, true);
-			Settings::writeLocalData('server_hashing_cost', $cost, 432000, false);
+			Settings::writeLocalData('server_hashing_cost', $cost, 432_000, true);
+			Settings::writeLocalData('server_hashing_cost', $cost, 432_000, false);
 		}
 		return $cost;
 	}
@@ -53,14 +53,14 @@ class Database{
 
 	public static function generateNonce() : string{
 		$nonce = '';
-		for($i = 0; $i < 5; $i++) $nonce .= random_int(100000,999999) . 'p';
+		for($i = 0; $i < 5; $i++) $nonce .= random_int(100_000,999_999) . 'p';
 		$nonce = substr($nonce, 0, -1);
 		return $nonce;
 	}
 
 	public static function generateCodes() : string{
 		$codes = '';
-		for($i = 0; $i < 10; $i++) $codes .= random_int(100000,999999) . ';';
+		for($i = 0; $i < 10; $i++) $codes .= random_int(100_000,999_999) . ';';
 		$codes = substr($codes, 0, -1);
 		return $codes;
 	}
@@ -160,14 +160,16 @@ class Database{
 		if(Settings::getDBCacheMode() >= 2){
 			$amount = Settings::readLocalData('user_count', false);
 			if($amount !== null){
-				Settings::writeLocalData('user_count', $amount, 3600, true);
+				Settings::writeLocalData('user_count', $amount, 3_600, true);
 				return $amount;
 			}
 			return 0;
 		}
 
 		$query = "SELECT COUNT(*) AS 'amount' FROM users";
-		if(Settings::getDBCacheMode() === 1) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
+		if(Settings::getDBCacheMode() === 1 && Settings::getDBEngine() == MYSQL) {
+			$query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
+		}
 
 		try{
 			$conn = Settings::createConnection();
@@ -175,8 +177,8 @@ class Database{
 			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
-			$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
-			$expiration = ($amount*5 >= 86400) ? 86400 : $amount*5+5;
+			$amount = $stmt->fetch()['amount'] ?: -1;
+			$expiration = ($amount*5 >= 86_400) ? 86_400 : $amount*5+5;
 			Settings::writeLocalData('user_count', $amount, $expiration, true);
 			return $amount;
 		}catch(PDOException $e) {
@@ -193,14 +195,16 @@ class Database{
 		if(Settings::getDBCacheMode() >= 2){
 			$amount = Settings::readLocalData('password_count', false);
 			if($amount !== null){
-				Settings::writeLocalData('password_count', $amount, 3600, true);
+				Settings::writeLocalData('password_count', $amount, 3_600, true);
 				return $amount;
 			}
 			return 0;
 		}
 
 		$query = "SELECT COUNT(*) AS 'amount' FROM passwords";
-		if(Settings::getDBCacheMode() === 1) $query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
+		if(Settings::getDBCacheMode() === 1 && Settings::getDBEngine() == MYSQL){
+			$query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
+		}
 
 		try{
 			$conn = Settings::createConnection();
@@ -208,8 +212,8 @@ class Database{
 			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
-			$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
-			$expiration = ($amount*5 >= 86400) ? 86400 : $amount*5+5;
+			$amount = $stmt->fetch()['amount'] ?: -1;
+			$expiration = ($amount*5 >= 86_400) ? 86_400 : $amount*5+5;
 			Settings::writeLocalData('password_count', $amount, $expiration, true);
 			return $amount;
 		}catch(PDOException $e) {
@@ -234,7 +238,7 @@ class Database{
 			$amount = $stmt->fetch()['amount'];
 			Settings::writeLocalData($username . '_password_count', $amount, 300, true);
 
-			return ($stmt->rowCount() === 1) ? $amount : -1;
+			return $amount ?: -1;
 		}catch(PDOException $e) {
 			Settings::writeLocalData($username . '_password_count', -1, 5, true);
 			return -1;
@@ -266,6 +270,7 @@ class Database{
 		$memoryTotal = Settings::readLocalData('server_memoryTotal', true);
 		if($memoryUsed === null || $memoryTotal === null){
 			$free = shell_exec('free');
+			if(!$free) return '-1'; // not working on MacOS
 			$free = (string)trim($free);
 			$free_arr = explode("\n", $free);
 			$mem = explode(" ", $free_arr[1]);
@@ -384,8 +389,8 @@ class Database{
 		$token = Settings::readLocalData('token_' . $userID, true);
 		if($token === null) $token = Settings::readLocalData('token_' . $userID, false);
 		if($token === null) $token = hash('sha256', self::generateCodes());
-		Settings::writeLocalData('token_' . $userID, $token, 3600, true);
-		Settings::writeLocalData('token_' . $userID, $token, 3600, false);
+		Settings::writeLocalData('token_' . $userID, $token, 3_600, true);
+		Settings::writeLocalData('token_' . $userID, $token, 3_600, false);
 
 		$today = date('Y-m-d');
 		if($user->accessed !== $today){
@@ -427,7 +432,7 @@ class Database{
 			$passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			Settings::writeLocalData($username . '_passwords', serialize($passwords), 60, true);
 
-			if($stmt->rowCount() > 0){
+			if($passwords){
 				$JSON_OBJ->passwords = $passwords;
 				return Display::json(0, $JSON_OBJ);
 			}
@@ -490,7 +495,7 @@ class Database{
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
 			$stmt->execute();
 
-			return ($stmt->rowCount() === 1) ? 1 : 2;
+			return $stmt->fetch() ? 1 : 2;
 		}catch(PDOException $e) {
 			return 505;
 		}
@@ -517,7 +522,7 @@ class Database{
 		if(!(strlen($website) >= 36 && strlen($website) <= 255) || str_contains($website, ' ')) return Display::json(300);
 		if(!(strlen($username2) >= 36 && strlen($username2) <= 255) || str_contains($username2, ' ')) return Display::json(301);
 		if(!(strlen($password2) >= 36 && strlen($password2) <= 255) || str_contains($password2, ' ')) return Display::json(302);
-		if(!(strlen($message) >= 36 && strlen($message) <= 10000) || str_contains($message, ' ')) return Display::json(303);
+		if(!(strlen($message) >= 36 && strlen($message) <= 10_000) || str_contains($message, ' ')) return Display::json(303);
 
 		if($user->max_passwords >= 0){
 			$password_count = self::getUserPasswordCount($username);
@@ -582,7 +587,7 @@ class Database{
 			if(!(strlen($password_data['website']) >= 36 && strlen($password_data['website']) <= 255) || str_contains($password_data['website'], ' ')){ $num_error++; continue; }
 			if(!(strlen($password_data['username']) >= 36 && strlen($password_data['username']) <= 255) || str_contains($password_data['username'], ' ')){ $num_error++; continue; }
 			if(!(strlen($password_data['password']) >= 36 && strlen($password_data['password']) <= 255) || str_contains($password_data['password'], ' ')){ $num_error++; continue; }
-			if(!(strlen($password_data['message']) >= 36 && strlen($password_data['message']) <= 10000) || str_contains($password_data['message'], ' ')){ $num_error++; continue; }
+			if(!(strlen($password_data['message']) >= 36 && strlen($password_data['message']) <= 10_000) || str_contains($password_data['message'], ' ')){ $num_error++; continue; }
 
 			$passwordArray[] = $password_data;
 			$query .= '(:owner' . $index .', :website' . $index .', :username' . $index .', :password' . $index .', :message' . $index .'),';
@@ -630,7 +635,7 @@ class Database{
 		if(!(strlen($website) >= 36 && strlen($website) <= 255) || str_contains($website, ' ')) return Display::json(300);
 		if(!(strlen($username2) >= 36 && strlen($username2) <= 255) || str_contains($username2, ' ')) return Display::json(301);
 		if(!(strlen($password2) >= 36 && strlen($password2) <= 255) || str_contains($password2, ' ')) return Display::json(302);
-		if(!(strlen($message) >= 36 && strlen($message) <= 10000) || str_contains($message, ' ')) return Display::json(303);
+		if(!(strlen($message) >= 36 && strlen($message) <= 10_000) || str_contains($message, ' ')) return Display::json(303);
 
 		switch(self::isPasswordOwnedByUser($username, $password_id)){
 			case 2:
@@ -653,11 +658,11 @@ class Database{
 			$stmt->bindParam(':password', $password2, PDO::PARAM_STR);
 			$stmt->bindParam(':message', $message, PDO::PARAM_STR);
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-			$stmt->execute();
+			$result = $stmt->execute();
 
 			Settings::removeLocalData($username . '_passwords', true);
 
-			return ($stmt->rowCount() === 1) ? Display::json(0) : Display::json(13);
+			return $result ? Display::json(0) : Display::json(13);
 		}catch(PDOException $e) {
 			return Display::json(505);
 		}
@@ -686,12 +691,12 @@ class Database{
 
 			$stmt = $conn->prepare('DELETE FROM passwords WHERE password_id = :password_id');
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-			$stmt->execute();
+			$result = $stmt->execute();
 
 			Settings::removeLocalData($username . '_passwords', true);
 			Settings::decreaseLocalData($username . '_password_count', 1, true);
 
-			return ($stmt->rowCount() === 1) ? Display::json(0) : Display::json(11);
+			return $result ? Display::json(0) : Display::json(11);
 		}catch(PDOException $e) {
 			return Display::json(505);
 		}
@@ -725,7 +730,7 @@ class Database{
 			$passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			Settings::writeLocalData($username . '_passwords', serialize($passwords), 60, true);
 
-			if($stmt->rowCount() > 0){
+			if($passwords){
 				$JSON_OBJ->passwords = $passwords;
 				return Display::json(0, $JSON_OBJ);
 			}
@@ -762,7 +767,7 @@ class Database{
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare('UPDATE users SET 2fa_secret = :secret, backup_codes = :codes WHERE username = :username');
+			$stmt = $conn->prepare('UPDATE users SET "2fa_secret" = :secret, backup_codes = :codes WHERE username = :username');
 			$stmt->bindParam(':secret', $secret, PDO::PARAM_STR);
 			$stmt->bindParam(':codes', $codes, PDO::PARAM_STR);
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -803,7 +808,7 @@ class Database{
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare('UPDATE users SET 2fa_secret = null WHERE username = :username');
+			$stmt = $conn->prepare('UPDATE users SET "2fa_secret" = null WHERE username = :username');
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
@@ -929,12 +934,14 @@ class Database{
 			$stmt->bindParam(':email', $sub_email, PDO::PARAM_STR);
 			$stmt->execute();
 
-			if($stmt->rowCount() === 0) return Display::json(17);
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			if(empty($data)) return Display::json(17);
 
 			$message = 'Usernames registered with your email: ';
 			$html = '<p>Usernames registered with your email: <ul>';
 
-			foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as &$array_username){
+			foreach($data as &$array_username){
 				$html .= "<li style='font-weight: bold;'>" . $array_username['username'] . '</li>';
 				$message .= $array_username['username'] . ', ';
 			}
@@ -948,7 +955,7 @@ class Database{
 				$mail->SMTPAuth = true;
 				$mail->Username = Settings::getMailUsername();
 				$mail->Password = Settings::getMailPassword();
-				$mail->SMTPSecure = (Settings::getMailTLS()) ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+				if(Settings::getMailTLS()) $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 				$mail->Port = Settings::getMailPort();
 
 				$mail->setFrom(Settings::getMailUsername(), 'Passky');

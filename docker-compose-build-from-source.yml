@@ -10,6 +10,8 @@ services:
       # Change environment variables in .env file
       #
       # Database
+      - DATABASE_ENGINE
+      - DATABASE_FILE
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
@@ -44,6 +46,8 @@ services:
       - CF_TURNSTILE_SITE_KEY
       - CF_TURNSTILE_SECRET_KEY
       # Database
+      - DATABASE_ENGINE
+      - DATABASE_FILE
       - MYSQL_HOST
       - MYSQL_PORT
       - MYSQL_DATABASE

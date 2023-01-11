@@ -1,7 +1,8 @@
 FROM mariadb:10.9
 
 # Copy database.sql file to /docker-entrypoint-initdb.d/ folder
-COPY database.sql /docker-entrypoint-initdb.d/
+COPY database.mysql.sql /docker-entrypoint-initdb.d/
+COPY database.sqlite.sql /docker-entrypoint-initdb.d/
 
 # Install zip unzip openssh-client sshpass and cron for Backups
 RUN apt-get update && apt-get install -y zip unzip cron sshpass openssh-client

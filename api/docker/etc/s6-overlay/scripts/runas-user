@@ -35,6 +35,9 @@ echo '
 --------------------------------------------
 '
 
+echo " Database Engine: $DATABASE_ENGINE
+"
+
 if [ $ACCOUNT_MAX -lt 0 ]
 then
   echo " Max Accounts: ∞"

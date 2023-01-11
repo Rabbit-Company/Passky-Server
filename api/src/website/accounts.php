@@ -25,6 +25,8 @@ if (isset($_GET['search']) && strlen($_GET['search']) >= 1) {
 }
 
 $startFrom = ($page - 1) * $_SESSION['limit'];
+$totalPremium = -1;
+$data = [];
 
 try{
 	$conn = Settings::createConnection();
@@ -45,7 +47,12 @@ try{
 
 	$totalPasswords = Settings::readLocalData('admin_accounts_passwords_count', true);
 	if($totalPasswords === null){
-		$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
+		$stmt3 = null;
+		if(Settings::getDBEngine() == MYSQL){
+			$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
+		}else{
+			$stmt3 = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM 'passwords'");
+		}
 		$stmt3->execute();
 		$totalPasswords = $stmt3->fetch()['amount'];
 		Settings::writeLocalData('admin_accounts_passwords_count', $totalPasswords, 300, true);
@@ -78,7 +85,7 @@ try{
 			$data = unserialize($data);
 		}
 	}
-}catch(PDOException) {}
+}catch(PDOException $e) {}
 $conn = null;
 
 displayHeader(2);

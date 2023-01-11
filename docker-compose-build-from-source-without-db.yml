@@ -19,6 +19,8 @@ services:
       - CF_TURNSTILE_SITE_KEY
       - CF_TURNSTILE_SECRET_KEY
       # Database
+      - DATABASE_ENGINE
+      - DATABASE_FILE
       - MYSQL_HOST
       - MYSQL_PORT
       - MYSQL_DATABASE

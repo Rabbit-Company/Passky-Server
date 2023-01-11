@@ -16,7 +16,7 @@ $amount = $_GET['amount'];
 
 if(!is_numeric($days)) $days = 365;
 if($days < 0) $days = 1;
-if($days > 365000) $days = 365000;
+if($days > 365_000) $days = 365_000;
 
 if(!is_numeric($amount)) $amount = 1;
 if($amount < 0) $amount = 1;
@@ -25,7 +25,7 @@ if($amount > 100) $amount = 100;
 $licenseKeys = array();
 
 for($i = 0; $i < $amount; $i++){
-	$licenseKeys[] = implode('-', str_split(substr(strtoupper(hash('sha256', 'passky' . random_int(100000, 999999) . time() . random_int(100000, 999999))), 0, 25), 5));
+	$licenseKeys[] = implode('-', str_split(substr(strtoupper(hash('sha256', 'passky' . random_int(100_000, 999_999) . time() . random_int(100_000, 999_999))), 0, 25), 5));
 }
 
 $query = 'INSERT INTO licenses(license, duration) VALUES';

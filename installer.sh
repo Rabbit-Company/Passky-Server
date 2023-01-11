@@ -51,6 +51,12 @@ echo -e "On Admin Panel you will be able to manage passky accounts."
 echo -e "Example: admin"
 printf "\n${green}Admin username: "
 read ADMIN_USERNAME
+while [[ -z "$ADMIN_USERNAME" ]];
+do
+	echo -e "\n${red}Please enter Admin username."
+	printf "\n${green}Admin username: "
+	read ADMIN_USERNAME
+done
 echo "ADMIN_USERNAME=${ADMIN_USERNAME}" >> .env
 
 echo -e "\n${blue}${bold}Provide password for your Admin Panel.${blue}"
@@ -125,61 +131,102 @@ echo -e "\n${gray}--------------------------------------------------------------
 echo -e "${brown}       DATABASE SETTINGS"
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 
-echo -e "${blue}${bold}Provide IP or host for your database.${blue}"
-echo -e "If you are using docker, use container name"
-echo -e "Example: passky-database"
-printf "\n${green}Database host: "
-read MYSQL_HOST
+echo -e "\n${blue}${bold}Provide Database Engine Type.${blue}"
+echo -e "Currently support: (sqlite, mysql)"
+printf "\n${green}Database Engine: "
+read DATABASE_ENGINE
+while [[ ! "$DATABASE_ENGINE" =~ sqlite|mysql$ ]];
+do
+	echo -e "\n${red}Entered database engine that not supported, currently support: (sqlite, mysql)."
+	printf "\n${green}Database Engine: "
+	read DATABASE_ENGINE
+done
+echo "DATABASE_ENGINE=${DATABASE_ENGINE}" >> .env
+
+if [ $DATABASE_ENGINE == "sqlite" ]; then
+	echo -e "\n${blue}${bold}Provide database file name.${blue}"
+	echo -e "If you are using docker, database with user will be created automatically"
+	echo -e "Example: passky"
+	printf "\n${green}Database file name: "
+	read DATABASE_FILE
+	while [[ -z "$DATABASE_FILE" ]];
+	do
+		echo -e "\n${red}Please enter database file name."
+		printf "\n${green}Database file name: "
+		read DATABASE_FILE
+	done
+fi
+echo "DATABASE_FILE=${DATABASE_FILE}" >> .env
+
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	echo -e "${blue}${bold}Provide IP or host for your database.${blue}"
+	echo -e "If you are using docker, use container name"
+	echo -e "Example: passky-database"
+	printf "\n${green}Database host: "
+	read MYSQL_HOST
+fi
 echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
 
-echo -e "\n${blue}${bold}Provide database port.${blue}"
-echo -e "If you are using docker, use port 3306"
-echo -e "Example: 3306"
-printf "\n${green}Database port: "
-read MYSQL_PORT
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	echo -e "\n${blue}${bold}Provide database port.${blue}"
+	echo -e "If you are using docker, use port 3306"
+	echo -e "Example: 3306"
+	printf "\n${green}Database port: "
+	read MYSQL_PORT
+fi
 echo "MYSQL_PORT=${MYSQL_PORT}" >> .env
 
-echo -e "\n${blue}${bold}Provide database name.${blue}"
-echo -e "If you are using docker, database with user will be created automatically"
-echo -e "Example: passky"
-printf "\n${green}Database name: "
-read MYSQL_DATABASE
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	echo -e "\n${blue}${bold}Provide database name.${blue}"
+	echo -e "If you are using docker, database with user will be created automatically"
+	echo -e "Example: passky"
+	printf "\n${green}Database name: "
+	read MYSQL_DATABASE
+fi
 echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
 
-echo -e "\n${blue}${bold}Provide user for your database.${blue}"
-echo -e "If you are using docker, database with user will be created automatically"
-echo -e "Example: passky"
-printf "\n${green}Database user: "
-read MYSQL_USER
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	echo -e "\n${blue}${bold}Provide user for your database.${blue}"
+	echo -e "If you are using docker, database with user will be created automatically"
+	echo -e "Example: passky"
+	printf "\n${green}Database user: "
+	read MYSQL_USER
+fi
 echo "MYSQL_USER=${MYSQL_USER}" >> .env
 
-echo -e "\n${blue}${bold}Provide password for user '${MYSQL_USER}'.${blue}"
-echo -e "Do not use password provided in example."
-echo -e "Example: uDWjSd8wB2HRBHei489o"
-printf "\n${green}Password: "
-read -s MYSQL_PASSWORD
-while [[ ! "$MYSQL_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
-do
-	echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	echo -e "\n${blue}${bold}Provide password for user '${MYSQL_USER}'.${blue}"
+	echo -e "Do not use password provided in example."
+	echo -e "Example: uDWjSd8wB2HRBHei489o"
 	printf "\n${green}Password: "
 	read -s MYSQL_PASSWORD
-done
+	while [[ ! "$MYSQL_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
+	do
+		echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
+		printf "\n${green}Password: "
+		read -s MYSQL_PASSWORD
+	done
+fi
 echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
 
-echo -e "\n\n${blue}${bold}Provide password for user 'root'.${blue}"
-echo -e "Do not use password provided in example."
-echo -e "Example: 9w8e8wil0bteC5iRlXofsnuuEiW1F"
-printf "\n${green}Password: "
-read -s MYSQL_ROOT_PASSWORD
-while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
-do
-	echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	echo -e "\n\n${blue}${bold}Provide password for user 'root'.${blue}"
+	echo -e "Do not use password provided in example."
+	echo -e "Example: 9w8e8wil0bteC5iRlXofsnuuEiW1F"
 	printf "\n${green}Password: "
 	read -s MYSQL_ROOT_PASSWORD
-done
+	while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
+	do
+		echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
+		printf "\n${green}Password: "
+		read -s MYSQL_ROOT_PASSWORD
+	done
+fi
 echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
 
 echo "MYSQL_CACHE_MODE=0" >> .env
+echo "MYSQL_SSL=false" >> .env
+echo "MYSQL_SSL_CA=/etc/ssl/certs/ca-certificates.crt" >> .env
 
 echo -e "\n\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${brown}       MAIL SETTINGS"
@@ -238,6 +285,14 @@ then
 	echo -e "Example: info@passky.org"
 	printf "\n${green}SMTP username: "
 	read MAIL_USERNAME
+	# REF https://github.com/deajan/linuxscripts/blob/master/emailCheck.sh#L73
+	rfc822="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
+	while [[ ! "$MAIL_USERNAME" =~ $rfc822 ]];
+	do
+		echo -e "${red}'${MAIL_USERNAME}' is not a valid email address."
+		printf "\n${green}SMTP username: "
+		read MAIL_USERNAME
+	done
 	echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
 
 	echo -e "\n${blue}${bold}Provide SMTP password.${blue}"
@@ -375,8 +430,17 @@ echo "REDIS_LOCAL_PASSWORD=" >> .env
 
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${green}            ENV FILE HAS BEEN SUCCESSFULLY GENEREATED"
-echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose up -d"
+if [ $DATABASE_ENGINE == "sqlite" ]; then
+	echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose -f docker-compose-build-from-source-without-db.yml up -d"
+else
+	echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose up -d"
+fi
 echo -e "${blue} If you made a mistake you can just re-run the installer with command: ${bold}./installer.sh"
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 
 echo -e "${none}"
+
+cp .env api/.env
+mkdir -p api/.tmp
+rm api/.tmp/*.sql
+cp database/*.sql api/.tmp/

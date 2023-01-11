@@ -1,9 +1,7 @@
-/*
-Created: 30/03/2021
-Modified: 10/10/2022
-Author: Rabbit Company
-Database: MySQL 8.0
-*/
+-- Created: 30/03/2021
+-- Modified: 10/10/2022
+-- Author: Rabbit Company
+-- Database: MySQL 8.0
 
 -- Create database section -------------------------------------------------
 
@@ -55,4 +53,4 @@ CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`licenses`
   PRIMARY KEY (`license`)
 );
 
-CREATE INDEX `owner_idx` ON `MYSQL_DATABASE`.`passwords` (`owner`);
+CREATE INDEX IF NOT EXISTS `owner_idx` ON `passwords` (`owner`);
