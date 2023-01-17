@@ -70,75 +70,10 @@ If you’re ready to try Passky out at no cost, you can get started by visiting 
 
 ## Installation
 
-### Docker
-#### Debian & Ubuntu (x64)
-```yaml
-# Install docker
-curl -sSL https://get.docker.com/ | CHANNEL=stable bash
-# Start docker on boot
-sudo systemctl enable --now docker
-# Install docker compose
-sudo apt install docker-compose -y
-```
-#### Raspberry Pi OS (arm64)
-```yaml
-# Install docker
-curl -sSL https://get.docker.com/ | CHANNEL=stable bash
-# Start docker on boot
-sudo systemctl enable --now docker
-# Install docker compose
-sudo apt-get install libffi-dev libssl-dev
-sudo apt install python3-dev
-sudo apt-get install -y python3 python3-pip
-sudo pip3 install docker-compose
-```
+Passky Server can be easily installed in multiple ways.
 
-### Managed Hosting (Shared/Dedicated) for (Server+Website)
-
-### Requirments
-
-1- [PHP 8.2+](https://php.net).
-
-2- Database([SQLite](https://www.sqlite.org/index.html), [MySQL](https://www.mysql.com/), [MariaDB](https://mariadb.org/)).
-
-3- [composer](https://getcomposer.org/).
-
-4- [Redis](https://redis.io/). (optional)
-
-5- Mail Server. (optional)
-
-### Installation
-
-1- Go to the root of your hosting and download the following:
-- [Server Application](https://github.com/Rabbit-Company/Passky-Server) in `Passky-Server` folder.
-- [Website Application](https://github.com/Rabbit-Company/Passky-Website) in `Passky-Website` folder.
-
-2- Prepare the server:
-```yaml
-cd Passy-Server
-./installer.sh # In order to do the setup process
-# or just copy `.env.example` into `api/.env` and make the proper changes that suit you.
-./shared-hosting-finalization.sh # (required)
-```
-
-3- Create the following sub-domains:
--  `passky.YourDomain.com` for [Website Application](https://github.com/Rabbit-Company/Passky-Website) which point to `Passky-Website/website` folder.
--  `api.passky.YourDomain.com` for [Server Application](https://github.com/Rabbit-Company/Passky-Server) which point to `Passky-Server/api/src`.
-
-4- You can now access both `passky.YourDomain.com` which is the password manager itself, and `api.passky.YourDomain.com` which is the Server that clients connect by a [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop#installation), [Web Browser](https://vault.passky.org/), [Browsers Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension#installation), and [Android Application](https://github.com/Rabbit-Company/Passky-Android#installation).
-
-### Passky containers
-```yaml
-wget https://github.com/Rabbit-Company/Passky-Server/releases/latest/download/passky-server.tar.xz
-tar -xf passky-server.tar.xz
-cd passky-server
-# Makes installers executable
-chmod +x installer.sh installerGUI.sh
-# Start the GUI installer
-./installerGUI.sh
-# After you complete with installer you can create containers with below command
-sudo docker-compose up -d
-```
+- [Docker](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/installation/docker.md) (Recommended)
+- [Shared Hosting](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/installation/shared-hosting.md)
 
 ## Upgrade
 
