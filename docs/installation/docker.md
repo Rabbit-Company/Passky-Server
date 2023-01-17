@@ -49,6 +49,8 @@ chmod +x installer.sh installerGUI.sh
 sudo docker-compose up -d
 ```
 
+The admin panel for the Passky is designed to be deployed on port 8080 by default. However, it is important to note that this can be modified to a different port as per your requirements, by editing the appropriate settings in the `docker-compose.yml` file.
+
 ## 3. Passky Website Installation (Optional)
 
 > ℹ️ The Passky Website is a client-side only application and as such, it does not require any server-side code for its operation. As a result, it can be hosted for free on [Cloudflare Pages](https://pages.cloudflare.com/).
@@ -59,8 +61,9 @@ sudo docker-compose up -d
 wget https://raw.githubusercontent.com/Rabbit-Company/Passky-Website/main/docker-compose.yml
 # Start the container
 docker-compose up -d
-# Your website should be now deployed on port 8081. This can be changed in docker-compose.yml file.
 ```
+
+The website for the Passky is designed to be deployed on port 8080 by default. However, it is important to note that this can be modified to a different port as per your requirements, by editing the appropriate settings in the `docker-compose.yml` file.
 
 ## 4. Security
 
