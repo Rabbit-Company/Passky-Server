@@ -11,5 +11,10 @@ RUN chmod +x /etc/passky-entrypoint.sh
 # Remove all daily cron tasks
 RUN rm /etc/cron.daily/*
 
+# Copy script to cron.daily folder that will be executed every day
+COPY passky-daily-crontab /etc/cron.daily/
+# Makes script executable
+RUN chmod +x /etc/cron.daily/passky-daily-crontab
+
 # Start MariaDB and Cron
 ENTRYPOINT ["/etc/passky-entrypoint.sh"]
