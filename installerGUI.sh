@@ -244,6 +244,3 @@ else
 fi
 
 cp .env api/.env
-mkdir -p api/.tmp
-rm api/.tmp/*.sql
-cp database/*.sql api/.tmp/

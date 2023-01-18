@@ -9,6 +9,7 @@ define('SQLITE', 'sqlite');
 define('MYSQL', 'mysql');
 
 require_once ROOT . '/vendor/autoload.php';
+require_once 'Schema.php';
 
 // Try to load .env file and make it available for getenv to use.
 try{
@@ -197,14 +198,9 @@ class Settings{
 
 			$script = null;
 
-			$files = [
-				ROOT . "/database.$engine.sql",
-				ROOT . "/../database/database.$engine.sql",
-			];
-
-			foreach($files as $file){
-				$script = @file_get_contents($file);
-				if($script) break;
+			switch($engine){
+				case SQLITE: $script = Schema::SQLite(); break;
+				case MYSQL: $script = Schema::MySQL(); break;
 			}
 
 			if($script){
