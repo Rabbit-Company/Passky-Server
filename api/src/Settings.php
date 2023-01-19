@@ -4,6 +4,7 @@ define('ROOT', realpath(__DIR__ . '/..'));
 define('PUBLIC', __DIR__);
 define('DATA_FILE', ROOT . '/data.json');
 define('MIGRATION_FILE', ROOT . '/.migration.php');
+define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 
 define('SQLITE', 'sqlite');
 define('MYSQL', 'mysql');
@@ -112,6 +113,7 @@ class Settings{
 		$database_file = self::getDBFile();
 		$migration = false;
 		$connection = null;
+		$timestamp = null;
 		$file = null;
 
 		if($sqlite){
@@ -170,8 +172,9 @@ class Settings{
 
 		if(!$migration) {
 
+			$timestamp = date(DATETIME_FORMAT);
 			$snapshot = @include_once MIGRATION_FILE;
-			$migration = empty($snapshot) || !strtotime($snapshot) || strlen($snapshot) < 19;
+			$migration = empty($snapshot) || !strtotime($snapshot) || strlen($snapshot) != strlen($timestamp);
 		}
 
 		if($migration){
@@ -195,7 +198,7 @@ class Settings{
 					}catch(Exception $e){}
 				}
 
-				file_put_contents(MIGRATION_FILE, "<?php return '" . date('Y-m-d H:i:s') . "'; ?>");
+				file_put_contents(MIGRATION_FILE, "<?php return '$timestamp'; ?>");
 			}
 		}
 
