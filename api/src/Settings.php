@@ -3,7 +3,7 @@
 define('ROOT', realpath(__DIR__ . '/..'));
 define('PUBLIC', __DIR__);
 define('DATA_FILE', ROOT . '/data.json');
-define('TABLES_COUNT', 3);
+define('MIGRATION_FILE', ROOT . '/.migration.php');
 
 define('SQLITE', 'sqlite');
 define('MYSQL', 'mysql');
@@ -112,7 +112,6 @@ class Settings{
 		$database_file = self::getDBFile();
 		$migration = false;
 		$connection = null;
-		$tables = null;
 		$file = null;
 
 		if($sqlite){
@@ -169,29 +168,10 @@ class Settings{
 
 		/* // Auto-Migration // */
 
-		if(!$migration){
+		if(!$migration) {
 
-			$SQL = '';
-
-			switch($engine){
-
-				case SQLITE:
-					$SQL = "SELECT    name
-									FROM      sqlite_schema
-									WHERE     type = 'table' AND
-														name NOT LIKE 'sqlite_%';";
-					break;
-
-				case MYSQL:
-					$SQL = "SHOW FULL TABLES;";
-					break;
-			}
-
-			if($SQL){
-				$stmt = $connection->query($SQL);
-				$tables = sizeof($stmt->fetchAll());
-				$migration = $tables != TABLES_COUNT;
-			}
+			$snapshot = @include_once MIGRATION_FILE;
+			$migration = empty($snapshot) || !strtotime($snapshot) || strlen($snapshot) < 19;
 		}
 
 		if($migration){
@@ -214,6 +194,8 @@ class Settings{
 
 					}catch(Exception $e){}
 				}
+
+				file_put_contents(MIGRATION_FILE, "<?php return '" . date('Y-m-d H:i:s') . "'; ?>");
 			}
 		}
 
