@@ -45,8 +45,8 @@ class User {
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			if($stmt->rowCount() === 1){
-				$result = $stmt->fetch();
+			$result = $stmt->fetch();
+			if($result){
 				Settings::writeLocalData($username . '_data', serialize($result), 60, true);
 
 				$this->user_id = $result['user_id'];

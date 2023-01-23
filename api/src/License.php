@@ -19,8 +19,8 @@ class License {
 			$stmt->bindParam(':license', $license, PDO::PARAM_STR);
 			$stmt->execute();
 
-			if($stmt->rowCount() === 1){
-				$result = $stmt->fetch();
+			$result = $stmt->fetch();
+			if($result){
 				$this->license = $result['license'];
 				$this->duration = $result['duration'];
 				$this->created = $result['created'];

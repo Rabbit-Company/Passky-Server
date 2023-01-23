@@ -22,7 +22,7 @@ class Database{
 			$stmt = $conn->prepare('SELECT user_id FROM users WHERE username = :username');
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
-			return ($stmt->rowCount() === 0) ? 0 : 1;
+			return ($stmt->fetchColumn()) ? 1 : 0;
 		}catch(PDOException $e) {
 			return 505;
 		}
@@ -177,7 +177,7 @@ class Database{
 			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
-			$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
+			$amount = $stmt->fetchColumn();
 			$expiration = ($amount*5 >= 86_400) ? 86_400 : $amount*5+5;
 			Settings::writeLocalData('user_count', $amount, $expiration, true);
 			return $amount;
@@ -212,7 +212,7 @@ class Database{
 			$stmt = $conn->prepare($query);
 			$stmt->execute();
 
-			$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
+			$amount = $stmt->fetchColumn();;
 			$expiration = ($amount*5 >= 86_400) ? 86_400 : $amount*5+5;
 			Settings::writeLocalData('password_count', $amount, $expiration, true);
 			return $amount;
@@ -235,10 +235,10 @@ class Database{
 			$stmt->bindParam(':owner', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
-			$amount = $stmt->fetch()['amount'];
+			$amount = $stmt->fetchColumn();
 			Settings::writeLocalData($username . '_password_count', $amount, 300, true);
 
-			return ($stmt->rowCount() === 1) ? $amount : -1;
+			return $amount;
 		}catch(PDOException $e) {
 			Settings::writeLocalData($username . '_password_count', -1, 5, true);
 			return -1;
@@ -432,7 +432,7 @@ class Database{
 			$passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			Settings::writeLocalData($username . '_passwords', serialize($passwords), 60, true);
 
-			if($stmt->rowCount() > 0){
+			if(count($passwords) > 0){
 				$JSON_OBJ->passwords = $passwords;
 				return Display::json(0, $JSON_OBJ);
 			}
@@ -495,7 +495,7 @@ class Database{
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
 			$stmt->execute();
 
-			return ($stmt->rowCount() === 1) ? 1 : 2;
+			return ($stmt->fetchColumn()) ? 1 : 2;
 		}catch(PDOException $e) {
 			return 505;
 		}
@@ -658,11 +658,11 @@ class Database{
 			$stmt->bindParam(':password', $password2, PDO::PARAM_STR);
 			$stmt->bindParam(':message', $message, PDO::PARAM_STR);
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-			$stmt->execute();
+			$success = $stmt->execute();
 
 			Settings::removeLocalData($username . '_passwords', true);
 
-			return ($stmt->rowCount() === 1) ? Display::json(0) : Display::json(13);
+			return ($success) ? Display::json(0) : Display::json(13);
 		}catch(PDOException $e) {
 			return Display::json(505);
 		}
@@ -691,12 +691,11 @@ class Database{
 
 			$stmt = $conn->prepare('DELETE FROM passwords WHERE password_id = :password_id');
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-			$stmt->execute();
 
 			Settings::removeLocalData($username . '_passwords', true);
 			Settings::decreaseLocalData($username . '_password_count', 1, true);
 
-			return ($stmt->rowCount() === 1) ? Display::json(0) : Display::json(11);
+			return ($stmt->execute()) ? Display::json(0) : Display::json(11);
 		}catch(PDOException $e) {
 			return Display::json(505);
 		}
@@ -730,7 +729,7 @@ class Database{
 			$passwords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			Settings::writeLocalData($username . '_passwords', serialize($passwords), 60, true);
 
-			if($stmt->rowCount() > 0){
+			if(count($passwords) > 0){
 				$JSON_OBJ->passwords = $passwords;
 				return Display::json(0, $JSON_OBJ);
 			}
@@ -934,7 +933,7 @@ class Database{
 			$stmt->bindParam(':email', $sub_email, PDO::PARAM_STR);
 			$stmt->execute();
 
-			if($stmt->rowCount() === 0) return Display::json(17);
+			if($stmt->fetchColumn() === false) return Display::json(17);
 
 			$message = 'Usernames registered with your email: ';
 			$html = '<p>Usernames registered with your email: <ul>';

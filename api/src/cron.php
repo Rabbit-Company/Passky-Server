@@ -63,7 +63,7 @@ if(Settings::getDBCacheMode() >= 2){
 		$stmt = $conn->prepare($queryUsers);
 		$stmt->execute();
 
-		$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
+		$amount = $stmt->fetchColumn();
 		Settings::writeLocalData('user_count', $amount, 43_200, true);
 		Settings::writeLocalData('user_count', $amount, 864_000, false);
 	}catch(PDOException $e) {
@@ -77,7 +77,7 @@ if(Settings::getDBCacheMode() >= 2){
 		$stmt = $conn->prepare($queryPasswords);
 		$stmt->execute();
 
-		$amount = ($stmt->rowCount() === 1) ? $stmt->fetch()['amount'] : -1;
+		$amount = $stmt->fetchColumn();
 		Settings::writeLocalData('password_count', $amount, 43_200, true);
 		Settings::writeLocalData('password_count', $amount, 864_000, false);
 	}catch(PDOException $e) {
