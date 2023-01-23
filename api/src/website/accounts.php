@@ -48,7 +48,7 @@ try{
 	$totalPasswords = Settings::readLocalData('admin_accounts_passwords_count', true);
 	if($totalPasswords === null){
 		$stmt3 = null;
-		if(Settings::getDBEngine() == MYSQL){
+		if(Settings::getDBEngine() === 'mysql'){
 			$stmt3 = $conn->prepare("SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'");
 		}else{
 			$stmt3 = $conn->prepare("SELECT COUNT(*) AS 'amount' FROM 'passwords'");

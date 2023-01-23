@@ -167,7 +167,7 @@ class Database{
 		}
 
 		$query = "SELECT COUNT(*) AS 'amount' FROM users";
-		if(Settings::getDBCacheMode() === 1 && Settings::getDBEngine() == MYSQL) {
+		if(Settings::getDBCacheMode() === 1 && Settings::getDBEngine() === 'mysql') {
 			$query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
 		}
 
@@ -202,7 +202,7 @@ class Database{
 		}
 
 		$query = "SELECT COUNT(*) AS 'amount' FROM passwords";
-		if(Settings::getDBCacheMode() === 1 && Settings::getDBEngine() == MYSQL){
+		if(Settings::getDBCacheMode() === 1 && Settings::getDBEngine() === 'mysql'){
 			$query = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";
 		}
 

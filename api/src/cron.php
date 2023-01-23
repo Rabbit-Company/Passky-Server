@@ -33,6 +33,9 @@ Settings::purgeLocalData();
 Settings::writeLocalData('cron_executed', $today, 86_400, true);
 Settings::writeLocalData('cron_executed', $today, 86_400, false);
 
+// Create tables if they do not exists
+Settings::createTables();
+
 // Deactivate expired premium accounts
 $maxPasswords = Settings::getMaxPasswords();
 try{
@@ -48,7 +51,7 @@ $conn = null;
 if(Settings::getDBCacheMode() >= 2){
 	$queryUsers = "SELECT COUNT(*) AS 'amount' FROM users";
 	$queryPasswords = "SELECT COUNT(*) AS 'amount' FROM passwords";
-	if(Settings::getDBCacheMode() === 3 && Settings::getDBEngine() == MYSQL){
+	if(Settings::getDBCacheMode() === 3 && Settings::getDBEngine() == 'mysql'){
 
 		$queryUsers = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'users'";
 		$queryPasswords = "SELECT TABLE_ROWS AS 'amount' FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . Settings::getDBName() . "' AND TABLE_NAME = 'passwords'";

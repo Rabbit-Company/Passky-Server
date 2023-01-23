@@ -4,10 +4,6 @@ define('ROOT', realpath(__DIR__ . '/..'));
 define('PUBLIC', __DIR__);
 define('DATA_FILE', ROOT . '/data.json');
 define('MIGRATION_FILE', ROOT . '/.migration.php');
-define('DATETIME_FORMAT', 'Y-m-d H:i:s');
-
-define('SQLITE', 'sqlite');
-define('MYSQL', 'mysql');
 
 require_once ROOT . '/vendor/autoload.php';
 require_once 'Schema.php';
@@ -66,7 +62,7 @@ class Settings{
 */
 
 	public static function getDBEngine() : string{
-		return getenv("DATABASE_ENGINE", true) ?: getenv("DATABASE_ENGINE") ?: SQLITE;
+		return getenv("DATABASE_ENGINE", true) ?: getenv("DATABASE_ENGINE") ?: 'sqlite';
 	}
 
 	public static function getDBFile() : string{
@@ -106,103 +102,31 @@ class Settings{
 	}
 
 	public static function createConnection() : PDO{
+		$options = array();
+		if(self::getDBSSL()) $options[PDO::MYSQL_ATTR_SSL_CA] = self::getDBSSLCA();
 
-		$engine = strtolower(self::getDBEngine());
-		$sqlite = $engine === SQLITE;
-		$database_name = self::getDBName();
-		$database_file = self::getDBFile();
-		$migration = false;
-		$connection = null;
-		$timestamp = null;
-		$file = null;
-
-		if($sqlite){
-
-			$file = ROOT . "/$database_file.db";
-			$connection = new PDO("$engine:" . $file);
-			$migration = !filesize($file);
-
+		if(self::getDBEngine() === 'mysql'){
+			$conn = new PDO('mysql:host=' . self::getDBHost() . ';port=' . self::getDBPort() . ';dbname=' . self::getDBName(), self::getDBUsername(), self::getDBPassword(), $options);
 		}else{
+			$conn = new PDO("sqlite:" . ROOT . "/" . self::getDBFile() . ".db");
+		}
 
-			$host = self::getDBHost();
-			$port = self::getDBPort();
-			$username = self::getDBUsername();
-			$password = self::getDBPassword();
-			$options = [];
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		return $conn;
+	}
 
-			if(self::getDBSSL()) $options[PDO::MYSQL_ATTR_SSL_CA] = self::getDBSSLCA();
+	public static function createTables(){
+		$script = Schema::SQLite();
+		if(self::getDBEngine() === 'mysql') $script = Schema::MySQL();
 
+		$conn = self::createConnection();
+		foreach(explode(";", $script) as $SQL){
 			try{
-
-				$connection = new PDO("$engine:host=$host;port=$port;dbname=$database_name", $username, $password, $options);
-
-			}catch(Exception $e){
-
-				$error = $e->getMessage();
-
-				if(in_array($error, [
-					"SQLSTATE[HY000] [1049] Unknown database '$database_name'",
-				]) || str_contains(strtolower($error), 'unknown database')){
-
-					$connection = new PDO("$engine:host=$host;port=$port", $username, $password, $options);
-
-					$SQL = '';
-					switch($engine){
-
-						case 'mysql':
-							$SQL = "CREATE DATABASE IF NOT EXISTS `$database_name`;";
-							break;
-					}
-
-					if($SQL){
-						$connection->query($SQL);
-						$connection = new PDO("$engine:host=$host;port=$port;dbname=$database_name", $username, $password, $options);
-					}
-				}
-			}
+				if(self::getDBEngine() === 'mysql') $SQL = str_replace('`MYSQL_DATABASE`', "`" . self::getDBFile() . "`", $SQL);
+				$conn->query($SQL . ";");
+			}catch(Exception $e){}
 		}
-
-		/*
-			production (PDO::ERRMODE_EXCEPTION)
-			debug/test (PDO::ERRMODE_WARNING)
-		*/
-		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-		/* // Auto-Migration // */
-
-		if(!$migration) {
-
-			$timestamp = date(DATETIME_FORMAT);
-			$snapshot = @include_once MIGRATION_FILE;
-			$migration = empty($snapshot) || !strtotime($snapshot) || strlen($snapshot) != strlen($timestamp);
-		}
-
-		if($migration){
-
-			$script = null;
-
-			switch($engine){
-				case SQLITE: $script = Schema::SQLite(); break;
-				case MYSQL: $script = Schema::MySQL(); break;
-			}
-
-			if($script){
-				foreach(explode(";", $script) as $SQL){
-					try{
-
-						if(!$sqlite && $database_name){
-							$SQL = str_replace('`MYSQL_DATABASE`', "`$database_name`", $SQL);
-						}
-						$connection->query($SQL . ";");
-
-					}catch(Exception $e){}
-				}
-
-				file_put_contents(MIGRATION_FILE, "<?php return '$timestamp'; ?>");
-			}
-		}
-
-		return $connection;
+		$conn = null;
 	}
 
 /*
