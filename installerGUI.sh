@@ -157,37 +157,6 @@ else
 	echo "MAIL_USE_TLS=true" >> .env
 fi
 
-if (whiptail --title "Passky Installer - Mail Settings" --yesno "Do you want backups to be enabled?\n\nBackup perform every day and will export database to external server thru SSH (Using SCP).\n\nIf you don't have any external server ready for backups, leave it disabled." 14 78);
-then
-	echo "BACKUP_ENABLED=true" >> .env
-
-	BACKUP_HOST=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide host for Backup server.\n\nSetting up Backups is not required." 12 78 backups.passky.org 3>&1 1>&2 2>&3)
-	echo "BACKUP_HOST=${BACKUP_HOST}" >> .env
-
-	BACKUP_PORT=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide SSH port.\n\nSetting up Backups is not required." 12 78 22 3>&1 1>&2 2>&3)
-	while [[ ! "$BACKUP_PORT" =~ ^[0-9]{1,5}$ ]];
-	do
-		BACKUP_PORT=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide SSH port.\n\nSetting up Backups is not required.\n\n'${BACKUP_PORT}' is not a valid port. Port must be a number between 1 and 65535." 14 78 22 3>&1 1>&2 2>&3)
-	done
-	echo "BACKUP_PORT=${BACKUP_PORT}" >> .env
-
-	BACKUP_LOCATION=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide location for Backup server.\n\nOn this location backup would be saved every day." 12 78 /home/backup/Passky 3>&1 1>&2 2>&3)
-	echo "BACKUP_LOCATION=${BACKUP_LOCATION}" >> .env
-
-	BACKUP_USER=$(whiptail --title "Passky Installer - Backup Settings" --inputbox "Provide user for Backup server.\n\nDo not use root user. Create new user that doesn't have root premissions." 12 78 backup 3>&1 1>&2 2>&3)
-	echo "BACKUP_USER=${BACKUP_USER}" >> .env
-
-	BACKUP_PASSWORD=$(whiptail --title "Passky Installer - Backup Settings" --passwordbox "Provide password for user '${BACKUP_USER}'.\n\nSetting up Backups is not required." 12 78 3>&1 1>&2 2>&3)
-	echo "BACKUP_PASSWORD=${BACKUP_PASSWORD}" >> .env
-else
-	echo "BACKUP_ENABLED=false" >> .env
-	echo "BACKUP_HOST=" >> .env
-	echo "BACKUP_PORT=" >> .env
-	echo "BACKUP_USER=" >> .env
-	echo "BACKUP_PASSWORD=" >> .env
-	echo "BACKUP_LOCATION=" >> .env
-fi
-
 if (whiptail --title "Passky Installer - API call limiter (Brute force mitigation)" --yesno "Do you want API call limiter to be enabled?\n\nAPI call limiter will only allow specific amount of calls for each device (IP).\n\nIf you expose this Passky Server to the internet, this should be enabled for security reasons." 14 78); then
 	echo "LIMITER_ENABLED=true" >> .env
 else
