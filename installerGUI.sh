@@ -196,11 +196,6 @@ echo "REDIS_LOCAL_HOST=127.0.0.1" >> .env
 echo "REDIS_LOCAL_PORT=6379" >> .env
 echo "REDIS_LOCAL_PASSWORD=" >> .env
 
-
-if [ $DATABASE_ENGINE == "sqlite" ]; then
-	whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose -f docker-compose-build-from-source-without-db.yml up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78
-else
-	whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78
-fi
+whiptail --title "Passky Installer" --msgbox "ENV FILE HAS BEEN SUCCESSFULLY GENEREATED\n\nNow you can deploy Passky Server with command: docker-compose up -d\n\nIf you made a mistake you can just re-run the installer with command: ./installerGUI.sh" 14 78
 
 cp .env api/.env

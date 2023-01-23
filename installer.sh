@@ -347,11 +347,7 @@ echo "REDIS_LOCAL_PASSWORD=" >> .env
 
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${green}            ENV FILE HAS BEEN SUCCESSFULLY GENEREATED"
-if [ $DATABASE_ENGINE == "sqlite" ]; then
-	echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose -f docker-compose-build-from-source-without-db.yml up -d"
-else
-	echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose up -d"
-fi
+echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose up -d"
 echo -e "${blue} If you made a mistake you can just re-run the installer with command: ${bold}./installer.sh"
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 
