@@ -113,15 +113,6 @@ if [ $DATABASE_ENGINE == "mysql" ]; then
 fi
 echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
 
-if [ $DATABASE_ENGINE == "mysql" ]; then
-	MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically" 12 78 3>&1 1>&2 2>&3)
-	while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
-	do
-		MYSQL_ROOT_PASSWORD=$(whiptail --title "Passky Installer - Database Settings" --passwordbox "Provide password for user 'root'.\n\nIf you are using docker, database with user will be created automatically\n\nEntered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers." 14 78 3>&1 1>&2 2>&3)
-	done
-fi
-echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
-
 echo "MYSQL_CACHE_MODE=0" >> .env
 echo "MYSQL_SSL=false" >> .env
 echo "MYSQL_SSL_CA=/etc/ssl/certs/ca-certificates.crt" >> .env

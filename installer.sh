@@ -209,21 +209,6 @@ if [ $DATABASE_ENGINE == "mysql" ]; then
 fi
 echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
 
-if [ $DATABASE_ENGINE == "mysql" ]; then
-	echo -e "\n\n${blue}${bold}Provide password for user 'root'.${blue}"
-	echo -e "Do not use password provided in example."
-	echo -e "Example: 9w8e8wil0bteC5iRlXofsnuuEiW1F"
-	printf "\n${green}Password: "
-	read -s MYSQL_ROOT_PASSWORD
-	while [[ ! "$MYSQL_ROOT_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
-	do
-		echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
-		printf "\n${green}Password: "
-		read -s MYSQL_ROOT_PASSWORD
-	done
-fi
-echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> .env
-
 echo "MYSQL_CACHE_MODE=0" >> .env
 echo "MYSQL_SSL=false" >> .env
 echo "MYSQL_SSL_CA=/etc/ssl/certs/ca-certificates.crt" >> .env

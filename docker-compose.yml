@@ -1,31 +1,5 @@
 version: '3'
 services:
-  passky-database:
-    container_name: passky-database
-    image: 'rabbitcompany/passky-database:latest'
-    restart: unless-stopped
-    environment:
-      #
-      # Change environment variables in .env file
-      # You can also run an installer.sh that would auto generate .env file
-      # or run installerGUI.sh for graphical configuration.
-      #
-      # Database
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_ROOT_PASSWORD
-      # Backup
-      - BACKUP_ENABLED
-      - BACKUP_HOST
-      - BACKUP_PORT
-      - BACKUP_USER
-      - BACKUP_PASSWORD
-      - BACKUP_LOCATION
-    volumes:
-      - /passky:/var/lib/mysql
-    networks:
-      - passky
   passky-api:
     container_name: passky-api
     image: 'rabbitcompany/passky-api:latest'
@@ -97,12 +71,5 @@ services:
       - LIMITER_REMOVE_YUBIKEY
       - LIMITER_UPGRADE_ACCOUNT
       - LIMITER_GET_REPORT
-    networks:
-      - passky
     ports:
       - 8080:80
-    depends_on:
-      - passky-database
-networks:
-  passky:
-    driver: bridge
