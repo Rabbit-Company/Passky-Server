@@ -36,6 +36,7 @@ COPY docker/etc/nginx /etc/nginx
 
 # Configure PHP
 COPY php.ini /etc/php/current_version/fpm/
+RUN sed -i '/session.cookie_secure/d' /etc/php/current_version/fpm/pool.d/y-override-php-defaults.conf
 
 # Remove scripts
 RUN rm /etc/s6-overlay/scripts/laravel-automations \
