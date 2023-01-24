@@ -3,7 +3,6 @@
 define('ROOT', realpath(__DIR__ . '/..'));
 define('PUBLIC', __DIR__);
 define('DATA_FILE', ROOT . '/data.json');
-define('MIGRATION_FILE', ROOT . '/.migration.php');
 
 require_once ROOT . '/vendor/autoload.php';
 require_once 'Schema.php';
