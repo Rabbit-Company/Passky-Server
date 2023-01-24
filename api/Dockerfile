@@ -25,8 +25,9 @@ RUN apt-get clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Configure Job Scheduler (Cron)
-COPY passky-daily-crontab /etc/cron.hourly/passky-daily-crontab
-RUN chmod +x /etc/cron.hourly/passky-daily-crontab
+COPY passky-cron /etc/cron.d/passky
+RUN chmod 0644 /etc/cron.d/passky
+RUN crontab /etc/cron.d/passky
 
 # Configure S6-Overlay
 COPY docker/etc/s6-overlay /etc/s6-overlay/
