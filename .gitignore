@@ -1,5 +1,6 @@
 .env
 *.db
+api/databases
 api/data.json
 api/api-limiter.json
 api/tokens.json
