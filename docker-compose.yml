@@ -73,3 +73,5 @@ services:
       - LIMITER_GET_REPORT
     ports:
       - 8080:80
+    volumes:
+      - ./databases:/var/www/html/databases

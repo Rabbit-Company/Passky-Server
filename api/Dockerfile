@@ -51,5 +51,5 @@ RUN rm /etc/s6-overlay/scripts/laravel-automations \
 RUN rm /etc/nginx/server-opts.d/security.conf
 
 # Set owner, group and permissions
-RUN chown -R 9999:9999 /var/www/html \
+RUN chown -R 1000:1000 /var/www/html \
 && chmod 755 -R /var/www/html
