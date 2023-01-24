@@ -108,7 +108,7 @@ class Settings{
 		if(self::getDBEngine() === 'mysql'){
 			$conn = new PDO('mysql:host=' . self::getDBHost() . ';port=' . self::getDBPort() . ';dbname=' . self::getDBName(), self::getDBUsername(), self::getDBPassword(), $options);
 		}else{
-			$conn = new PDO("sqlite:" . ROOT . "/" . self::getDBFile() . ".db");
+			$conn = new PDO("sqlite:" . ROOT . "/databases/" . self::getDBFile() . ".db");
 		}
 
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

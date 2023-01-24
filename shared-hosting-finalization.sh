@@ -2,3 +2,4 @@
 
 composer update -d api/
 echo '{}' > api/data.json
+mkdir api/databases

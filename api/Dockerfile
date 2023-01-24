@@ -12,6 +12,9 @@ RUN composer update -d /var/www/html/
 # Create json file for Temp data
 RUN echo '{}' > /var/www/html/data.json
 
+# Create database folder for SQLite databases
+RUN mkdir /var/www/html/databases
+
 # Install redis and cron
 RUN apt-get update && apt-get -y --no-install-recommends install \
 redis-server \
