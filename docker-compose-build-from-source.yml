@@ -1,34 +1,9 @@
 version: '3'
 services:
-  passky-database:
-    container_name: passky-database
+  passky-server:
+    container_name: passky-server
     build:
-      context: ./database
-    restart: always
-    environment:
-      #
-      # Change environment variables in .env file
-      #
-      # Database
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_ROOT_PASSWORD
-      # Backup
-      - BACKUP_ENABLED
-      - BACKUP_HOST
-      - BACKUP_PORT
-      - BACKUP_USER
-      - BACKUP_PASSWORD
-      - BACKUP_LOCATION
-    volumes:
-      - /passky:/var/lib/mysql
-    networks:
-      - passky
-  passky-api:
-    container_name: passky-api
-    build:
-      context: ./api
+      context: ./server
     restart: always
     environment:
       #
@@ -44,6 +19,8 @@ services:
       - CF_TURNSTILE_SITE_KEY
       - CF_TURNSTILE_SECRET_KEY
       # Database
+      - DATABASE_ENGINE
+      - DATABASE_FILE
       - MYSQL_HOST
       - MYSQL_PORT
       - MYSQL_DATABASE
@@ -93,12 +70,7 @@ services:
       - LIMITER_REMOVE_YUBIKEY
       - LIMITER_UPGRADE_ACCOUNT
       - LIMITER_GET_REPORT
-    networks:
-      - passky
     ports:
       - 8080:80
-    depends_on:
-      - passky-database
-networks:
-  passky:
-    driver: bridge
+    volumes:
+      - ./databases:/var/www/html/databases

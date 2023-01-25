@@ -1,4 +1,0 @@
-#!/bin/bash
-
-sleep $[ ($RANDOM % 300) + 1 ]s
-curl http://localhost/cron.php

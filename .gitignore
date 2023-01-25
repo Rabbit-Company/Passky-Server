@@ -1,6 +1,10 @@
 .env
-api/api-limiter.json
-api/tokens.json
-api/vendor
-api/composer.lock
+*.db
+databases
+server/databases
+server/data.json
+server/api-limiter.json
+server/tokens.json
+server/vendor
+server/composer.lock
 node_modules
