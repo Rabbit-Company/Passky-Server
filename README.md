@@ -32,15 +32,17 @@ At Passky, we take your security seriously, and we don't compromise on safety wh
 
 Passky uses a combination of advanced encryption methods to ensure the security of your data.
 
-For sensitive data encryption, Passky uses **XChaCha20**, a state-of-the-art encryption algorithm that provides a high level of security and performance. This encryption method is designed to be resistant to known-plaintext attacks and other forms of cryptanalysis.
+Passky is based on a **zero trust architecture** and uses advanced encryption methods such as **XChaCha20** and **Argon2id** to ensure the security of your sensitive data.
 
-For master password hashing, Passky uses **Argon2id**, a password-hashing algorithm that has been recognized as the winner of multiple password-hashing competitions, such as the [Password Hashing Competition (PHC)](https://www.password-hashing.net) held by the community. It is designed to be resistant to brute-force attacks. This algorithm uses a combination of memory-hard and data-dependent techniques to make it difficult for attackers to guess your master password.
+For sensitive data encryption, Passky uses **XChaCha20**, a state-of-the-art encryption algorithm that provides a **high level of security and performance**. This encryption method is designed to be **resistant to known-plaintext attacks and other forms of cryptanalysis**.
 
-When you save your account information to Passky, all sensitive data is fully encrypted using XChaCha20. The encrypted data is then stored on Passky's servers.
+For master password hashing, Passky uses **Argon2id**, a password-hashing algorithm that has been recognized as the winner of multiple password-hashing competitions, such as the **[Password Hashing Competition (PHC)](https://www.password-hashing.net)** held by the community. It is designed to be **resistant to brute-force attacks**. This algorithm uses a combination of memory-hard and data-dependent techniques to make it difficult for attackers to guess your master password.
 
-When you try to access your account, Passky will prompt you to input your master password. The master password is then hashed using Argon2id algorithm to ensure its security. The hashed master password is then used to decrypt the sensitive data, allowing you to access your account.
+When you save your account information to Passky, **all sensitive data is fully encrypted** using **XChaCha20**. The encrypted data is then stored on Passky's servers.
 
-In summary, Passky uses advanced encryption methods such as XChaCha20 and Argon2id to ensure the security of your sensitive data and master password, making it difficult for anyone to access your information without your permission.
+When you try to access your account, Passky will prompt you to input your master password. The master password is then hashed using **Argon2id** algorithm to ensure its security. The hashed master password is then used to decrypt the sensitive data, allowing you to access your account.
+
+In summary, **Passky uses advanced encryption methods such as XChaCha20 and Argon2id** to ensure the security of your sensitive data and master password, making it difficult for anyone to access your information without your permission.
 
 ## How Does Passky Compare to the Competition?
 
