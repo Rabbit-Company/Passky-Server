@@ -354,5 +354,3 @@ echo -e "${blue} If you made a mistake you can just re-run the installer with co
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 
 echo -e "${none}"
-
-cp .env server/.env
