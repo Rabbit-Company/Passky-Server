@@ -57,7 +57,7 @@ do
 	printf "\n${green}Admin username: "
 	read ADMIN_USERNAME
 done
-echo "ADMIN_USERNAME=${ADMIN_USERNAME}" >> .env
+echo "ADMIN_USERNAME=\"${ADMIN_USERNAME}\"" >> .env
 
 echo -e "\n${blue}${bold}Provide password for your Admin Panel.${blue}"
 echo -e "On Admin Panel you will be able to manage passky accounts."
