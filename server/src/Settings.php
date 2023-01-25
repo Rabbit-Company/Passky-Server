@@ -89,7 +89,7 @@ class Settings{
 	}
 
 	public static function getDBSSL() : bool{
-		return in_array(getenv('MYSQL_SSL', true), ['true', '1'], true) && @filesize(self::getDBSSLCA());
+		return getenv('MYSQL_SSL', true) === 'true';
 	}
 
 	public static function getDBSSLCA() : string{

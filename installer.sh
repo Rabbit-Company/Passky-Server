@@ -64,13 +64,7 @@ echo -e "On Admin Panel you will be able to manage passky accounts."
 echo -e "Example: fehu2UPmpragklWoJcbr4BajxoaGns"
 printf "\n${green}Admin password: "
 read -s ADMIN_PASSWORD
-while [[ ! "$ADMIN_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
-do
-	echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
-	printf "\n${green}Password: "
-	read -s ADMIN_PASSWORD
-done
-echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" >> .env
+echo "ADMIN_PASSWORD=\"${ADMIN_PASSWORD}\"" >> .env
 
 echo -e "\n\n${blue}${bold}In what country your Passky Server is hosted?${blue}"
 echo -e "Only 'ISO 3166-1 alpha-2' codes are accepted. (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements)"
@@ -165,7 +159,7 @@ if [ $DATABASE_ENGINE == "mysql" ]; then
 	printf "\n${green}Database host: "
 	read MYSQL_HOST
 fi
-echo "MYSQL_HOST=${MYSQL_HOST}" >> .env
+echo "MYSQL_HOST=\"${MYSQL_HOST}\"" >> .env
 
 if [ $DATABASE_ENGINE == "mysql" ]; then
 	echo -e "\n${blue}${bold}Provide database port.${blue}"
@@ -183,7 +177,7 @@ if [ $DATABASE_ENGINE == "mysql" ]; then
 	printf "\n${green}Database name: "
 	read MYSQL_DATABASE
 fi
-echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> .env
+echo "MYSQL_DATABASE=\"${MYSQL_DATABASE}\"" >> .env
 
 if [ $DATABASE_ENGINE == "mysql" ]; then
 	echo -e "\n${blue}${bold}Provide user for your database.${blue}"
@@ -192,7 +186,7 @@ if [ $DATABASE_ENGINE == "mysql" ]; then
 	printf "\n${green}Database user: "
 	read MYSQL_USER
 fi
-echo "MYSQL_USER=${MYSQL_USER}" >> .env
+echo "MYSQL_USER=\"${MYSQL_USER}\"" >> .env
 
 if [ $DATABASE_ENGINE == "mysql" ]; then
 	echo -e "\n${blue}${bold}Provide password for user '${MYSQL_USER}'.${blue}"
@@ -200,17 +194,25 @@ if [ $DATABASE_ENGINE == "mysql" ]; then
 	echo -e "Example: uDWjSd8wB2HRBHei489o"
 	printf "\n${green}Password: "
 	read -s MYSQL_PASSWORD
-	while [[ ! "$MYSQL_PASSWORD" =~ ^[A-Za-z0-9]{8,}$ ]];
+fi
+echo "MYSQL_PASSWORD=\"${MYSQL_PASSWORD}\"" >> .env
+
+if [ $DATABASE_ENGINE == "mysql" ]; then
+	echo -e "${blue}${bold}Do you want to enable SSL encryption?${blue}"
+	echo -e "Most external database providers like PlanetScale will require SSL encryption."
+	echo -e "Example: true"
+	printf "\n${green}Enable SSL: "
+	read MYSQL_SSL
+	while [[ ! " ${validBoolean[@]} " =~ " ${MYSQL_SSL} " ]];
 	do
-		echo -e "\n${red}Entered password needs to be at least 8 characters long and can only contain uppercase characters, lowercase characters and numbers."
-		printf "\n${green}Password: "
-		read -s MYSQL_PASSWORD
+		echo -e "${red}'${MYSQL_SSL}' is not a valid boolean. You can only answer this question with 'true' or 'false'."
+		printf "\n${green}Enable SSL: "
+		read MYSQL_SSL
 	done
 fi
-echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> .env
+echo "MYSQL_SSL=${MYSQL_SSL}" >> .env
 
 echo "MYSQL_CACHE_MODE=0" >> .env
-echo "MYSQL_SSL=false" >> .env
 echo "MYSQL_SSL_CA=/etc/ssl/certs/ca-certificates.crt" >> .env
 
 echo -e "\n\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
@@ -237,7 +239,7 @@ then
 	echo -e "Example: mail.passky.org"
 	printf "\n${green}SMTP host: "
 	read MAIL_HOST
-	echo "MAIL_HOST=${MAIL_HOST}" >> .env
+	echo "MAIL_HOST=\"${MAIL_HOST}\"" >> .env
 
 	echo -e "\n${blue}${bold}Provide SMTP port.${blue}"
 	echo -e "Setting up SMTP is not required."
@@ -278,14 +280,14 @@ then
 		printf "\n${green}SMTP username: "
 		read MAIL_USERNAME
 	done
-	echo "MAIL_USERNAME=${MAIL_USERNAME}" >> .env
+	echo "MAIL_USERNAME=\"${MAIL_USERNAME}\"" >> .env
 
 	echo -e "\n${blue}${bold}Provide SMTP password.${blue}"
 	echo -e "Setting up SMTP is not required."
 	echo -e "Example: uDWjSd8wB2HRBHei489o"
 	printf "\n${green}SMTP password: "
 	read -s MAIL_PASSWORD
-	echo "MAIL_PASSWORD=${MAIL_PASSWORD}" >> .env
+	echo "MAIL_PASSWORD=\"${MAIL_PASSWORD}\"" >> .env
 else
 	echo "MAIL_HOST=" >> .env
 	echo "MAIL_PORT=465" >> .env
