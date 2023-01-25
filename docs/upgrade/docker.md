@@ -15,7 +15,7 @@ In the case of Passky, the current version structure is **major.minor.patch**, s
 
 ## 2. Minor or Patch Upgrade
 1. Navigate to `Passky-Server` folder
-2. Perform upgrade
+2. Perform soft or hard upgrade
 	- Soft upgrade:
 	```yml
 	sudo docker-compose pull # Pull new Passky Server image from Docker Hub
