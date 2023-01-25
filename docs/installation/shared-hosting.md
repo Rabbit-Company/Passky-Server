@@ -11,19 +11,19 @@ It is essential to ensure that your hosting provider meets all necessary require
 
 ## 2. Passky Server Installation
 
-> ⚠️ It is important to note that when installing the Passky Server, only the data contained within the `api/src` folder should be made publicly accessible. Any other data should be kept secure and protected.
+> ⚠️ It is important to note that when installing the Passky Server, only the data contained within the `server/src` folder should be made publicly accessible. Any other data should be kept secure and protected.
 
 1. To begin the installation process for the Passky Server, navigate to the root directory of your hosting, download the [Passky Server](https://github.com/Rabbit-Company/Passky-Server) and save it in a folder named `Passky-Server`.
 
 2. In order to prepare the server for the installation process, open a terminal and navigate to the `Passky-Server` folder by executing the command: `cd Passy-Server`. Then execute the following commands in sequence:
 ```yaml
-./installer.sh # or just copy `.env.example` into `api/.env` and make the proper changes that suit you.
+./installer.sh # or just copy `.env.example` into `server/.env` and make the proper changes that suit you.
 ./shared-hosting-finalization.sh 
 ```
 
-3. To ensure proper functionality, it is necessary to create a sub-domain, `api.yourdomain.com`, that points to the `Passky-Server/api/src` directory.
+3. To ensure proper functionality, it is necessary to create a sub-domain, `passky.yourdomain.com`, that points to the `Passky-Server/server/src` directory.
 
-4. Upon completion of the installation process, the admin panel for the Passky Server can be accessed via the URL `api.yourdomain.com`. Additionally, various clients such as the [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop), [Web Browser](https://github.com/Rabbit-Company/Passky-Website), [Browser Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension), and [Android Application](https://github.com/Rabbit-Company/Passky-Android) can be connected to the Passky Server.
+4. Upon completion of the installation process, the admin panel for the Passky Server can be accessed via the URL `passky.yourdomain.com`. Additionally, various clients such as the [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop), [Web Browser](https://github.com/Rabbit-Company/Passky-Website), [Browser Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension), and [Android Application](https://github.com/Rabbit-Company/Passky-Android) can be connected to the Passky Server.
 
 ## 3. Passky Website Installation (Optional)
 

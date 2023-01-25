@@ -1,8 +1,8 @@
 version: '3'
 services:
-  passky-api:
-    container_name: passky-api
-    image: 'rabbitcompany/passky-api:latest'
+  passky-server:
+    container_name: passky-server
+    image: 'rabbitcompany/passky-server:latest'
     restart: unless-stopped
     environment:
       #

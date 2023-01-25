@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-composer update -d api/
-echo '{}' > api/data.json
-mkdir api/databases
+composer update -d server/
+echo '{}' > server/data.json
+mkdir server/databases

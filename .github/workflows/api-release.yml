@@ -1,4 +1,4 @@
-name: API to Docker hub on Release
+name: Server to Docker hub on Release
 
 on:
   release:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout 
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Get the version
@@ -18,7 +18,7 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-  
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v2
@@ -32,7 +32,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ./api/
+          context: ./server/
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: rabbitcompany/passky-api:${{steps.vars.outputs.tag}}
+          tags: rabbitcompany/passky-server:${{steps.vars.outputs.tag}}

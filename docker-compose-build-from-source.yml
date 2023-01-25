@@ -1,9 +1,9 @@
 version: '3'
 services:
-  passky-api:
-    container_name: passky-api
+  passky-server:
+    container_name: passky-server
     build:
-      context: ./api
+      context: ./server
     restart: always
     environment:
       #

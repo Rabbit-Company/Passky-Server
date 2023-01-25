@@ -353,4 +353,4 @@ echo -e "${gray}----------------------------------------------------------------
 
 echo -e "${none}"
 
-cp .env api/.env
+cp .env server/.env
