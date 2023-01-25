@@ -63,6 +63,7 @@ Number of Passwords | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$
 Two-factor Authentication | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$
 Encryption | $${\color{green}XChaCha20/Argon2id}$$ | $${\color{orange}AES-256/PBKDF2}$$ | $${\color{orange}AES-256/PBKDF2}$$ | $${\color{orange}AES-256/PBKDF2}$$ | $${\color{orange}AES-256/PBKDF2}$$
 Open-Source | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$
+Customization | $${\color{green}Yes}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$
 
 Comparison data accurate as of January 25th, 2023
 
