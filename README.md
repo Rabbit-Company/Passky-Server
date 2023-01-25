@@ -32,27 +32,15 @@ At Passky, we take your security seriously, and we don't compromise on safety wh
 
 Passky uses a combination of advanced encryption methods to ensure the security of your data.
 
-For sensitive data encryption, Passky uses XChaCha20, a state-of-the-art encryption algorithm that provides a high level of security and performance. This encryption method is designed to be resistant to known-plaintext attacks and other forms of cryptanalysis.
+For sensitive data encryption, Passky uses **XChaCha20**, a state-of-the-art encryption algorithm that provides a high level of security and performance. This encryption method is designed to be resistant to known-plaintext attacks and other forms of cryptanalysis.
 
-For master password hashing, Passky uses Argon2id, a password-hashing algorithm that is designed to be resistant to brute-force attacks. This algorithm uses a combination of memory-hard and data-dependent techniques to make it difficult for attackers to guess your master password.
+For master password hashing, Passky uses **Argon2id**, a password-hashing algorithm that is designed to be resistant to brute-force attacks. This algorithm uses a combination of memory-hard and data-dependent techniques to make it difficult for attackers to guess your master password.
 
 When you save your account information to Passky, all sensitive data is fully encrypted using XChaCha20. The encrypted data is then stored on Passky's servers.
 
 When you try to access your account, Passky will prompt you to input your master password. The master password is then hashed using Argon2id algorithm to ensure its security. The hashed master password is then used to decrypt the sensitive data, allowing you to access your account.
 
 In summary, Passky uses advanced encryption methods such as XChaCha20 and Argon2id to ensure the security of your sensitive data and master password, making it difficult for anyone to access your information without your permission.
-
-## How Secure is Passky?
-
-Passky simplifies your digital life and solves your password problem. All you’ll ever need to do is remember a single, ultra-secure password that includes uppercase letters, lowercase letters, numbers, and special characters. Once you’ve got that written down in your wallet or purse (or buried in your memory), you’ll get the benefit of secure passwords across your online accounts without having to memorize dozens of codewords. This makes it one of the most secure ways to protect your online identity.
-
-But Passky takes security a step further. We’ve implemented a brute force mitigation system that locks out any user who inputs the wrong password too many times. By stopping login attempts for a set time and warning you about an attempted breach, you’ll have time to secure your account by creating a new password or taking other measures.
-
-## But is Passky Easy to Use?
-
-Passky has been designed with modern users in mind. That’s why we’ve strived to provide an interface that’s streamlined and easy to use. Unlike some of the competition, Passky can be easily used by anyone, including techies and computer novices. And since it’s built for performance, you won’t need to overtax your CPU or waste a lot of storage space to keep it running.
-
-Downloading and installing Passky to your browser is a simple process that takes less than two-minutes to complete. Once it’s up and running, you can immediately begin managing your passwords with it. Creating, editing, and deleting passwords takes mere seconds. And once you’ve got everything setup, you’ll be able to quickly access all of your password-protected websites and accounts.
 
 ## How Does Passky Compare to the Competition?
 
@@ -77,13 +65,6 @@ Passky Server can be easily installed in multiple ways.
 
 ## Upgrade
 
-```yaml
-sudo docker-compose pull
-sudo docker-compose up -d
-```
+To upgrade your Passky Server, please **select the installation method** that you previously used to set up your server. This will ensure a seamless upgrade process and minimal disruption to your current Passky Server configuration. If you have any issues or concerns during the upgrade process, please do not hesitate to reach out to our support team for assistance.
 
-## Uninstall
-
-```yaml
-sudo docker-compose down
-```
+- [Docker](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/upgrade/docker.md)

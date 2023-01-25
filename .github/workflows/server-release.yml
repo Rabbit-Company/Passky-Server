@@ -13,8 +13,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Get the version
-        id: vars
-        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+        id: get_version
+        uses: battila7/get-version-action@v2
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -35,4 +35,6 @@ jobs:
           context: ./server/
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: rabbitcompany/passky-server:${{steps.vars.outputs.tag}}
+          tags:
+            - rabbitcompany/passky-server:${{steps.get_version.outputs.version-without-v}}
+            - rabbitcompany/passky-server:${{steps.get_version.outputs.major}}
