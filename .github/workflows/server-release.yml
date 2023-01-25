@@ -35,6 +35,6 @@ jobs:
           context: ./server/
           push: true
           platforms: linux/amd64,linux/arm64
-          tags:
-            - rabbitcompany/passky-server:${{steps.get_version.outputs.version-without-v}}
-            - rabbitcompany/passky-server:${{steps.get_version.outputs.major}}
+          tags: |
+            rabbitcompany/passky-server:${{steps.get_version.outputs.version-without-v}}
+            rabbitcompany/passky-server:${{steps.get_version.outputs.major}}
