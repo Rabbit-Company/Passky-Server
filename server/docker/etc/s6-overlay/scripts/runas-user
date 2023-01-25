@@ -1,0 +1,78 @@
+#!/command/with-contenv bash
+
+groupmod -o -g 1000 webgroup
+usermod -o -u 1000 webuser
+chown -R webuser:webgroup "/var/www/html"
+
+echo '
+-------------------------------------------------------------------
+  ____               _            ____
+ |  _ \ __ _ ___ ___| | ___   _  / ___|  ___ _ ____   _____ _ __
+ | |_) / _` / __/ __| |/ / | | | \___ \ / _ \  __\ \ / / _ \  __|
+ |  __/ (_| \__ \__ \   <| |_| |  ___) |  __/ |   \ V /  __/ |
+ |_|   \__,_|___/___/_|\_\\__, | |____/ \___|_|    \_/ \___|_|
+                          |___/
+
+        Brought to you by Rabbit Company and Server Side Up
+-------------------------------------------------------------------
+'
+
+echo '
+--------------------------------------------
+                  Settings
+--------------------------------------------
+'
+
+echo " Database Engine: $DATABASE_ENGINE
+"
+
+if [ $ACCOUNT_MAX -lt 0 ]
+then
+  echo " Max Accounts: ∞"
+else
+  echo " Max Accounts: $ACCOUNT_MAX"
+fi
+echo "
+ Max Passwords:"
+
+if [ $ACCOUNT_MAX_PASSWORDS -lt 0 ]
+then
+  echo "  - Default: ∞"
+else
+  echo "  - Default: $ACCOUNT_MAX_PASSWORDS"
+fi
+
+if [ $ACCOUNT_PREMIUM -lt 0 ]
+then
+  echo "  - Premium: ∞"
+else
+  echo "  - Premium: $ACCOUNT_PREMIUM"
+fi
+
+echo "
+--------------------------------------------
+"
+
+echo '
+--------------------------------------------
+              Enabled Features
+--------------------------------------------
+'
+
+if [ $MAIL_ENABLED ]
+then
+  echo " ✅ SMTP Email"
+else
+  echo " ❌ SMTP Email"
+fi
+
+if [ $LIMITER_ENABLED ]
+then
+  echo " ✅ API Call Limiter"
+else
+  echo " ❌ API Call Limiter"
+fi
+
+echo "
+--------------------------------------------
+"

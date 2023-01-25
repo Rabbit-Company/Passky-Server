@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./api/src/website/**/*.{html,js,php}"],
+  content: ["./server/src/website/**/*.{html,js,php}"],
   theme: {
     extend: {},
   },
