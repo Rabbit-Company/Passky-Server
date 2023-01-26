@@ -5,9 +5,10 @@ LABEL maintainer="Rabbit Company (info@rabbit-company.com)"
 # Copy files to docker container
 COPY src/ /var/www/html/public/
 COPY composer.json /var/www/html/
+COPY composer.lock /var/www/html/
 
 # Install dependiencies from composer
-RUN composer update -d /var/www/html/
+RUN composer install -d /var/www/html/
 
 # Create json file for Temp data
 RUN echo '{}' > /var/www/html/data.json

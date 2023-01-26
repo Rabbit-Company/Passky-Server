@@ -6,5 +6,4 @@ server/data.json
 server/api-limiter.json
 server/tokens.json
 server/vendor
-server/composer.lock
 node_modules
