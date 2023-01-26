@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 cp .env server/.env
-composer update -d server/
+composer install -d server/
 echo '{}' > server/data.json
 mkdir server/databases
