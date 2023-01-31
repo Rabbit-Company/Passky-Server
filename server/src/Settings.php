@@ -21,7 +21,7 @@ class Settings{
 */
 
 	public static function getVersion() : string{
-		return '8.1.0';
+		return '8.1.1';
 	}
 
 	public static function getLocation() : string{
@@ -43,7 +43,7 @@ class Settings{
 	}
 
 	public static function getAdminPassword() : string{
-		return getenv('ADMIN_PASSWORD', true) ?: getenv('ADMIN_PASSWORD') ?: 'fehu2UPmpragklWoJcbr4BajxoaGns';
+		return getenv('ADMIN_PASSWORD', true) ?: getenv('ADMIN_PASSWORD') ?: hash('sha256', 'passky' . random_int(PHP_INT_MIN, PHP_INT_MAX) . random_int(PHP_INT_MIN, PHP_INT_MAX));
 	}
 
 	public static function getCFTSiteKey() : string{
@@ -165,7 +165,7 @@ class Settings{
 */
 
 	public static function getMail() : bool{
-		return in_array(getenv('MAIL_ENABLED', true), ['true', '1'], true);
+		return getenv('MAIL_ENABLED', true) === 'true';
 	}
 
 	public static function getMailHost() : string{
@@ -185,7 +185,7 @@ class Settings{
 	}
 
 	public static function getMailTLS() : bool{
-		return in_array(getenv('MAIL_USE_TLS', true), ['true', '1'], true);
+		return getenv('MAIL_USE_TLS', true) === 'true';
 	}
 
 /*
@@ -227,7 +227,7 @@ class Settings{
 */
 
 	public static function getLimiter() : bool{
-		return in_array(getenv('LIMITER_ENABLED', true), ['true', '1'], true);
+		return getenv('LIMITER_ENABLED', true) === 'true';
 	}
 
 	public static function getLimiterGetInfo() : int{

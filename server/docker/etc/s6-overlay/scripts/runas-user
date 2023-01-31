@@ -17,6 +17,22 @@ echo '
 -------------------------------------------------------------------
 '
 
+if [[ -z $DATABASE_ENGINE ]]; then
+	DATABASE_ENGINE=sqlite
+fi
+
+if [[ -z $ACCOUNT_MAX ]]; then
+	ACCOUNT_MAX=100
+fi
+
+if [[ -z $ACCOUNT_MAX_PASSWORDS ]]; then
+	ACCOUNT_MAX_PASSWORDS=1000
+fi
+
+if [[ -z $ACCOUNT_PREMIUM ]]; then
+	ACCOUNT_PREMIUM=-1
+fi
+
 echo '
 --------------------------------------------
                   Settings
