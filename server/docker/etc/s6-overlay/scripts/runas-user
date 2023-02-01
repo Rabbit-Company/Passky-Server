@@ -33,6 +33,10 @@ if [[ -z $ACCOUNT_PREMIUM ]]; then
 	ACCOUNT_PREMIUM=-1
 fi
 
+if [[ -z $LIMITER_ENABLED ]]; then
+	LIMITER_ENABLED=true
+fi
+
 echo '
 --------------------------------------------
                   Settings

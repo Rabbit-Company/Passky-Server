@@ -9,7 +9,7 @@ require_once 'Schema.php';
 
 // Try to load .env file and make it available for getenv to use.
 try{
-	(new DevCoder\DotEnv(ROOT . '/.env'))->load();
+	(new DevCoder\DotEnv(ROOT . '/.env', array(DevCoder\Processor\QuotedProcessor::class)))->load();
 }catch(Exception $ignored){}
 
 class Settings{
@@ -21,7 +21,7 @@ class Settings{
 */
 
 	public static function getVersion() : string{
-		return '8.1.1';
+		return '8.1.2';
 	}
 
 	public static function getLocation() : string{
@@ -89,7 +89,8 @@ class Settings{
 	}
 
 	public static function getDBSSL() : bool{
-		return getenv('MYSQL_SSL', true) === 'true';
+		$enabled = getenv('MYSQL_SSL', true) ?: getenv('MYSQL_SSL') ?: 'false';
+		return in_array($enabled, array('true', '1'), true);
 	}
 
 	public static function getDBSSLCA() : string{
@@ -165,7 +166,8 @@ class Settings{
 */
 
 	public static function getMail() : bool{
-		return getenv('MAIL_ENABLED', true) === 'true';
+		$enabled = getenv('MAIL_ENABLED', true) ?: getenv('MAIL_ENABLED') ?: 'false';
+		return in_array($enabled, array('true', '1'), true);
 	}
 
 	public static function getMailHost() : string{
@@ -185,7 +187,8 @@ class Settings{
 	}
 
 	public static function getMailTLS() : bool{
-		return getenv('MAIL_USE_TLS', true) === 'true';
+		$enabled = getenv('MAIL_USE_TLS', true) ?: getenv('MAIL_USE_TLS') ?: 'false';
+		return in_array($enabled, array('true', '1'), true);
 	}
 
 /*
@@ -227,7 +230,8 @@ class Settings{
 */
 
 	public static function getLimiter() : bool{
-		return getenv('LIMITER_ENABLED', true) === 'true';
+		$enabled = getenv('LIMITER_ENABLED', true) ?: getenv('LIMITER_ENABLED') ?: 'true';
+		return in_array($enabled, array('true', '1'), true);
 	}
 
 	public static function getLimiterGetInfo() : int{
