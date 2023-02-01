@@ -9,7 +9,7 @@ require_once 'Schema.php';
 
 // Try to load .env file and make it available for getenv to use.
 try{
-	(new DevCoder\DotEnv(ROOT . '/.env'))->load();
+	(new DevCoder\DotEnv(ROOT . '/.env', DevCoder\Processor\QuotedProcessor::class))->load();
 }catch(Exception $ignored){}
 
 class Settings{
