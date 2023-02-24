@@ -42,7 +42,7 @@ try{
 	}
 
 	if($disable2fa){
-		$stmt = $conn->prepare('UPDATE users SET "2fa_secret" = null, yubico_otp = null, backup_codes = null WHERE username = :username');
+		$stmt = $conn->prepare('UPDATE users SET `2fa_secret` = null, yubico_otp = null, backup_codes = null WHERE username = :username');
 		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 		$stmt->execute();
 	}

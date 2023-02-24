@@ -766,7 +766,7 @@ class Database{
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare('UPDATE users SET "2fa_secret" = :secret, backup_codes = :codes WHERE username = :username');
+			$stmt = $conn->prepare('UPDATE users SET `2fa_secret` = :secret, backup_codes = :codes WHERE username = :username');
 			$stmt->bindParam(':secret', $secret, PDO::PARAM_STR);
 			$stmt->bindParam(':codes', $codes, PDO::PARAM_STR);
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -807,7 +807,7 @@ class Database{
 		try{
 			$conn = Settings::createConnection();
 
-			$stmt = $conn->prepare('UPDATE users SET "2fa_secret" = null WHERE username = :username');
+			$stmt = $conn->prepare('UPDATE users SET `2fa_secret` = null WHERE username = :username');
 			$stmt->bindParam(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 
