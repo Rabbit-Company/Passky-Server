@@ -21,7 +21,7 @@ class Settings{
 */
 
 	public static function getVersion() : string{
-		return '8.1.3';
+		return '8.1.4';
 	}
 
 	public static function getLocation() : string{
@@ -122,7 +122,7 @@ class Settings{
 		$conn = self::createConnection();
 		foreach(explode(";", $script) as $SQL){
 			try{
-				if(self::getDBEngine() === 'mysql') $SQL = str_replace('`MYSQL_DATABASE`', "`" . self::getDBFile() . "`", $SQL);
+				if(self::getDBEngine() === 'mysql') $SQL = str_replace('`MYSQL_DATABASE`', "`" . self::getDBName() . "`", $SQL);
 				$conn->query($SQL . ";");
 			}catch(Exception $e){}
 		}
