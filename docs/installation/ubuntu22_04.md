@@ -237,3 +237,11 @@ sudo systemctl restart nginx
 ```
 
 ## Test
+
+To test the installation head your browser to http://server-ip/cron.php and make sure something like the following json is returned.
+
+```json
+{"result": "success"}
+```
+
+After that head to the administration panel and make sure that you are receiving no errors.
