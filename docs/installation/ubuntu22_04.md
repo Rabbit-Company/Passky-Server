@@ -17,6 +17,12 @@ sudo apt update && sudo apt -y upgrade -y
 [ -f /var/run/reboot-required ] && sudo reboot -f # optionally check if a reboot is necessary
 ```
 
+After that initial reboot install some required tools:
+
+```sh
+sudo apt install curl
+```
+
 ## Installing PHP 8.2
 
 Ubuntu 22.04 repository contains a version of PHP too old, we will use a PPA:
@@ -110,7 +116,7 @@ sudo systemctl enable nginx
 
 To install redis run:
 ```sh
-sudo apt install redis
+sudo apt install redis-server
 ```
 
 ## Installing MySQL
@@ -140,9 +146,7 @@ In the configuration you can (and should) disable remote login for root and remo
 Next create a passky database and the relative user:
 ```sh
 sudo mysql -u root -p -h localhost # use the password set before as the new root password
-CREATE DATABASE passky;
-CREATE USER 'passky' IDENTIFIED BY 'serure_password'; # here remember to change the password
-GRANT ALL PRIVILEGES ON passky.* TO 'passky';
+CREATE DATABASE passky; # this one will be set later on
 exit
 ```
 
@@ -162,7 +166,7 @@ Insert in the text editor the following line at the end of file:
 * * * * * curl http://localhost/cron.php
 ```
 
-And remember that if you changed the HTTP serrver port you will need to set it here like so:
+And remember that if you changed the HTTP server port you will need to set it here like so:
 
 ```
 * * * * * curl http://localhost:8080/cron.php
@@ -202,15 +206,22 @@ Then download the application:
 cd /var/www/
 git clone https://github.com/Rabbit-Company/Passky-Server.git
 cd Passky-Server
-sudo chown -R www-data:www-data Passky-Server # fix privileges
 git branch my-setup # move to another branch
 cp .env.example server/.env # grab the configuration file
-$EDITOR server/.env # configure the service as you like it
+$EDITOR server/.env # configure the service as you like it, just remember to change the ADMIN_USERNAME and change the ADMIN_PASSWORD
 cd server
-composer update # update all dependencies
-sudo chown -R www-data:www-data vendor # fix privileges
-git add .env
 echo '{}' > data.json
+sudo chown www-data:www-data data.json
+
+# ------------------------------------------------------------------
+# the following is only needed if you want to use sqlite database
+mkdir databases
+sudo chown www-data:www-data -R databases
+#-------------------------------------------------------------------
+
+composer update # update all dependencies
+
+git add .env
 git add data.json
 git commit -m "my installation"
 ```
@@ -218,5 +229,13 @@ git commit -m "my installation"
 After that edit again the file /etc/nginx/sites-available/default and change the root to:
 
 ```
-  
+root /var/www/Passky-Server/server/src;
 ```
+
+then restart nginx:
+
+```sh
+sudo systemctl restart nginx
+```
+
+## Test
