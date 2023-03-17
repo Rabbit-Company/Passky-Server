@@ -24,6 +24,10 @@ if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 	exit();
 }
 
+if (isset($_SERVER["REDIRECT_HTTP_AUTHORIZATION"])) {
+	list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':' , base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)));
+}
+
 require_once 'Display.php';
 require_once 'Database.php';
 require_once 'Settings.php';
