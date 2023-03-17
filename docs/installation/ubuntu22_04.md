@@ -41,7 +41,7 @@ sudo apt update
 
 The install php8.2 from the new PPA and the required+common extensions:
 ```sh
-sudo apt install php8.2 php8.2-{bcmath,fpm,xml,mysql,zip,intl,ldap,gd,cli,bz2,curl,mbstring,pgsql,opcache,soap,cgi,redis}
+sudo apt install php8.2 php8.2-{bcmath,fpm,xml,mysql,zip,intl,ldap,gd,cli,bz2,curl,mbstring,pgsql,opcache,soap,cgi,redis,sqlite3}
 ```
 
 ## Installing the webserver
@@ -155,8 +155,7 @@ exit
 To install cron:
 
 ```sh
-sudo apt install cron
-sudo systemctl enable --now cron
+sudo apt install systemctl-cron
 contab -e
 ```
 
@@ -221,8 +220,7 @@ sudo chown www-data:www-data -R databases
 
 composer update # update all dependencies
 
-git add .env
-git add data.json
+git add -f .env
 git commit -m "my installation"
 ```
 
