@@ -669,37 +669,42 @@ class Database{
 		$conn = null;
 	}
 
-	public static function deletePassword(string $username, string $token, int $password_id) : string{
+	public static function deletePassword(string $username, string $token, int|string $password_id) : string {
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(1);
 		if(!self::isTokenValid($username, $token)) return Display::json(25);
 		$username = strtolower($username);
+		if (is_string($password_id)) {
+			foreach (json_decode($password_id) as $id)
+				$return = self::deletePassword($username, $token, intval($id));
+			return $return;
+		} else {
+			switch (self::isPasswordOwnedByUser($username, $password_id)) {
+				case 2:
+					return Display::json(10);
+					break;
+				case 3:
+					return Display::json(1);
+					break;
+				case 505:
+					return Display::json(505);
+					break;
+			}
 
-		switch(self::isPasswordOwnedByUser($username, $password_id)){
-			case 2:
-				return Display::json(10);
-			break;
-			case 3:
-				return Display::json(1);
-			break;
-			case 505:
+			try {
+				$conn = Settings::createConnection();
+
+				$stmt = $conn->prepare('DELETE FROM passwords WHERE password_id = :password_id');
+				$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
+
+				Settings::removeLocalData($username . '_passwords', true);
+				Settings::decreaseLocalData($username . '_password_count', 1, true);
+
+				return ($stmt->execute()) ? Display::json(0) : Display::json(11);
+			} catch (PDOException $e) {
 				return Display::json(505);
-			break;
+			}
+			$conn = null;
 		}
-
-		try{
-			$conn = Settings::createConnection();
-
-			$stmt = $conn->prepare('DELETE FROM passwords WHERE password_id = :password_id');
-			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
-
-			Settings::removeLocalData($username . '_passwords', true);
-			Settings::decreaseLocalData($username . '_password_count', 1, true);
-
-			return ($stmt->execute()) ? Display::json(0) : Display::json(11);
-		}catch(PDOException $e) {
-			return Display::json(505);
-		}
-		$conn = null;
 	}
 
 	public static function getPasswords(string $username, string $token) : string{
