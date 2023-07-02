@@ -8,3 +8,6 @@ server/tokens.json
 server/vendor
 server/composer.lock
 node_modules
+/.settings/
+/.project
+/.buildpath
