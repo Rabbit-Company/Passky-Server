@@ -18,11 +18,11 @@
 
 Passky is a simple, modern, lightweight, open source and secure password manager.
 
-[![Passky - Password manager](https://img.youtube.com/vi/yrk6cHkgVA8/0.jpg)](https://www.youtube.com/watch?v=yrk6cHkgVA8 "Click to watch!")
+[![Passky - Password manager](https://cdn.passky.org/images/youtubeVideo.png)](https://www.youtube.com/watch?v=yrk6cHkgVA8 "Click to watch!")
 
 ## How Much Does it Cost?
 
-Passky is a free, open-source password manager that simplifies your digital life. Both the free and premium plans include advanced security features such as two-factor authentication to ensure the safety and security of your sensitive data.
+Passky is a **free**, open-source password manager that simplifies your digital life. Both the free and premium plans include advanced security features such as two-factor authentication to ensure the safety and security of your sensitive data.
 
 While the free plan allows you to store up to 100 passwords, the premium plan offers additional benefits such as the ability to store an unlimited number of passwords. [Upgrade to the premium plan](https://passky.org/pricing) to gain access to all of Passky's features and take your password security to the next level.
 
@@ -48,7 +48,7 @@ In summary, **Passky uses advanced encryption methods such as XChaCha20 and Argo
 
 Feature | Passky | Bitwarden | NordPass | Dashlane | 1Password | LastPass
 --- | :---: | :---: | :---: | :---: | :---: | :---: |
-Premium Price | $${\color{orange}\$2/month}$$ | $${\color{green}\$0.83/month}$$ | $${\color{orange}1.99€/month}$$ | $${\color{orange}2€/month}$$ | $${\color{red}\$2.99/month}$$ | $${\color{red}2.90€/month}$$ |
+Premium Price | $${\color{orange}\&dollar;2/month}$$ | $${\color{green}\&dollar;0.83/month}$$ | $${\color{orange}1.99€/month}$$ | $${\color{orange}2€/month}$$ | $${\color{red}\&dollar;2.99/month}$$ | $${\color{red}2.90€/month}$$ |
 Number of Passwords | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$
 Two-factor Authentication | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$
 Zero-knowledge architecture | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$
