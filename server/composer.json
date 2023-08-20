@@ -3,6 +3,6 @@
 		"paragonie/constant_time_encoding": "^2",
 		"pragmarx/google2fa": "v8.0.1",
 		"phpmailer/phpmailer": "^6.8",
-		"devcoder-xyz/php-dotenv": "^2.0"
+		"devcoder-xyz/php-dotenv": "^2.1"
 	}
 }

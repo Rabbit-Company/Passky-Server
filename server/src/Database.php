@@ -933,16 +933,18 @@ class Database{
 			$stmt->bindParam(':email', $sub_email, PDO::PARAM_STR);
 			$stmt->execute();
 
-			if($stmt->fetchColumn() === false) return Display::json(17);
+			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if(empty($rows)) return Display::json(17);
 
 			$message = 'Usernames registered with your email: ';
 			$html = '<p>Usernames registered with your email: <ul>';
 
-			foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as &$array_username){
-				$html .= "<li style='font-weight: bold;'>" . $array_username['username'] . '</li>';
-				$message .= $array_username['username'] . ', ';
+			foreach($rows as $row){
+				$html .= "<li style='font-weight: bold;'>" . $row['username'] . '</li>';
+				$message .= $row['username'] . ', ';
 			}
 
+			$message = rtrim($message, ', ');
 			$html .= '</ul></p>';
 
 			$mail = new PHPMailer(true);
