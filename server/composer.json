@@ -2,7 +2,7 @@
 	"require": {
 		"paragonie/constant_time_encoding": "^2",
 		"pragmarx/google2fa": "v8.0.1",
-		"phpmailer/phpmailer": "^6.8",
+		"phpmailer/phpmailer": "^6.9",
 		"devcoder-xyz/php-dotenv": "^2.1"
 	}
 }
