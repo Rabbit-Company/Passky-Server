@@ -541,7 +541,7 @@ class Database{
 			$stmt->bindParam(':message', $message, PDO::PARAM_STR);
 
 			Settings::removeLocalData($username . '_passwords', true);
-			Settings::increaseLocalData($username . '_password_count', 1, true);
+			Settings::removeLocalData($username . '_password_count', true);
 
 			return ($stmt->execute()) ? Display::json(0) : Display::json(3);
 		}catch(PDOException $e) {
@@ -608,11 +608,11 @@ class Database{
 			}
 
 			Settings::removeLocalData($username . '_passwords', true);
+			Settings::removeLocalData($username . '_password_count', true);
 
 			if($stmt->execute()){
 				$num_success = count($passwordArray);
 				$num_error = count($password_obj) - count($passwordArray);
-				Settings::increaseLocalData($username . '_password_count', $num_success, true);
 			}else{
 				$num_error = count($password_obj);
 			}
@@ -693,7 +693,7 @@ class Database{
 			$stmt->bindParam(':password_id', $password_id, PDO::PARAM_INT);
 
 			Settings::removeLocalData($username . '_passwords', true);
-			Settings::decreaseLocalData($username . '_password_count', 1, true);
+			Settings::removeLocalData($username . '_password_count', true);
 
 			return ($stmt->execute()) ? Display::json(0) : Display::json(11);
 		}catch(PDOException $e) {
