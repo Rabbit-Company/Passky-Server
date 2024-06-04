@@ -23,7 +23,9 @@ It is essential to ensure that your hosting provider meets all necessary require
 
 3. To ensure proper functionality, it is necessary to create a sub-domain, `passky.yourdomain.com`, that points to the `Passky-Server/server/src` directory.
 
-4. Upon completion of the installation process, the admin panel for the Passky Server can be accessed via the URL `passky.yourdomain.com`. Additionally, various clients such as the [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop), [Web Browser](https://github.com/Rabbit-Company/Passky-Website), [Browser Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension), and [Android Application](https://github.com/Rabbit-Company/Passky-Android) can be connected to the Passky Server.
+4. Execute the `/cron.php` API endpoint at least once. This is crucial as it will create necessary tables if they do not already exist. To ensure ongoing maintenance, configure your hosting provider's cron job scheduler to run this endpoint at least once per day.
+
+5. Upon completion of the installation process, the admin panel for the Passky Server can be accessed via the URL `passky.yourdomain.com`. Additionally, various clients such as the [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop), [Web Browser](https://github.com/Rabbit-Company/Passky-Website), [Browser Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension), and [Android Application](https://github.com/Rabbit-Company/Passky-Android) can be connected to the Passky Server.
 
 ## 3. Passky Website Installation (Optional)
 
