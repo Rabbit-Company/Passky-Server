@@ -312,10 +312,8 @@ class Database{
 			if($amount_of_accounts >= Settings::getMaxAccounts()) return Display::json(15);
 		}
 
-		$sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
-
 		if(!preg_match("/^[a-z0-9._]{6,30}$/i", $username)) return Display::json(12);
-		if(!filter_var($sub_email, FILTER_VALIDATE_EMAIL)) return Display::json(6);
+		if(!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}$/i", $email) || strlen($email) > 200) return Display::json(6);
 		if(!preg_match("/^[a-z0-9]{128}$/i", $password)) return Display::json(5);
 
 		$username = strtolower($username);
@@ -923,14 +921,15 @@ class Database{
 
 	public static function forgotUsername(string $email) : string{
 		if(!Settings::getMail()) return Display::json(28);
-		$sub_email = filter_var($email, FILTER_SANITIZE_EMAIL);
-		if(!filter_var($sub_email, FILTER_VALIDATE_EMAIL)) return Display::json(6);
+		if(!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}$/i", $email) || strlen($email) > 200) return Display::json(6);
+
+		$email = strtolower($email);
 
 		try{
 			$conn = Settings::createConnection();
 
 			$stmt = $conn->prepare('SELECT username FROM users WHERE email = :email');
-			$stmt->bindParam(':email', $sub_email, PDO::PARAM_STR);
+			$stmt->bindParam(':email', $email, PDO::PARAM_STR);
 			$stmt->execute();
 
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

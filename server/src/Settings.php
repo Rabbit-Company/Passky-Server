@@ -21,7 +21,7 @@ class Settings{
 */
 
 	public static function getVersion() : string{
-		return '8.1.7';
+		return '8.1.8';
 	}
 
 	public static function getLocation() : string{

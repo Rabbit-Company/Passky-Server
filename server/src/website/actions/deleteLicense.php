@@ -3,7 +3,7 @@ require_once '../../Settings.php';
 
 session_start();
 
-$token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+$token = htmlspecialchars(filter_input(INPUT_GET, 'token'), ENT_QUOTES, 'UTF-8');
 
 if(!isset($_SESSION['username']) || !isset($_SESSION['token']) || !$token || $token !== $_SESSION['token']){
 	$_SESSION['page'] = 'home';
