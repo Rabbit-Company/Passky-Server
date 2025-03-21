@@ -1,8 +1,8 @@
-version: '3'
+version: "3"
 services:
   passky-server:
     container_name: passky-server
-    image: 'rabbitcompany/passky-server:latest'
+    image: "rabbitcompany/passky-server:latest"
     restart: unless-stopped
     environment:
       #
@@ -72,6 +72,6 @@ services:
       - LIMITER_UPGRADE_ACCOUNT
       - LIMITER_GET_REPORT
     ports:
-      - 8080:80
+      - 8080:8080
     volumes:
-      - ./databases:/var/www/html/databases
+      - ./databases:/databases

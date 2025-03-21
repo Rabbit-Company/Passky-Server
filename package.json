@@ -1,15 +1,25 @@
 {
 	"name": "passky-server",
+	"version": "10.0.0",
 	"description": "Server for Passky (password manager)",
-	"version": "8.1.8",
-	"main": "tailwind.config.js",
+	"module": "index.ts",
+	"type": "module",
 	"scripts": {
-		"build": "npx tailwindcss -i ./tailwind.css -o ./server/src/website/css/tailwind.min.css --minify"
+		"start": "bun run server/index.ts",
+		"test": "bun test",
+		"watch": "bun --watch server/index.ts",
+		"build": "bun build server/index.ts --compile --minify --outfile ./passky-server"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Rabbit-Company/Passky-Server.git"
 	},
+	"keywords": [
+		"passky",
+		"password",
+		"manager",
+		"security"
+	],
 	"author": "Rabbit Company",
 	"license": "GPL-3.0",
 	"bugs": {
@@ -17,6 +27,9 @@
 	},
 	"homepage": "https://github.com/Rabbit-Company/Passky-Server#readme",
 	"devDependencies": {
-		"tailwindcss": "^3.4.14"
+		"@types/bun": "^1.2.5"
+	},
+	"dependencies": {
+		"@rabbit-company/logger": "npm:@jsr/rabbit-company__logger"
 	}
 }
