@@ -19,15 +19,7 @@ services:
       - CF_TURNSTILE_SITE_KEY
       - CF_TURNSTILE_SECRET_KEY
       # Database
-      - DATABASE_ENGINE
-      - DATABASE_FILE
-      - MYSQL_HOST
-      - MYSQL_PORT
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_SSL
-      - MYSQL_SSL_CA
+      - DB_URL
       - MYSQL_CACHE_MODE
       # Redis
       - REDIS_HOST

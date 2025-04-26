@@ -1,17 +1,23 @@
 import Logger from "@rabbit-company/logger";
-import IORedis from "ioredis";
+import { RedisClient } from "bun";
 
 namespace Redis {
-	export const localCache: IORedis = new IORedis(process.env["REDIS_LOCAL"] || "redis://localhost/", { connectTimeout: 500, commandTimeout: 500 });
-	export const externalCache: IORedis = new IORedis(process.env["REDIS_EXTERNAL"] || "redis://localhost/", { connectTimeout: 2000, commandTimeout: 2000 });
+	export const localCache: RedisClient = new RedisClient(process.env["REDIS_LOCAL"] || "redis://localhost/", { idleTimeout: 0 });
+	export const externalCache: RedisClient = new RedisClient(process.env["REDIS_EXTERNAL"] || "redis://localhost/", { idleTimeout: 0 });
 
 	export async function initialize() {
-		Redis.localCache.on("error", () => {
+		Redis.localCache.onconnect = () => {
+			Logger.info("[REDIS] Local Redis connected");
+		};
+		Redis.externalCache.onconnect = () => {
+			Logger.info("[REDIS] External Redis connected");
+		};
+		Redis.localCache.onclose = () => {
 			Logger.error("[REDIS] Local Redis connection error!");
-		});
-		Redis.externalCache.on("error", () => {
+		};
+		Redis.externalCache.onclose = () => {
 			Logger.error("[REDIS] External Redis connection error!");
-		});
+		};
 	}
 
 	export async function getString(key: string, localTTL: number = 0): Promise<string | null> {

@@ -8,8 +8,6 @@ import Scheduler from "./scheduler";
 await Redis.initialize();
 await Scheduler.initialize();
 
-Metrics.initialize();
-
 Logger.level = Number(process.env["LOGGER_LEVEL"]) || 3;
 
 Logger.info(`[HS] HTTP Server listening on port ${process.env["SERVER_HOSTNAME"]}:${process.env["SERVER_PORT"]}`);
@@ -31,7 +29,7 @@ export const httpServer = Bun.serve({
 		Logger.http(`${req.method} - ${ip} - ${path}`);
 
 		if (Number(process.env["METRICS_TYPE"]) >= 1) {
-			Metrics.http_requests_total.labels(req.method, path).inc();
+			Metrics.http_requests_total.labels({ method: req.method, endpoint: path }).inc();
 		}
 
 		if (req.method === "OPTIONS") {
@@ -58,7 +56,7 @@ export const httpServer = Bun.serve({
 
 			const end = process.hrtime(start);
 			if (Number(process.env["METRICS_TYPE"]) >= 2) {
-				Metrics.http_request_duration.labels(path).observe(end[0] * 1000 + end[1] / 1000000);
+				Metrics.http_request_duration.labels({ endpoint: path }).observe(end[0] * 1000 + end[1] / 1000000);
 			}
 
 			res.headers.set("Access-Control-Allow-Origin", "*");
