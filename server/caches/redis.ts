@@ -1,5 +1,5 @@
-import Logger from "@rabbit-company/logger";
 import { RedisClient } from "bun";
+import { Logger } from "../logger";
 
 namespace Redis {
 	export const localCache: RedisClient = new RedisClient(process.env["REDIS_LOCAL"] || "redis://localhost/", { idleTimeout: 0 });

@@ -1,7 +1,7 @@
-import Logger from "@rabbit-company/logger";
 import Metrics from "../metrics";
 import Redis from "../caches/redis";
 import { httpServer } from "..";
+import { Logger } from "../logger";
 
 namespace TaskMetrics {
 	export async function run() {

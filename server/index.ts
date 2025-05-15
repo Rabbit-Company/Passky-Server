@@ -1,14 +1,12 @@
-import Logger from "@rabbit-company/logger";
 import Metrics from "./metrics";
 import Redis from "./caches/redis";
 import { jsonError } from "./utils";
 import { Error } from "./errors";
 import Scheduler from "./scheduler";
+import { Logger } from "./logger";
 
 await Redis.initialize();
 await Scheduler.initialize();
-
-Logger.level = Number(process.env["LOGGER_LEVEL"]) || 3;
 
 Logger.info(`[HS] HTTP Server listening on port ${process.env["SERVER_HOSTNAME"] || "0.0.0.0"}:${process.env["SERVER_PORT"] || 8080}`);
 
