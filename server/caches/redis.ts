@@ -2,8 +2,8 @@ import { RedisClient } from "bun";
 import { Logger } from "../logger";
 
 namespace Redis {
-	export const localCache: RedisClient = new RedisClient(process.env["REDIS_LOCAL"] || "redis://localhost/", { idleTimeout: 0 });
-	export const externalCache: RedisClient = new RedisClient(process.env["REDIS_EXTERNAL"] || "redis://localhost/", { idleTimeout: 0 });
+	export const localCache: RedisClient = new RedisClient(process.env["REDIS_LOCAL"] || "redis://localhost/");
+	export const externalCache: RedisClient = new RedisClient(process.env["REDIS_EXTERNAL"] || "redis://localhost/");
 
 	export async function initialize() {
 		Redis.localCache.onconnect = () => {
