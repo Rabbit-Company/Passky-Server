@@ -10,7 +10,7 @@ await Scheduler.initialize();
 
 Logger.level = Number(process.env["LOGGER_LEVEL"]) || 3;
 
-Logger.info(`[HS] HTTP Server listening on port ${process.env["SERVER_HOSTNAME"]}:${process.env["SERVER_PORT"]}`);
+Logger.info(`[HS] HTTP Server listening on port ${process.env["SERVER_HOSTNAME"] || "0.0.0.0"}:${process.env["SERVER_PORT"] || 8080}`);
 
 const router = new Bun.FileSystemRouter({
 	style: "nextjs",
@@ -18,8 +18,8 @@ const router = new Bun.FileSystemRouter({
 });
 
 export const httpServer = Bun.serve({
-	port: process.env["SERVER_PORT"],
-	hostname: process.env["SERVER_HOSTNAME"],
+	port: process.env["SERVER_PORT"] || 8080,
+	hostname: process.env["SERVER_HOSTNAME"] || "0.0.0.0",
 	development: false,
 	async fetch(req, server) {
 		const url = new URL(req.url);
