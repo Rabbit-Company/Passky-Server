@@ -30,7 +30,7 @@
 		"@types/bun": "^1.2.13"
 	},
 	"dependencies": {
-		"@rabbit-company/logger": "npm:@jsr/rabbit-company__logger@5.3.0",
+		"@rabbit-company/logger": "npm:@jsr/rabbit-company__logger@5.4.0",
 		"@rabbit-company/openmetrics-client": "npm:@jsr/rabbit-company__openmetrics-client@2.0.1"
 	}
 }
