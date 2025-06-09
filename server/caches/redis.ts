@@ -1,9 +1,10 @@
 import { RedisClient } from "bun";
 import { Logger } from "../logger";
+import { Settings } from "../settings";
 
 namespace Redis {
-	export const localCache: RedisClient = new RedisClient(process.env["REDIS_LOCAL"] || "redis://localhost/");
-	export const externalCache: RedisClient = new RedisClient(process.env["REDIS_EXTERNAL"] || "redis://localhost/");
+	export const localCache: RedisClient = new RedisClient(Settings.getLocalRedisConfig());
+	export const externalCache: RedisClient = new RedisClient(Settings.getExternalRedisConfig());
 
 	export async function initialize() {
 		Redis.localCache.onconnect = () => {

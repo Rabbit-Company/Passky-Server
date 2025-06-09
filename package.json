@@ -31,6 +31,7 @@
 	},
 	"dependencies": {
 		"@rabbit-company/openmetrics-client": "^2.0.1",
+		"@rabbit-company/password-generator": "^2.2.0",
 		"@rabbit-company/web": "^0.11.0",
 		"@rabbit-company/web-middleware": "^0.11.0"
 	}

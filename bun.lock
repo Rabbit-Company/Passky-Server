@@ -5,6 +5,7 @@
       "name": "passky-server",
       "dependencies": {
         "@rabbit-company/openmetrics-client": "^2.0.1",
+        "@rabbit-company/password-generator": "^2.2.0",
         "@rabbit-company/web": "^0.11.0",
         "@rabbit-company/web-middleware": "^0.11.0",
       },
@@ -17,6 +18,8 @@
     "@rabbit-company/logger": ["@rabbit-company/logger@5.5.0", "", { "peerDependencies": { "typescript": "^5.5.4" } }, "sha512-dkSwfRmzvQa/RsJzAMBvrOMqRYnCFFeaC77aF86ybW9/hNREng8/lLocQF8sjiuhs5F3Dr+WbQbkCWmDs0hVXQ=="],
 
     "@rabbit-company/openmetrics-client": ["@rabbit-company/openmetrics-client@2.0.1", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-JJr8reWZwTr5vvq1txc2jEgDkLKJ/QAref8W7C7pP7fdmy1qltpu9Ujrbqariq/pJb3qTj0y89krlYZSgh/YvA=="],
+
+    "@rabbit-company/password-generator": ["@rabbit-company/password-generator@2.2.0", "", { "peerDependencies": { "typescript": "^5.6.2" } }, "sha512-vGTQatvHhJPsBZZaW/V276+YwmL6ThaBuN0vSeJwGIW9YBoW5glQ+sXRPZDhOAkGy0K3AbwZ6TmP+svrAn5Gkw=="],
 
     "@rabbit-company/rate-limiter": ["@rabbit-company/rate-limiter@3.0.0", "", { "peerDependencies": { "typescript": "^5.5.4" } }, "sha512-NMtBAfXUGmyqc42Sxl6jOC1y4G5M/TAJxwJGn6SPQU/O5kVRufU5FioJwUaWlAhPiaD8qG/1EsdxTcDCwlGSHw=="],
 
