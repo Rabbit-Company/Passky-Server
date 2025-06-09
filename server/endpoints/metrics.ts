@@ -22,6 +22,5 @@ Server.app.use(
 Server.app.get("/metrics", async (ctx) => {
 	if (Number(process.env["METRICS_TYPE"]) < 1) return jsonError(Error.INVALID_ENDPOINT);
 
-	ctx.header("Content-Type", Registry.contentType);
-	return ctx.text(await Redis.getString(`metrics_cache`));
+	return ctx.text(await Redis.getString(`metrics_cache`), 200, { "Content-Type": Registry.contentType });
 });
