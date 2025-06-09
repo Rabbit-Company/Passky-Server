@@ -1,5 +1,5 @@
-import { Logger as RabbitLogger } from "@rabbit-company/logger";
+import { Logger as RabbitLogger } from "@rabbit-company/web-middleware/logger";
 
 export const Logger = new RabbitLogger({
-	level: Number(process.env["LOGGER_LEVEL"]) || 3
+	level: parseInt(process.env["LOGGER_LEVEL"] || "4"),
 });

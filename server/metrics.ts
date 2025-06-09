@@ -1,4 +1,4 @@
-import { Counter, Gauge, Histogram, Registry } from "@rabbit-company/openmetrics-client";
+import { Counter, Histogram, Registry } from "@rabbit-company/openmetrics-client";
 
 namespace Metrics {
 	export const registry = new Registry({ prefix: "passky" });
@@ -7,12 +7,6 @@ namespace Metrics {
 		name: "http_requests",
 		help: "Total HTTP requests",
 		labelNames: ["method", "endpoint"] as const,
-		registry: registry,
-	});
-
-	export const http_concurrent_requests_total = new Gauge({
-		name: "http_concurrent_requests",
-		help: "Total HTTP concurrent requests",
 		registry: registry,
 	});
 

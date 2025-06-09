@@ -4,24 +4,33 @@
     "": {
       "name": "passky-server",
       "dependencies": {
-        "@rabbit-company/logger": "npm:@jsr/rabbit-company__logger@5.4.0",
-        "@rabbit-company/openmetrics-client": "npm:@jsr/rabbit-company__openmetrics-client@2.0.1",
+        "@rabbit-company/openmetrics-client": "^2.0.1",
+        "@rabbit-company/web": "^0.11.0",
+        "@rabbit-company/web-middleware": "^0.11.0",
       },
       "devDependencies": {
-        "@types/bun": "^1.2.13",
+        "@types/bun": "^1.2.15",
       },
     },
   },
   "packages": {
-    "@rabbit-company/logger": ["@jsr/rabbit-company__logger@5.4.0", "https://npm.jsr.io/~/11/@jsr/rabbit-company__logger/5.4.0.tgz", {}, "sha512-j2K8yl9JyxN6ILJC9miV8X4LSasmdMTPhvO9aU4vchVE2OXj1TbagH8QTPmgFh+wiZpmqPpDjj85bPcBiC0YEQ=="],
+    "@rabbit-company/logger": ["@rabbit-company/logger@5.5.0", "", { "peerDependencies": { "typescript": "^5.5.4" } }, "sha512-dkSwfRmzvQa/RsJzAMBvrOMqRYnCFFeaC77aF86ybW9/hNREng8/lLocQF8sjiuhs5F3Dr+WbQbkCWmDs0hVXQ=="],
 
-    "@rabbit-company/openmetrics-client": ["@jsr/rabbit-company__openmetrics-client@2.0.1", "https://npm.jsr.io/~/11/@jsr/rabbit-company__openmetrics-client/2.0.1.tgz", {}, "sha512-QHIzAjJsU74jz7gyFlMR8dUev8l9h8IkPetg3hjz4VAaJk58+QFpyDIlwLpEdb+PU1G29AGsGxLRVQz7SOuGGw=="],
+    "@rabbit-company/openmetrics-client": ["@rabbit-company/openmetrics-client@2.0.1", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-JJr8reWZwTr5vvq1txc2jEgDkLKJ/QAref8W7C7pP7fdmy1qltpu9Ujrbqariq/pJb3qTj0y89krlYZSgh/YvA=="],
 
-    "@types/bun": ["@types/bun@1.2.13", "", { "dependencies": { "bun-types": "1.2.13" } }, "sha512-u6vXep/i9VBxoJl3GjZsl/BFIsvML8DfVDO0RYLEwtSZSp981kEO1V5NwRcO1CPJ7AmvpbnDCiMKo3JvbDEjAg=="],
+    "@rabbit-company/rate-limiter": ["@rabbit-company/rate-limiter@3.0.0", "", { "peerDependencies": { "typescript": "^5.5.4" } }, "sha512-NMtBAfXUGmyqc42Sxl6jOC1y4G5M/TAJxwJGn6SPQU/O5kVRufU5FioJwUaWlAhPiaD8qG/1EsdxTcDCwlGSHw=="],
+
+    "@rabbit-company/web": ["@rabbit-company/web@0.11.0", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-lnM6piFfj7YMAd1T6gIPThiocnbZSpzbIe/xkQvvwxMae2ctHiivSGna17a+ydxEracbvJT7E3kV8btTUeu/GQ=="],
+
+    "@rabbit-company/web-middleware": ["@rabbit-company/web-middleware@0.11.0", "", { "dependencies": { "@rabbit-company/logger": "^5.5.0", "@rabbit-company/rate-limiter": "^3.0.0" }, "peerDependencies": { "@rabbit-company/web": "^0.5.0", "typescript": "^5" } }, "sha512-twjkF2uGPzsXTFM+W6lQxmm32DYeFMIsu6janc6CTtOneay35Ae6LYO6VHLSWOJqhT2bPK4La5daY/C53oTcNg=="],
+
+    "@types/bun": ["@types/bun@1.2.15", "", { "dependencies": { "bun-types": "1.2.15" } }, "sha512-U1ljPdBEphF0nw1MIk0hI7kPg7dFdPyM7EenHsp6W5loNHl7zqy6JQf/RKCgnUn2KDzUpkBwHPnEJEjII594bA=="],
 
     "@types/node": ["@types/node@22.13.11", "", { "dependencies": { "undici-types": "~6.20.0" } }, "sha512-iEUCUJoU0i3VnrCmgoWCXttklWcvoCIx4jzcP22fioIVSdTmjgoEvmAO/QPw6TcS9k5FrNgn4w7q5lGOd1CT5g=="],
 
-    "bun-types": ["bun-types@1.2.13", "", { "dependencies": { "@types/node": "*" } }, "sha512-rRjA1T6n7wto4gxhAO/ErZEtOXyEZEmnIHQfl0Dt1QQSB4QV0iP6BZ9/YB5fZaHFQ2dwHFrmPaRQ9GGMX01k9Q=="],
+    "bun-types": ["bun-types@1.2.15", "", { "dependencies": { "@types/node": "*" } }, "sha512-NarRIaS+iOaQU1JPfyKhZm4AsUOrwUOqRNHY0XxI8GI8jYxiLXLcdjYMG9UKS+fwWasc1uw1htV9AX24dD+p4w=="],
+
+    "typescript": ["typescript@5.8.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
 
     "undici-types": ["undici-types@6.20.0", "", {}, "sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg=="],
   }
