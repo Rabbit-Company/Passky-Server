@@ -3,7 +3,7 @@ services:
   passky-server:
     container_name: passky-server
     build:
-      context: ./server
+      context: .
     restart: always
     environment:
       #
