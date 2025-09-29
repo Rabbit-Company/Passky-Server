@@ -1,10 +1,5 @@
 .env
 *.db
-databases
-server/databases
-server/data.json
-server/api-limiter.json
-server/tokens.json
-server/vendor
-server/composer.lock
+*.db-shm
+*.db-wal
 node_modules

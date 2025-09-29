@@ -1,9 +1,11 @@
 import Redis from "./caches/redis";
+import DB from "./databases/database";
 import Scheduler from "./scheduler";
 import { Logger } from "./logger";
 import { Server } from "./server";
 
 await Redis.initialize();
+await DB.initialize();
 await Scheduler.initialize();
 
 const hostname = process.env["SERVER_HOSTNAME"] || "0.0.0.0";

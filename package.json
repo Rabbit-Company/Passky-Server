@@ -27,7 +27,7 @@
 	},
 	"homepage": "https://github.com/Rabbit-Company/Passky-Server#readme",
 	"devDependencies": {
-		"@types/bun": "^1.2.22"
+		"@types/bun": "^1.2.23"
 	},
 	"dependencies": {
 		"@rabbit-company/openmetrics-client": "^2.0.1",

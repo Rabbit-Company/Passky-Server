@@ -44,4 +44,26 @@ export namespace Settings {
 
 		return `redis://${host}:${port}`;
 	};
+
+	// DATABASE SETTINGS
+	export const getDatabaseConfig = (): string => {
+		const url = process.env["DATABASE_URL"];
+		if (url) return url;
+
+		const engine = process.env["DATABASE_ENGINE"];
+		if (engine === "sqlite") {
+			return `sqlite://${process.env["DATABASE_FILE"] || "passky"}.db`;
+		} else if (engine === "mysql") {
+			const host = process.env["MYSQL_HOST"] || "passky-database";
+			const port = Number(process.env["MYSQL_PORT"]) || 3306;
+			const database = process.env["MYSQL_DATABASE"] || "passky";
+			const username = process.env["MYSQL_USER"] || "passky";
+			const password = process.env["MYSQL_PASSWORD"] || "";
+			const ssl = process.env["MYSQL_SSL"] === "true";
+
+			return `mysql://${username}:${password}@${host}:${port}/${database}?ssl=${ssl}`;
+		}
+
+		return "sqlite://passky.db";
+	};
 }
