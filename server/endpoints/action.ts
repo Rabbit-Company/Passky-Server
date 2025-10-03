@@ -3,8 +3,8 @@ import { Server } from "../server";
 import { Settings } from "../settings";
 import os from "node:os";
 import fs from "fs";
-import Redis from "../caches/redis";
 import { Logger } from "../logger";
+import Cache from "../caches/cache";
 
 interface LegacyResponse {
 	info: string;
@@ -86,7 +86,7 @@ function getInfo(ctx: Context): Response {
 }
 
 async function getStats(ctx: Context): Promise<Response> {
-	const cached = await Redis.getString("server_stats");
+	const cached = await Cache.getString("server_stats");
 	if (cached) {
 		return ctx.json(JSON.parse(cached));
 	}
@@ -105,6 +105,6 @@ async function getStats(ctx: Context): Promise<Response> {
 		diskTotal: diskTotal,
 	};
 
-	await Redis.setString("server_stats", JSON.stringify(stats), 5);
+	await Cache.setString("server_stats", JSON.stringify(stats), 5);
 	return ctx.json(stats);
 }

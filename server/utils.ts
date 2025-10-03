@@ -1,7 +1,7 @@
 import type { SupportedCryptoAlgorithms } from "bun";
 import Validate from "./validate";
 import Errors, { Error } from "./errors";
-import Redis from "./caches/redis";
+import Cache from "./caches/cache";
 
 export function jsonResponse(json: object, statusCode = 200) {
 	return new Response(JSON.stringify(json), {
@@ -84,7 +84,7 @@ export async function authenticateUser(req: Request, ip: string | undefined): Pr
 	if (!Validate.token(auth.pass)) return { user: "", error: jsonError(Error.INVALID_TOKEN) };
 
 	const hashedIP = await generateHash(ip || "", "sha256");
-	const token = await Redis.getString(`token_${auth.user}_${hashedIP}`);
+	const token = await Cache.getString(`token_${auth.user}_${hashedIP}`);
 	if (!Validate.token(token)) return { user: "", error: jsonError(Error.TOKEN_EXPIRED) };
 	if (!timingSafeEqual(auth.pass, token as string)) return { user: "", error: jsonError(Error.TOKEN_EXPIRED) };
 

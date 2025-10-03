@@ -1,10 +1,10 @@
-import Redis from "./caches/redis";
+import Cache from "./caches/cache";
 import DB from "./databases/database";
 import Scheduler from "./scheduler";
 import { Logger } from "./logger";
 import { Server } from "./server";
 
-await Redis.initialize();
+await Cache.initialize();
 await DB.initialize();
 await Scheduler.initialize();
 

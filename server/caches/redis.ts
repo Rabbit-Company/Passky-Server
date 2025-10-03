@@ -1,107 +1,68 @@
 import { RedisClient } from "bun";
+import type { ICacheBackend } from "../types";
 import { Logger } from "../logger";
 import { Settings } from "../settings";
 
-namespace Redis {
-	export const localCache: RedisClient = new RedisClient(Settings.getLocalRedisConfig());
-	export const externalCache: RedisClient = new RedisClient(Settings.getExternalRedisConfig());
+export default class RedisCache implements ICacheBackend {
+	private client: RedisClient;
+	private isExternal: boolean;
 
-	export async function initialize() {
-		Redis.localCache.onconnect = () => {
-			Logger.info("[REDIS] Local Redis connected");
+	constructor(isExternal: boolean = false) {
+		this.isExternal = isExternal;
+		const config = isExternal ? Settings.getExternalRedisConfig() : Settings.getLocalRedisConfig();
+		this.client = new RedisClient(config);
+	}
+
+	async initialize(): Promise<void> {
+		this.client.onconnect = () => {
+			Logger.info(`[CACHE] ${this.isExternal ? "External" : "Local"} Redis cache connected`);
 		};
-		Redis.externalCache.onconnect = () => {
-			Logger.info("[REDIS] External Redis connected");
-		};
-		Redis.localCache.onclose = () => {
-			Logger.error("[REDIS] Local Redis connection error!");
-		};
-		Redis.externalCache.onclose = () => {
-			Logger.error("[REDIS] External Redis connection error!");
+		this.client.onclose = () => {
+			Logger.error(`[CACHE] ${this.isExternal ? "External" : "Local"} Redis cache connection error!`);
 		};
 	}
 
-	export async function getString(key: string, localTTL: number = 0): Promise<string | null> {
+	async get(key: string): Promise<string | null> {
 		try {
-			const localValue = await Redis.localCache.get(key);
-			if (localValue !== null) return localValue;
-
-			const externalValue = await Redis.externalCache.get(key);
-			if (externalValue !== null) {
-				if (localTTL !== 0) await Redis.localCache.set(key, externalValue, "EX", localTTL);
-				return externalValue;
-			}
-
-			return null;
+			return await this.client.get(key);
 		} catch {
-			Logger.error("[REDIS] Connection error!");
+			Logger.error("[CACHE] Redis get error");
 			return null;
 		}
 	}
 
-	export async function setString(key: string, value: string, localTTL: number = 0, externalTTL: number = 0): Promise<boolean | null> {
+	async set(key: string, value: string, ttl?: number): Promise<boolean> {
 		try {
-			if (localTTL !== 0) await Redis.localCache.set(key, value, "EX", localTTL);
-			if (externalTTL !== 0) await Redis.externalCache.set(key, value, "EX", externalTTL);
+			if (ttl && ttl > 0) {
+				await this.client.set(key, value, "EX", ttl);
+			} else {
+				await this.client.set(key, value);
+			}
 			return true;
 		} catch {
-			Logger.error("[REDIS] Connection error!");
-			return null;
+			Logger.error("[CACHE] Redis set error");
+			return false;
 		}
 	}
 
-	export async function increase(key: string, local: boolean = true, external: boolean = false): Promise<number | null> {
+	async delete(key: string): Promise<boolean> {
 		try {
-			let number = 0;
-
-			if (local) number = await Redis.localCache.incr(key);
-			if (external) number = await Redis.externalCache.incr(key);
-
-			return number;
-		} catch {
-			Logger.error("[REDIS] Connection error!");
-			return null;
-		}
-	}
-
-	export async function getNumber(key: string, defaultNumber: number = 0): Promise<number> {
-		return Number.parseInt((await Redis.getString(key)) || defaultNumber.toString(), 10) || defaultNumber;
-	}
-
-	export async function deleteString(key: string): Promise<boolean | null> {
-		try {
-			await Redis.localCache.del(key);
-			await Redis.externalCache.del(key);
+			await this.client.del(key);
 			return true;
 		} catch {
-			Logger.error("[REDIS] Connection error!");
-			return null;
+			Logger.error("[CACHE] Redis delete error");
+			return false;
 		}
 	}
 
-	export async function getOrSetString(key: string, value: string, localTTL: number = 0, externalTTL: number = 0): Promise<string | null> {
+	async incr(key: string): Promise<number> {
 		try {
-			if (localTTL !== 0) {
-				const localValue = await Redis.localCache.get(key);
-				if (localValue !== null) return localValue;
-			}
-
-			if (externalTTL !== 0) {
-				const externalValue = await Redis.externalCache.get(key);
-				if (externalValue !== null) {
-					if (localTTL !== 0) await Redis.localCache.set(key, externalValue, "EX", localTTL);
-					return externalValue;
-				}
-			}
-
-			if (localTTL !== 0) await Redis.localCache.set(key, value, "EX", localTTL);
-			if (externalTTL !== 0) await Redis.externalCache.set(key, value, "EX", externalTTL);
-			return value;
+			return await this.client.incr(key);
 		} catch {
-			Logger.error("[REDIS] Connection error!");
-			return null;
+			Logger.error("[CACHE] Redis incr error");
+			return 0;
 		}
 	}
+
+	async destroy(): Promise<void> {}
 }
-
-export default Redis;
