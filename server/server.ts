@@ -50,7 +50,7 @@ export namespace Server {
 		);
 
 		await import("./endpoints/metrics");
-		await import("./endpoints/action");
+		await import("./endpoints/legacy/action");
 
 		app.listen({
 			hostname: hostname,

@@ -27,12 +27,13 @@
 	},
 	"homepage": "https://github.com/Rabbit-Company/Passky-Server#readme",
 	"devDependencies": {
-		"@types/bun": "^1.2.23"
+		"@types/bun": "^1.3.3"
 	},
 	"dependencies": {
 		"@rabbit-company/openmetrics-client": "^2.0.1",
 		"@rabbit-company/password-generator": "^2.2.0",
-		"@rabbit-company/web": "^0.14.0",
-		"@rabbit-company/web-middleware": "^0.14.0"
+		"@rabbit-company/totp": "^1.0.1",
+		"@rabbit-company/web": "^0.16.0",
+		"@rabbit-company/web-middleware": "^0.16.0"
 	}
 }

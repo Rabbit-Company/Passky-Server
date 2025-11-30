@@ -1,10 +1,10 @@
 import type { Context } from "@rabbit-company/web";
-import { Server } from "../server";
-import { Settings } from "../settings";
+import { Server } from "../../server";
+import { Settings } from "../../settings";
 import os from "node:os";
 import fs from "fs";
-import { Logger } from "../logger";
-import Cache from "../caches/cache";
+import { Logger } from "../../logger";
+import Cache from "../../caches/cache";
 
 interface LegacyResponse {
 	info: string;
@@ -33,7 +33,7 @@ const legacyHandlers: Record<string, (ctx: Context) => Response | Promise<Respon
 Server.app.use("/", (ctx, next) => {
 	if (ctx.req.url.includes("?action=")) {
 		ctx.header("X-API-Deprecation", "This legacy API will be removed. Please migrate to /v1/*");
-		ctx.header("X-API-Deprecation-Date", "2026-01-01");
+		ctx.header("X-API-Deprecation-Date", "2027-01-01");
 	}
 	return next();
 });
@@ -54,8 +54,8 @@ Server.app.get("/", async (ctx) => {
 	if (!handler) {
 		return ctx.json(
 			{
-				info: `Unknown action: ${action}`,
-				error: 1,
+				info: `Action is invalid!`,
+				error: 401,
 			},
 			400
 		);
