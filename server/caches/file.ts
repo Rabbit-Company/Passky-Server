@@ -1,7 +1,7 @@
 import { Logger } from "../logger";
-import type { ICacheBackend } from "../types";
 import { mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
+import type { ICacheBackend } from "./cache";
 
 export default class FileCache implements ICacheBackend {
 	private cacheDir: string;

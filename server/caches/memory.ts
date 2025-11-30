@@ -1,5 +1,5 @@
 import { Logger } from "../logger";
-import type { ICacheBackend } from "../types";
+import type { ICacheBackend } from "./cache";
 
 export default class MemoryCache implements ICacheBackend {
 	private cache: Map<string, { value: string; expiresAt: number | null }> = new Map();

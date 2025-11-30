@@ -1,7 +1,7 @@
 import { RedisClient } from "bun";
-import type { ICacheBackend } from "../types";
 import { Logger } from "../logger";
 import { Settings } from "../settings";
+import type { ICacheBackend } from "./cache";
 
 export default class RedisCache implements ICacheBackend {
 	private client: RedisClient;
