@@ -17,6 +17,12 @@ import { TokenStore } from "./tokens.ts";
 
 interface AppState extends Record<string, unknown> {
 	requestId?: string;
+	passkyUser?: string;
+}
+
+interface BurrowGateOptions {
+	secret: string;
+	reportUsernames: boolean;
 }
 
 const apiSecurityHeaders = {
@@ -74,12 +80,13 @@ async function requestFields(request: Request, rawBody: string): Promise<URLSear
 	return new URLSearchParams();
 }
 
-function createClientIpMiddleware(burrowgateSecret: string): Middleware<AppState> {
-	if (burrowgateSecret) {
+function createClientIpMiddleware(burrowgate: BurrowGateOptions): Middleware<AppState> {
+	if (burrowgate.secret) {
 		return burrowgateOrigin<AppState>({
-			secret: burrowgateSecret,
+			secret: burrowgate.secret,
 			skip: (ctx) => unsignedPaths.has(new URL(ctx.req.url).pathname),
 			onFailure: (ctx) => ctx.json(legacyResponse(999), 403, apiSecurityHeaders),
+			...(burrowgate.reportUsernames ? { originUser: (ctx: Context<AppState>) => ctx.get("passkyUser") } : {}),
 		});
 	}
 
@@ -130,7 +137,7 @@ function createLoggerMiddleware(): Middleware<AppState> {
 }
 
 export interface AppOptions {
-	burrowgateSecret?: string;
+	burrowgate?: Partial<BurrowGateOptions>;
 	legacyApi?: LegacyApiOptions;
 	logging?: boolean;
 }
@@ -148,7 +155,12 @@ export function createApp(
 	const legacyApi = new LegacyApi(database, maintenance, tokens, options.legacyApi ?? {});
 	const admin = new Admin(database, maintenance, tokens);
 
-	app.use(createClientIpMiddleware(options.burrowgateSecret ?? config.burrowgate.originSecret));
+	app.use(
+		createClientIpMiddleware({
+			secret: options.burrowgate?.secret ?? config.burrowgate.originSecret,
+			reportUsernames: options.burrowgate?.reportUsernames ?? config.burrowgate.reportUsernames,
+		}),
+	);
 	if (options.logging !== false) app.use(createLoggerMiddleware());
 	app.use(bodyLimit<AppState>({ maxSize: 12 * 1024 * 1024 }));
 	app.use(
@@ -182,6 +194,7 @@ export function createApp(
 			fields,
 			rawBody,
 			clientIp: clientIp(ctx),
+			onAuthenticated: (username) => ctx.set("passkyUser", username),
 		});
 
 		return ctx.json(response, 200, apiSecurityHeaders);

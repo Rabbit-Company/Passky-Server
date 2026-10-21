@@ -147,7 +147,16 @@ describe("HTTP routing and legacy compatibility", () => {
 		expect(after.length - before).toBeLessThan(2_000);
 	});
 
-	test("reports process and filesystem statistics", async () => {
+	test("keeps process and filesystem statistics private by default", async () => {
+		const body = await expectError(fixture.apiRequest("getStats"), 33);
+
+		expect(body).toEqual({ error: 33, info: "Statistics are disabled on this server." });
+	});
+
+	test("reports process and filesystem statistics when enabled", async () => {
+		await fixture.close();
+		fixture = await createFixture({ limiterEnabled: false, statsEnabled: true });
+
 		const body = await expectError(fixture.apiRequest("getStats"), 0);
 
 		expect(Number(body.cores)).toBeGreaterThan(0);

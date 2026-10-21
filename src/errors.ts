@@ -28,6 +28,7 @@ export const errorMessages = {
 	30: "This license key has already been used.",
 	31: "Report has not been generated yet.",
 	32: "Reports are disabled on this server.",
+	33: "Statistics are disabled on this server.",
 	300: "Website needs to be encrypted with XChaCha20.",
 	301: "Username needs to be encrypted with XChaCha20.",
 	302: "Password needs to be encrypted with XChaCha20.",

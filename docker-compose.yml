@@ -16,6 +16,7 @@ services:
       - SERVER_PORT
       - TRUSTED_PROXIES
       - BURROWGATE_ORIGIN_SECRET
+      - BURROWGATE_REPORT_USERNAMES
       # Admin Panel
       - ADMIN_USERNAME
       - ADMIN_PASSWORD
@@ -42,6 +43,7 @@ services:
       - METRICS_ENABLED
       - METRICS_TOKEN
       - REPORTS_ENABLED
+      - STATS_ENABLED
       - LOG_PRESET
       - LOKI_URL
       - LOKI_USERNAME

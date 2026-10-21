@@ -82,6 +82,16 @@ export function reportsApiCheck(enabled: boolean): HealthCheck {
 	};
 }
 
+export function statsApiCheck(enabled: boolean): HealthCheck {
+	return {
+		name: "Public statistics API",
+		detail: enabled
+			? "/?action=getStats publicly shares CPU, memory, and disk usage without authentication."
+			: "/?action=getStats is disabled. System usage is only visible here in the administrator interface.",
+		status: enabled ? "warning" : "healthy",
+	};
+}
+
 export function healthChecks(input: HealthInput): HealthCheck[] {
 	const maintenanceReport = input.maintenance.getReport();
 	const entropy = configuredAdminPasswordEntropy();
@@ -116,6 +126,7 @@ export function healthChecks(input: HealthInput): HealthCheck[] {
 		},
 		openMetricsCheck(config.metrics.enabled, config.metrics.token),
 		reportsApiCheck(config.reports.enabled),
+		statsApiCheck(config.stats.enabled),
 		{
 			name: "Administrator password",
 			detail: entropy === null ? "ADMIN_PASSWORD is not configured." : `Estimated password entropy is ${Math.round(entropy)} bits.`,

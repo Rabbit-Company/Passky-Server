@@ -56,8 +56,23 @@ async function call(request: Request): Promise<{ status: number; body: Record<st
 	return { status: response.status, body: await json(response) };
 }
 
+async function createSignedAccount(): Promise<void> {
+	const response = await call(
+		await signed("/?action=createAccount", { username: "testuser", password: clientHash, fields: { email: "testuser@example.com" } }),
+	);
+
+	expect(response.body.error).toBe(0);
+}
+
+function reportedUser(response: Response): { username: string | null; signature: string | null } {
+	return {
+		username: response.headers.get("x-burrowgate-origin-user"),
+		signature: response.headers.get("x-burrowgate-origin-user-signature"),
+	};
+}
+
 beforeEach(async () => {
-	fixture = await createFixture({ limiterEnabled: false }, { burrowgateSecret: secret });
+	fixture = await createFixture({ limiterEnabled: false }, { burrowgate: { secret } });
 });
 
 afterEach(async () => {
@@ -149,5 +164,62 @@ describe("BurrowGate origin verification", () => {
 	test("keeps the local health check and metrics reachable without a signature", async () => {
 		expect((await fixture.app.handle(new Request("http://passky.test/health"))).status).toBe(200);
 		expect((await fixture.app.handle(new Request("http://passky.test/metrics"))).status).toBe(200);
+	});
+
+	test("does not report usernames unless enabled", async () => {
+		await createSignedAccount();
+		const login = await fixture.app.handle(await signed("/?action=getToken", { username: "testuser", password: clientHash, fields: { otp: "" } }));
+
+		expect((await json(login)).error).toBe(8);
+		expect(reportedUser(login)).toEqual({ username: null, signature: null });
+	});
+});
+
+describe("BurrowGate username reporting", () => {
+	beforeEach(async () => {
+		await fixture.close();
+		fixture = await createFixture({ limiterEnabled: false }, { burrowgate: { secret, reportUsernames: true } });
+		await createSignedAccount();
+	});
+
+	test("reports verified Passky usernames with a valid signature", async () => {
+		const request = await signed("/?action=getToken", { username: "TestUser", password: clientHash, fields: { otp: "" } });
+		const login = await fixture.app.handle(request);
+		const token = String((await json(login)).token);
+		const reported = reportedUser(login);
+
+		expect(reported.username).toBe("testuser");
+		expect(reported.signature).toBe(await hmac([request.headers.get("x-burrowgate-signature"), "testuser"].join("\n")));
+
+		const passwords = await fixture.app.handle(await signed("/?action=getPasswords", { username: "testuser", password: token, fields: {} }));
+		expect(reportedUser(passwords).username).toBe("testuser");
+	});
+
+	test("never reports usernames that were not verified", async () => {
+		for (const request of [
+			await signed("/?action=getToken", { username: "testuser", password: "b".repeat(128), fields: { otp: "" } }),
+			await signed("/?action=getToken", { username: "unknownuser", password: clientHash, fields: { otp: "" } }),
+			await signed("/?action=getPasswords", { username: "testuser", password: "c".repeat(64), fields: {} }),
+			await signed("/?action=createAccount", { username: "newaccount", password: clientHash, fields: { email: "new@example.com" } }),
+			await signed("/?action=getInfo"),
+		]) {
+			expect(reportedUser(await fixture.app.handle(request))).toEqual({ username: null, signature: null });
+		}
+	});
+
+	test("reports the administrator only after signing in", async () => {
+		const loginPage = await fixture.app.handle(await signed("/"));
+		expect(reportedUser(loginPage).username).toBeNull();
+
+		const login = await fixture.app.handle(
+			await signed("/admin/login", {
+				fields: { username: "admin", password: "a-strong-admin-password-for-tests", "cf-turnstile-response": "development-test-key" },
+			}),
+		);
+		const cookie = login.headers.get("set-cookie")?.split(";", 1)[0] ?? "";
+		expect(reportedUser(login).username).toBe("admin");
+
+		const dashboard = await fixture.app.handle(await signed("/?section=overview", { headers: { cookie } }));
+		expect(reportedUser(dashboard).username).toBe("admin");
 	});
 });

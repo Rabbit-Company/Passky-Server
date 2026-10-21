@@ -20,6 +20,7 @@ import { adminHeaders, renderAdmin, renderLogin } from "./view.ts";
 
 interface AdminState extends Record<string, unknown> {
 	requestId?: string;
+	passkyUser?: string;
 }
 
 const SESSION_COOKIE = "passky_admin";
@@ -97,6 +98,7 @@ export class Admin {
 		const url = new URL(ctx.req.url);
 		const session = this.getSession(ctx.req);
 		if (!session) return ctx.html(renderLogin(url.origin), 200, adminHeaders);
+		ctx.set("passkyUser", config.admin.username);
 
 		const section = parseSection(url.searchParams.get("section"));
 		const search = url.searchParams.get("search")?.trim().slice(0, 200) ?? "";
@@ -178,6 +180,7 @@ export class Admin {
 			return redirect();
 		}
 
+		ctx.set("passkyUser", config.admin.username);
 		const id = generateToken();
 		this.sessions.set(id, {
 			csrf: generateToken(),
@@ -211,7 +214,7 @@ export class Admin {
 	}
 
 	private async editAccount(ctx: Context<AdminState>): Promise<Response> {
-		const authorized = await this.authorizedForm(ctx.req);
+		const authorized = await this.authorizedForm(ctx);
 		if (!authorized) return redirect();
 
 		const { fields, session } = authorized;
@@ -243,7 +246,7 @@ export class Admin {
 	}
 
 	private async deleteAccount(ctx: Context<AdminState>): Promise<Response> {
-		const authorized = await this.authorizedForm(ctx.req);
+		const authorized = await this.authorizedForm(ctx);
 		if (!authorized) return redirect();
 
 		const username = ctx.params.username ?? "";
@@ -258,7 +261,7 @@ export class Admin {
 	}
 
 	private async createLicenses(ctx: Context<AdminState>): Promise<Response> {
-		const authorized = await this.authorizedForm(ctx.req);
+		const authorized = await this.authorizedForm(ctx);
 		if (!authorized) return redirect();
 
 		const duration = Math.max(1, Math.min(365_000, Number.parseInt(authorized.fields.get("days") ?? "365", 10) || 365));
@@ -280,7 +283,7 @@ export class Admin {
 	}
 
 	private async deleteLicense(ctx: Context<AdminState>): Promise<Response> {
-		const authorized = await this.authorizedForm(ctx.req);
+		const authorized = await this.authorizedForm(ctx);
 		if (!authorized) return redirect();
 
 		await this.database.deleteLicense(ctx.params.license ?? "");
@@ -306,16 +309,17 @@ export class Admin {
 		return session;
 	}
 
-	private async authorizedForm(request: Request): Promise<{
+	private async authorizedForm(ctx: Context<AdminState>): Promise<{
 		fields: URLSearchParams;
 		session: AdminSession;
 	} | null> {
-		const session = this.getSession(request);
+		const session = this.getSession(ctx.req);
 		if (!session) return null;
 
-		const fields = await form(request);
+		const fields = await form(ctx.req);
 		if (!constantTimeEqual(fields.get("csrf") ?? "", session.csrf)) return null;
 
+		ctx.set("passkyUser", config.admin.username);
 		return { fields, session };
 	}
 

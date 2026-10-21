@@ -34,6 +34,8 @@ With [BurrowGate](https://burrowgate.org/), set `BURROWGATE_ORIGIN_SECRET` to th
 
 If Cloudflare sits in front of BurrowGate, configure BurrowGate to trust Cloudflare so the signed IP is the visitor's address rather than a Cloudflare edge address.
 
+Set `BURROWGATE_REPORT_USERNAMES=true` to show who made each request in BurrowGate's traffic log. Passky adds a signed username to the response, which BurrowGate verifies and removes before the response reaches the client. Only usernames that Passky has verified are reported. That means a successful sign-in, a valid token, or a signed-in administrator, who appears as `ADMIN_USERNAME`. Failed sign-in attempts are never reported, so nobody can place arbitrary names in your logs. The setting is off by default because it shares Passky usernames with BurrowGate.
+
 ## Administrator interface
 
 The administrator interface is served at `/`. Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` to enable it. While `ADMIN_PASSWORD` is empty, the interface stays disabled. Sign-in attempts are limited to five per IP address every fifteen minutes, and a session lasts `ADMIN_SESSION_TTL` seconds after sign-in (one hour by default).
@@ -62,9 +64,13 @@ With `LIMITER_ENABLED=true`, each API action can be called once per configured n
 
 Maintenance runs inside the server at startup and then daily. It expires premium accounts whose subscription has ended and refreshes the report shown in the administrator interface. No external cron job is needed.
 
-## Reports
+## Reports and statistics
 
-`/?action=getReport` returns daily registration counts and the number of active users. It is disabled by default and returns error `32`. Set `REPORTS_ENABLED=true` to expose it publicly. Administrators always see the report in the administrator interface.
+`/?action=getReport` returns daily registration counts and the number of active users. It is disabled by default and returns error `32`. Set `REPORTS_ENABLED=true` to expose it publicly.
+
+`/?action=getStats` returns the server's CPU load, memory usage, and disk usage. It is disabled by default and returns error `33`. Set `STATS_ENABLED=true` to expose it publicly.
+
+Administrators always see both in the administrator interface.
 
 ## Observability
 

@@ -33,12 +33,14 @@ export interface LegacyRequest {
 	fields: URLSearchParams;
 	rawBody: string;
 	clientIp: string;
+	onAuthenticated?: (username: string) => void;
 }
 
 export interface LegacyApiOptions {
 	limiterEnabled?: boolean;
 	limiterWindows?: Partial<Record<LegacyAction, number>>;
 	reportsEnabled?: boolean;
+	statsEnabled?: boolean;
 }
 
 const supportedActions = new Set<LegacyAction>([
@@ -111,6 +113,7 @@ export class LegacyApi {
 	} | null = null;
 	private readonly limiterEnabled: boolean;
 	private readonly reportsEnabled: boolean;
+	private readonly statsEnabled: boolean;
 
 	constructor(
 		private readonly database: Database,
@@ -120,6 +123,7 @@ export class LegacyApi {
 	) {
 		this.limiterEnabled = options.limiterEnabled ?? config.limiter.enabled;
 		this.reportsEnabled = options.reportsEnabled ?? config.reports.enabled;
+		this.statsEnabled = options.statsEnabled ?? config.stats.enabled;
 
 		const windows = {
 			...config.limiter.windows,
@@ -257,6 +261,8 @@ export class LegacyApi {
 	}
 
 	private async getStats(): Promise<LegacyResponse> {
+		if (!this.statsEnabled) return legacyResponse(33);
+
 		const filesystem = await statfs(process.cwd());
 		const diskTotal = Number(filesystem.blocks) * Number(filesystem.bsize);
 		const diskFree = Number(filesystem.bavail) * Number(filesystem.bsize);
@@ -315,6 +321,8 @@ export class LegacyApi {
 		}
 
 		const token = await this.tokens.issue(username, request.clientIp);
+		request.onAuthenticated?.(username);
+
 		const currentDate = today();
 		if (user.accessed !== currentDate) await this.database.updateLastAccess(username, currentDate);
 
@@ -607,7 +615,10 @@ export class LegacyApi {
 
 		const username = usernameInput.toLowerCase();
 
-		return (await this.tokens.verify(username, request.clientIp, token)) ? username : legacyResponse(25);
+		if (!(await this.tokens.verify(username, request.clientIp, token))) return legacyResponse(25);
+
+		request.onAuthenticated?.(username);
+		return username;
 	}
 
 	private passwordInput(fields: URLSearchParams): EncryptedPasswordInput {

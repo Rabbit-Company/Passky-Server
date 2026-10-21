@@ -37,6 +37,7 @@ The PHP image stored SQLite databases in `/var/www/html/databases`, while the Bu
 - Sessions are not carried over. Clients sign in again after the upgrade.
 - Daily maintenance runs inside the server. The `/cron.php` endpoint and external cron jobs are no longer needed.
 - `/?action=getReport` is disabled by default and returns error `32`. Set `REPORTS_ENABLED=true` to expose it publicly again. Administrators always see the report in the admin interface.
+- `/?action=getStats` is disabled by default and returns error `33`. Set `STATS_ENABLED=true` to expose server CPU, memory, and disk usage publicly again.
 - Forwarded client-IP headers are only read from trusted proxies. Loopback and private networks are trusted by default. See [Reverse proxies and client IPs](../configuration.md#reverse-proxies-and-client-ips) for details.
 - A wrong password now returns error `2` even when two-factor authentication is enabled, so the API no longer reveals whether an account uses 2FA.
 - The bundled Redis, Nginx, PHP-FPM, and cron processes are gone. Redis is optional and only used when `REDIS_URL` or `REDIS_HOST` points to a reachable server. `REDIS_HOST` values in phpredis format such as `tlsv1.2://host` keep working.

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
 
 import { clientHash, config, createFixture, Database, expectError, json, otherClientHash, type Fixture } from "./helpers.ts";
-import { openMetricsCheck } from "../src/admin/health.ts";
+import { openMetricsCheck, statsApiCheck } from "../src/admin/health.ts";
 import { addDays, subDays, today } from "../src/time.ts";
 
 let fixture: Fixture;
@@ -183,6 +183,8 @@ describe("administration interface", () => {
 		});
 		expect(openMetricsCheck(true, "secret-token").status).toBe("healthy");
 		expect(openMetricsCheck(true, "").status).toBe("warning");
+		expect(statsApiCheck(false).status).toBe("healthy");
+		expect(statsApiCheck(true).status).toBe("warning");
 	});
 
 	test("rejects invalid credentials and creates a secure authenticated session", async () => {
@@ -319,6 +321,7 @@ describe("administration interface", () => {
 		expect(html).toContain('data-health-count="error"');
 		expect(html).toContain("OpenMetrics");
 		expect(html).toContain("Public reports API");
+		expect(html).toContain("Public statistics API");
 		expect(html).toContain("Administrator password");
 		expect(html).toContain("Email recovery");
 		expect(html).toContain("Server version");

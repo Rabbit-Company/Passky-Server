@@ -124,6 +124,7 @@ export const config = {
 
 	burrowgate: {
 		originSecret: env("BURROWGATE_ORIGIN_SECRET"),
+		reportUsernames: boolean("BURROWGATE_REPORT_USERNAMES", false),
 	},
 
 	admin: {
@@ -192,6 +193,10 @@ export const config = {
 
 	reports: {
 		enabled: boolean("REPORTS_ENABLED", false),
+	},
+
+	stats: {
+		enabled: boolean("STATS_ENABLED", false),
 	},
 
 	logging: {
