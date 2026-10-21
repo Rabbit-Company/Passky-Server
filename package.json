@@ -1,22 +1,42 @@
 {
 	"name": "passky-server",
 	"description": "Server for Passky (password manager)",
-	"version": "8.1.8",
-	"main": "tailwind.config.js",
-	"scripts": {
-		"build": "npx tailwindcss -i ./tailwind.css -o ./server/src/website/css/tailwind.min.css --minify"
-	},
+	"version": "9.0.0",
+	"private": true,
+	"type": "module",
+	"author": "Rabbit Company",
+	"license": "EUPL-1.2",
+	"homepage": "https://github.com/Rabbit-Company/Passky-Server#readme",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Rabbit-Company/Passky-Server.git"
 	},
-	"author": "Rabbit Company",
-	"license": "GPL-3.0",
 	"bugs": {
 		"url": "https://github.com/Rabbit-Company/Passky-Server/issues"
 	},
-	"homepage": "https://github.com/Rabbit-Company/Passky-Server#readme",
+	"engines": {
+		"bun": ">=1.4.3"
+	},
+	"scripts": {
+		"dev": "bun --watch src/index.ts",
+		"start": "bun src/index.ts",
+		"test": "bun --no-env-file test",
+		"check": "bun run typecheck && bun build --target=bun --outdir=/tmp/passky-server-check src/index.ts",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@rabbit-company/blake2b": "^2.1.0",
+		"@rabbit-company/openmetrics-client": "^2.0.1",
+		"@rabbit-company/password-entropy": "^2.1.0",
+		"@rabbit-company/password-generator": "^2.2.0",
+		"@rabbit-company/totp": "^1.0.1",
+		"@rabbit-company/web": "^0.20.0",
+		"@rabbit-company/web-middleware": "^0.20.0",
+		"nodemailer": "^10.1.7"
+	},
 	"devDependencies": {
-		"tailwindcss": "^3.4.14"
+		"@types/bun": "^1.4.3",
+		"@types/nodemailer": "^8.0.2",
+		"typescript": "^5.9.3"
 	}
 }

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1170" height="564" viewBox="0 0 1170 564" role="img" aria-labelledby="title description" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif">
+<title id="title">Passky compared with other password managers</title>
+<desc id="description">Premium price: Passky $2.00/mo, Bitwarden $1.65/mo, NordPass $1.99/mo, Dashlane $4.99/mo, 1Password $3.99/mo, LastPass $3.00/mo. Free plan: Passky 100 passwords, Bitwarden Unlimited, NordPass 1 active device, Dashlane None, 1Password None, LastPass 1 device type. Premium passwords: Passky Unlimited, Bitwarden Unlimited, NordPass Unlimited, Dashlane Unlimited, 1Password Unlimited, LastPass Unlimited. Two-factor authentication: Passky Yes, Bitwarden Yes, NordPass Yes, Dashlane Yes, 1Password Yes, LastPass Yes. Zero-knowledge encryption: Passky Yes, Bitwarden Yes, NordPass Yes, Dashlane Yes, 1Password Yes, LastPass Yes. Encryption: Passky XChaCha20, Bitwarden AES-256, NordPass XChaCha20, Dashlane AES-256, 1Password AES-256, LastPass AES-256. Key derivation: Passky Argon2id, Bitwarden PBKDF2 or Argon2id, NordPass Argon2, Dashlane Argon2d, 1Password PBKDF2, LastPass PBKDF2. Open source: Passky Yes, Bitwarden Yes, NordPass No, Dashlane Partial, 1Password No, LastPass No. Self-hosting: Passky Yes, Bitwarden Yes, NordPass No, Dashlane No, 1Password No, LastPass No.</desc>
+<rect x="10" y="10" width="1150" height="510" rx="12" fill="#0d1117" stroke="#30363d"/>
+<path d="M22 10H1148a12 12 0 0 1 12 12V70H10V22a12 12 0 0 1 12-12Z" fill="#151b23"/>
+<rect x="272" y="10" width="148" height="510" fill="#0f2847"/>
+<rect x="272" y="10" width="148" height="510" fill="none" stroke="#1f6feb" stroke-width="2"/>
+<text x="346" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#e6edf3">Passky</text>
+<text x="494" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#e6edf3">Bitwarden</text>
+<text x="642" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#e6edf3">NordPass</text>
+<text x="790" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#e6edf3">Dashlane</text>
+<text x="938" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#e6edf3">1Password</text>
+<text x="1086" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#e6edf3">LastPass</text>
+<line x1="10" y1="70" x2="1160" y2="70" stroke="#30363d"/>
+<text x="28" y="101" font-size="17" font-weight="600" fill="#e6edf3">Premium price</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="101">$2.00/mo</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="494" y="101">$1.65/mo</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="642" y="101">$1.99/mo</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="790" y="101">$4.99/mo</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="938" y="101">$3.99/mo</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="1086" y="101">$3.00/mo</tspan></text>
+<line x1="10" y1="120" x2="1160" y2="120" stroke="#30363d"/>
+<text x="28" y="151" font-size="17" font-weight="600" fill="#e6edf3">Free plan</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="346" y="151">100 passwords</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="494" y="151">Unlimited</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="642" y="151">1 active device</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="790" y="151">None</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="938" y="151">None</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="1086" y="151">1 device type</tspan></text>
+<line x1="10" y1="170" x2="1160" y2="170" stroke="#30363d"/>
+<text x="28" y="201" font-size="17" font-weight="600" fill="#e6edf3">Premium passwords</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="201">Unlimited</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="494" y="201">Unlimited</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="642" y="201">Unlimited</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="790" y="201">Unlimited</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="938" y="201">Unlimited</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="1086" y="201">Unlimited</tspan></text>
+<line x1="10" y1="220" x2="1160" y2="220" stroke="#30363d"/>
+<text x="28" y="251" font-size="17" font-weight="600" fill="#e6edf3">Two-factor authentication</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="251">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="494" y="251">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="642" y="251">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="790" y="251">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="938" y="251">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="1086" y="251">Yes</tspan></text>
+<line x1="10" y1="270" x2="1160" y2="270" stroke="#30363d"/>
+<text x="28" y="301" font-size="17" font-weight="600" fill="#e6edf3">Zero-knowledge encryption</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="301">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="494" y="301">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="642" y="301">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="790" y="301">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="938" y="301">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="1086" y="301">Yes</tspan></text>
+<line x1="10" y1="320" x2="1160" y2="320" stroke="#30363d"/>
+<text x="28" y="351" font-size="17" font-weight="600" fill="#e6edf3">Encryption</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="351">XChaCha20</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="494" y="351">AES-256</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="642" y="351">XChaCha20</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="790" y="351">AES-256</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="938" y="351">AES-256</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="1086" y="351">AES-256</tspan></text>
+<line x1="10" y1="370" x2="1160" y2="370" stroke="#30363d"/>
+<text x="28" y="401" font-size="17" font-weight="600" fill="#e6edf3">Key derivation</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="401">Argon2id</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="494" y="391.5">PBKDF2 or</tspan><tspan x="494" y="410.5">Argon2id</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="642" y="401">Argon2</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="790" y="401">Argon2d</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="938" y="401">PBKDF2</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="1086" y="401">PBKDF2</tspan></text>
+<line x1="10" y1="420" x2="1160" y2="420" stroke="#30363d"/>
+<text x="28" y="451" font-size="17" font-weight="600" fill="#e6edf3">Open source</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="451">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="494" y="451">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="642" y="451">No</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#d29922"><tspan x="790" y="451">Partial</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="938" y="451">No</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="1086" y="451">No</tspan></text>
+<line x1="10" y1="470" x2="1160" y2="470" stroke="#30363d"/>
+<text x="28" y="501" font-size="17" font-weight="600" fill="#e6edf3">Self-hosting</text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="346" y="501">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#3fb950"><tspan x="494" y="501">Yes</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="642" y="501">No</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="790" y="501">No</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="938" y="501">No</tspan></text>
+<text text-anchor="middle" font-size="17" font-weight="600" fill="#f85149"><tspan x="1086" y="501">No</tspan></text>
+<rect x="272" y="10" width="148" height="510" fill="none" stroke="#1f6feb" stroke-width="2"/>
+<text x="14" y="548" font-size="15" fill="#9198a1">Personal plans in USD, price per month with yearly billing, without first-year discounts. Checked October 2026.</text>
+</svg>

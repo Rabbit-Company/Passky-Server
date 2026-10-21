@@ -9,10 +9,10 @@
 
 ## Passky Clients
 
-   * [Website](https://github.com/Rabbit-Company/Passky-Website#installation)
-   * [Browser Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension#installation)
-   * [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop#installation)
-   * [Android Application](https://github.com/Rabbit-Company/Passky-Android#installation)
+- [Website](https://github.com/Rabbit-Company/Passky-Website#installation)
+- [Browser Extension](https://github.com/Rabbit-Company/Passky-Browser-Extension#installation)
+- [Desktop Application](https://github.com/Rabbit-Company/Passky-Desktop#installation)
+- [Android Application](https://github.com/Rabbit-Company/Passky-Android#installation)
 
 ## What is Passky?
 
@@ -46,29 +46,59 @@ In summary, **Passky uses advanced encryption methods such as XChaCha20 and Argo
 
 ## How Does Passky Compare to the Competition?
 
-Feature | Passky | Bitwarden | NordPass | Dashlane | 1Password | LastPass
---- | :---: | :---: | :---: | :---: | :---: | :---: |
-Premium Price | $${\color{orange}\&dollar;2/month}$$ | $${\color{green}\&dollar;0.83/month}$$ | $${\color{orange}1.99€/month}$$ | $${\color{orange}2€/month}$$ | $${\color{red}\&dollar;2.99/month}$$ | $${\color{red}2.90€/month}$$ |
-Number of Passwords | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$ | $${\color{green}Unlimited}$$
-Two-factor Authentication | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$
-Zero-knowledge architecture | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{green}Yes}$$
-Encryption | $${\color{green}XChaCha20/Argon2id}$$ | $${\color{orange}AES-256/PBKDF2}$$ | $${\color{green}XChaCha20/Argon2id}$$ | $${\color{orange}AES-256/PBKDF2}$$ | $${\color{orange}AES-256/PBKDF2}$$ | $${\color{orange}AES-256/PBKDF2}$$
-Open-Source | $${\color{green}Yes}$$ | $${\color{green}Yes}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$
-Customization | $${\color{green}Yes}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$ | $${\color{red}No}$$
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/comparison-dark.svg">
+  <img src="docs/images/comparison-light.svg" alt="Comparison of Passky with Bitwarden, NordPass, Dashlane, 1Password, and LastPass by price, free plan, encryption, open source, and self-hosting">
+</picture>
 
-> Comparison data accurate as of January 25th, 2023
+<details>
+<summary>Comparison as a table</summary>
+
+| Feature                   |    Passky     |     Bitwarden      |    NordPass     | Dashlane  | 1Password |   LastPass    |
+| ------------------------- | :-----------: | :----------------: | :-------------: | :-------: | :-------: | :-----------: |
+| Premium price             |   $2.00/mo    |      $1.65/mo      |    $1.99/mo     | $4.99/mo  | $3.99/mo  |   $3.00/mo    |
+| Free plan                 | 100 passwords |     Unlimited      | 1 active device |   None    |   None    | 1 device type |
+| Premium passwords         |   Unlimited   |     Unlimited      |    Unlimited    | Unlimited | Unlimited |   Unlimited   |
+| Two-factor authentication |      Yes      |        Yes         |       Yes       |    Yes    |    Yes    |      Yes      |
+| Zero-knowledge encryption |      Yes      |        Yes         |       Yes       |    Yes    |    Yes    |      Yes      |
+| Encryption                |   XChaCha20   |      AES-256       |    XChaCha20    |  AES-256  |  AES-256  |    AES-256    |
+| Key derivation            |   Argon2id    | PBKDF2 or Argon2id |     Argon2      |  Argon2d  |  PBKDF2   |    PBKDF2     |
+| Open source               |      Yes      |        Yes         |       No        |  Partial  |    No     |      No       |
+| Self-hosting              |      Yes      |        Yes         |       No        |    No     |    No     |      No       |
+
+Personal plans in USD, price per month with yearly billing, without first-year discounts. Checked October 2026.
+
+</details>
 
 ## Installation
 
-Passky Server can be easily installed in multiple ways.
+Passky Server runs on [Bun](https://bun.com/) and stores data in SQLite, MySQL, MariaDB, or PostgreSQL. It can be installed in multiple ways.
 
 - [Docker](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/installation/docker.md) (Recommended)
-- [Linode](https://www.linode.com/marketplace/apps/rabbit-company/passky/) (One-click Install)
 - [Umbrel](https://apps.umbrel.com/app/passky-server) (One-click Install)
-- [Shared Hosting](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/installation/shared-hosting.md)
+
+All settings are described in the [configuration reference](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/configuration.md).
 
 ## Upgrade
 
 To upgrade your Passky Server, please **select the installation method** that you previously used to set up your server. This will ensure a seamless upgrade process and minimal disruption to your current Passky Server configuration. If you have any issues or concerns during the upgrade process, please do not hesitate to reach out to our support team for assistance.
 
 - [Docker](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/upgrade/docker.md)
+- [Upgrading from Passky Server 8 (PHP)](https://github.com/Rabbit-Company/Passky-Server/blob/main/docs/upgrade/php-to-bun.md)
+
+## Development
+
+```sh
+bun install
+bun run test
+bun run typecheck
+bun run dev
+```
+
+`bun run dev` starts the server with file watching. Settings are read from `.env`. The tests never load it and always run against an in-memory SQLite database.
+
+Pull requests to `main` run the type check and test suite. Pushes to `main` publish `rabbitcompany/passky-server:latest`, and GitHub releases publish the versioned image tags.
+
+## License
+
+Passky Server is licensed under the [European Union Public Licence v. 1.2](https://github.com/Rabbit-Company/Passky-Server/blob/main/LICENSE) (EUPL-1.2). Releases up to and including 8.1.8 were published under the GNU General Public License v3.0 and remain available under those terms.

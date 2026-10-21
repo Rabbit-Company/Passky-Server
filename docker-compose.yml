@@ -1,8 +1,7 @@
-version: '3'
 services:
   passky-server:
     container_name: passky-server
-    image: 'rabbitcompany/passky-server:latest'
+    image: "rabbitcompany/passky-server:latest"
     restart: unless-stopped
     environment:
       #
@@ -13,13 +12,19 @@ services:
       # Server
       - SERVER_LOCATION
       - SERVER_CORES
+      - SERVER_HOST
+      - SERVER_PORT
+      - TRUSTED_PROXIES
+      - BURROWGATE_ORIGIN_SECRET
       # Admin Panel
       - ADMIN_USERNAME
       - ADMIN_PASSWORD
+      - ADMIN_SESSION_TTL
       # Cloudflare Captcha
       - CF_TURNSTILE_SITE_KEY
       - CF_TURNSTILE_SECRET_KEY
       # Database
+      - DATABASE_URL
       - DATABASE_ENGINE
       - DATABASE_FILE
       - MYSQL_HOST
@@ -30,13 +35,22 @@ services:
       - MYSQL_SSL
       - MYSQL_SSL_CA
       - MYSQL_CACHE_MODE
+      # Argon2id
+      - ARGON2_MEMORY_COST
+      - ARGON2_TIME_COST
+      # Observability
+      - METRICS_ENABLED
+      - METRICS_TOKEN
+      - REPORTS_ENABLED
+      - LOG_PRESET
+      - LOKI_URL
+      - LOKI_USERNAME
+      - LOKI_PASSWORD
       # Redis
       - REDIS_HOST
       - REDIS_PORT
       - REDIS_PASSWORD
-      - REDIS_LOCAL_HOST
-      - REDIS_LOCAL_PORT
-      - REDIS_LOCAL_PASSWORD
+      - REDIS_URL
       # Mail
       - MAIL_ENABLED
       - MAIL_HOST
@@ -74,4 +88,4 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./databases:/var/www/html/databases
+      - ./databases:/app/databases

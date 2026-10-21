@@ -339,17 +339,14 @@ echo "YUBI_ID=67857" >> .env
 echo "CF_TURNSTILE_SITE_KEY=1x00000000000000000000AA" >> .env
 echo "CF_TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA" >> .env
 
-echo "REDIS_HOST=127.0.0.1" >> .env
+echo "REDIS_HOST=" >> .env
 echo "REDIS_PORT=6379" >> .env
 echo "REDIS_PASSWORD=" >> .env
 
-echo "REDIS_LOCAL_HOST=127.0.0.1" >> .env
-echo "REDIS_LOCAL_PORT=6379" >> .env
-echo "REDIS_LOCAL_PASSWORD=" >> .env
 
 echo -e "\n${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 echo -e "${green}            ENV FILE HAS BEEN SUCCESSFULLY GENEREATED"
-echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker-compose up -d"
+echo -e "${blue} Now you can deploy Passky Server with command: ${bold}docker compose up -d"
 echo -e "${blue} If you made a mistake you can just re-run the installer with command: ${bold}./installer.sh"
 echo -e "${gray}----------------------------------------------------------------------------------------------------------------------------------${none}"
 

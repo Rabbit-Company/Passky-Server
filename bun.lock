@@ -1,0 +1,59 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "@rabbit-company/passky-server-bun",
+      "dependencies": {
+        "@rabbit-company/blake2b": "^2.1.0",
+        "@rabbit-company/openmetrics-client": "^2.0.1",
+        "@rabbit-company/password-entropy": "^2.1.0",
+        "@rabbit-company/password-generator": "^2.2.0",
+        "@rabbit-company/totp": "^1.0.1",
+        "@rabbit-company/web": "^0.20.0",
+        "@rabbit-company/web-middleware": "^0.20.0",
+        "nodemailer": "^10.1.7",
+      },
+      "devDependencies": {
+        "@types/bun": "^1.4.3",
+        "@types/nodemailer": "^8.0.2",
+        "typescript": "^5.9.3",
+      },
+    },
+  },
+  "packages": {
+    "@rabbit-company/blake2b": ["@rabbit-company/blake2b@2.1.0", "", { "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-dxETRoVBMWmJFuJcfo/zF7QlfYAmT733Efwuok5K4bmb/T/Mq8V2HbwM4+N9OiK727ofRv1BPkWsJs2dvgz1DQ=="],
+
+    "@rabbit-company/burrowgate-auth": ["@rabbit-company/burrowgate-auth@1.3.0", "", {}, "sha512-9qx0uJOYP1DiGpE4WDj/UO0E8LKZeCWtZ6gkvpcAoEPGUOzB3cGlNZsw9JJJkvbuyIVjznDWJGkm3JkczpbsCg=="],
+
+    "@rabbit-company/logger": ["@rabbit-company/logger@5.6.1", "", { "peerDependencies": { "typescript": "^5.9.3" } }, "sha512-U/OvLzzkHgTUupgeMsnBHjJVbFfVIt4Nj643rraq/mKpIEmGUVsUGJi1Gin2Tw95vJ8pB/kNYVxtZi9FKO+mIw=="],
+
+    "@rabbit-company/openmetrics-client": ["@rabbit-company/openmetrics-client@2.0.1", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-JJr8reWZwTr5vvq1txc2jEgDkLKJ/QAref8W7C7pP7fdmy1qltpu9Ujrbqariq/pJb3qTj0y89krlYZSgh/YvA=="],
+
+    "@rabbit-company/password-entropy": ["@rabbit-company/password-entropy@2.1.0", "", { "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-SXxjLQcMfweUkQDHxo1YLt/lsKlMBXZ1dSh4cST+N7ydgkz+dN12UkRVj5mAGgrmN5bSB32KSrhND4DMiwvNcQ=="],
+
+    "@rabbit-company/password-generator": ["@rabbit-company/password-generator@2.2.0", "", { "peerDependencies": { "typescript": "^5.6.2" } }, "sha512-vGTQatvHhJPsBZZaW/V276+YwmL6ThaBuN0vSeJwGIW9YBoW5glQ+sXRPZDhOAkGy0K3AbwZ6TmP+svrAn5Gkw=="],
+
+    "@rabbit-company/rate-limiter": ["@rabbit-company/rate-limiter@3.0.1", "", { "peerDependencies": { "typescript": "^5.8.3" } }, "sha512-Wj32TPksbohww7fMbERjjSAApA9fdsneRtIpfQmY/W/BfGA9BbO08wKA1tezoVHuYEMUCwjUjaRZxjEYGMxTOw=="],
+
+    "@rabbit-company/totp": ["@rabbit-company/totp@1.0.1", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-37/cOVcmLXkUI5bhIMoXcZqWxBPsdmvAZNkfZs09K0qqfcS50CtUkqVSOiBfpntpf4Sq4fCvWteBQaLHpKD2EQ=="],
+
+    "@rabbit-company/web": ["@rabbit-company/web@0.20.0", "", {}, "sha512-1/rekOa5jmrIF1JNiMjrbcQf5t/u/jFacaaOzyd+ygZVmJ8Ls1wogUtoGzu2bna2UhEjiWvffVh9qUSrNMdLcw=="],
+
+    "@rabbit-company/web-middleware": ["@rabbit-company/web-middleware@0.20.0", "", { "dependencies": { "@rabbit-company/burrowgate-auth": "^1.3.0", "@rabbit-company/logger": "^5.6.1", "@rabbit-company/rate-limiter": "^3.0.1" }, "peerDependencies": { "@rabbit-company/web": "^0.20.0" } }, "sha512-PJczT1HgDSwH8s39qWtywZctbbZiL2jgXaRvioWG1fSEqLzpqvglGSSi5qjI5TXlQDBC4jnD8p9jVMqqfjtn/g=="],
+
+    "@types/bun": ["@types/bun@1.4.3", "", { "dependencies": { "bun-types": "1.4.3" } }, "sha512-N67Pqy8JXbAY/j0tNraS3V5mubGvc6rrrNDmDCtZLlFzccbUJPDb0tvgUBC5q4m8ybkP93Jcn1QB+RYQ6PvBhw=="],
+
+    "@types/node": ["@types/node@26.2.0", "", { "dependencies": { "undici-types": "~8.3.0" } }, "sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg=="],
+
+    "@types/nodemailer": ["@types/nodemailer@8.0.2", "", { "dependencies": { "@types/node": "*" } }, "sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA=="],
+
+    "bun-types": ["bun-types@1.4.3", "", { "dependencies": { "@types/node": "*", "undici-types": "*" } }, "sha512-tinRJNGOmUN+tEAsn2y2e942n9JHRHR42iUYzDH75NmhJqVBokGSQkkfSFdNWwsANIdrK6ACH9t01M452YyTwg=="],
+
+    "nodemailer": ["nodemailer@10.1.7", "", {}, "sha512-OQa6FDln5fLttmqSbjDiRYvFDOFNrBqfiOwHPlEbURil3b+vPB1v8xpi+Sp46drzNDlsTnNsS502vthmz56r4w=="],
+
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "undici-types": ["undici-types@8.3.0", "", {}, "sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ=="],
+  }
+}
